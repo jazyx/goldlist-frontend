@@ -11,6 +11,9 @@
   --primary: #060;
   --primary-border: #393;
   --primary-active: #030;
+  --disabled: #444;
+  --disabled-color: #777;
+  --disabled-border: #444;
 }
 
 body {
@@ -57,6 +60,13 @@ h1 {
  button:hover:active{
    border-style: inset;
    background-color: #000;
+ }
+
+ button:disabled {
+  color: var(--disabled-color);
+  background-color: var(--disabled);
+  border: 1px solid var(--disabled-border);
+  pointer-events: none;
  }
 
  pre {
