@@ -10,18 +10,18 @@ import {
 import './App.css'
 import { Home } from './pages/Home'
 import { NotFound } from './pages/NotFound'
-import { APIProvider } from './contexts/APIContext'
+import { Provider } from './contexts/'
 
 
 function App() {
   return (
     <Router>
-      <APIProvider>
+      <Provider>
         <Routes>
           <Route index element={<Home />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </APIProvider>
+      </Provider>
     </Router>
   )
 }

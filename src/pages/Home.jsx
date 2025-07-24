@@ -4,6 +4,7 @@
 
 
 import React from 'react'
+import { Guest } from '../components/Guest'
 
 
 export const Home = (props) => {
@@ -11,7 +12,7 @@ export const Home = (props) => {
     <main>
       <button disabled>Register</button>
       <button disabled>Log In</button>
-      <button>Continue as Guest</button>
+      <Guest/>
     </main>
   )
 }
