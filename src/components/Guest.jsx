@@ -12,13 +12,14 @@ import { UserContext } from '../contexts/'
 
 export const Guest = () => {
   const { userData, getUserData } = useContext(UserContext)
-  const { userName } = userData
+  const { user_name } = userData
+  const shortName = user_name.replace(/_.*$/, "")
 
   return (
     <button
       onClick={getUserData}
     >
-      Continue as {userName}
+      Continue as {shortName}
     </button>
   )
 }

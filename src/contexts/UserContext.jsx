@@ -19,11 +19,16 @@ export const UserContext = createContext()
 
 export const UserProvider = ({ children }) => {
   const { origin } = useContext(APIContext)
-  const [ userData, setUserData ] = useState({ userName: "Guest" })
+  const [ userData, setTheUserData ] = useState({ user_name: "Guest" })
+
+
+  const setUserData = (data) => {
+    console.log("userData", JSON.stringify(data, null, '  '));
+    setTheUserData(data)
+  }
+
 
   const getUserData = () => {
-    console.log("getUserData")
-
     const url = `${origin}/getUserData`
     const headers = { 'Content-Type': 'application/json' }
     const body = JSON.stringify(userData)
@@ -34,13 +39,10 @@ export const UserProvider = ({ children }) => {
       body,
     })
       .then(incoming => incoming.json())
-      .then(json => {
-        console.log("json", JSON.stringify(json, null, '  '));
-        return json
-      })
       .then(json => setUserData(json))
       .catch(error => setUserData(error.message))
   }
+
 
   return (
     <UserContext.Provider
