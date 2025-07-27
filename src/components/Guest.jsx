@@ -11,8 +11,7 @@ import { useContext} from 'react'
 import { UserContext } from '../contexts/'
 
 export const Guest = () => {
-  const { userData, getUserData } = useContext(UserContext)
-  const { user } = userData
+  const { user, getUserData } = useContext(UserContext)
   const { user_name } = user
   const shortName = user_name.replace(/_.*$/, "")
 

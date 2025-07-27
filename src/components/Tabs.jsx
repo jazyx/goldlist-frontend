@@ -9,8 +9,7 @@ import { TabButton } from './TabButton'
 
 
 export const Tabs = (props) => {
-  const { userData } = useContext(UserContext)
-  const { list, redos } = userData
+  const { list, redos } = useContext(UserContext)
 
 
   const byIndex = (a, b) => {

@@ -17,6 +17,8 @@
   --disabled: #444;
   --disabled-color: #777;
   --disabled-border: #444;
+
+  --altered: #fee;
 }
 
 body {
@@ -35,7 +37,8 @@ main {
 }
 
 main {
-  padding: 2em 0;
+  padding: 2.5em 0.5em;
+  background-color: #060;
 }
 
 h1 {
@@ -62,58 +65,29 @@ h1 {
     background-color: var(--primary);
     border-color: var(--primary-border);
   }
-}
+
  
-button:hover {
-  background-color: var(--button-active);
-  color: #fff;
-}
-
-button.primary:hover {
-  background-color: var(--primary-active);
-}
- 
-button:hover:active{
-  border-style: inset;
-  background-color: #000;
-}
-
-button:disabled {
-  color: var(--disabled-color);
-  background-color: var(--disabled);
-  border: 1px solid var(--disabled-border);
-  pointer-events: none;
-}
-
-/* pre {
-  border: 1px inset #888;
-  width: fit-content;
-  min-width: 25em;
-  min-height: 8em;
-  overflow: auto;
-}
-
-a {
-  color: inherit;
-  font-family: inherit;
-  display: block;
-  width: var(--width);
-  padding: var(--gap) 0;
-  text-align: center;
-  text-decoration: none;
-  border: 1px outset #888;
-  border-radius: 0.5em;
-  user-select: none;
-
   &:hover {
-    color: #99f;
+    background-color: var(--button-active);
+    color: #fff;
   }
 
-  &:hover:active {
+  &.primary:hover {
+    background-color: var(--primary-active);
+  }
+ 
+  &:hover:active{
     border-style: inset;
     background-color: #000;
   }
-} */
+
+  &:disabled {
+    color: var(--disabled-color);
+    background-color: var(--disabled);
+    border: 1px solid var(--disabled-border);
+    pointer-events: none;
+  }
+}
 
 ul#tabs {
   position: fixed;
@@ -135,6 +109,47 @@ ul#tabs {
 
     a {
       color: inherit;
+    }
+  }
+}
+
+div#phraseList {
+  counter-set: number;
+
+  div.phrase {
+    display: flex;
+    border-radius: 1.5em;
+    border: 1px inset #666;
+    box-sizing: border-box;
+    background-color: #444;
+    margin-top: var(--gap);
+    counter-increment: number;
+
+    div.number,
+    div.buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 2em;
+    }
+
+    div.buttons.altered button {
+      background-color: var(--altered);
+      color: #000
+    }
+
+    div.number::before {
+      content: counter(number);
+    }
+
+    textArea {
+      display: block;
+      width: 40em;
+      max-width: calc(100vw - 6em);
+
+      &.altered {
+        background-color: var(--altered);
+      }
     }
   }
 }

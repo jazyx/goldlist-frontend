@@ -11,8 +11,7 @@ import { Footer } from '../components/Footer'
 
 
 export const Add = () => {
-  const { userData } = useContext(UserContext)
-  const { index, phrases } = (userData.list || {})
+  const { phrases } = useContext(UserContext)
 
   // {
   //   "_id": "6885dff18637f1dff16ff520",
@@ -33,7 +32,11 @@ export const Add = () => {
   return (
     <main>
       <Tabs/>
-      <div>{phraseList}</div>
+      <div
+        id="phraseList"
+      >
+        {phraseList}
+      </div>
       <Footer />
     </main>
   )
