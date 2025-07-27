@@ -7,6 +7,7 @@ import { useContext } from 'react'
 import { UserContext } from '../contexts'
 import { Tabs } from '../components/Tabs'
 import { Phrase } from '../components/Phrase'
+import { Footer } from '../components/Footer'
 
 
 export const Add = () => {
@@ -33,6 +34,7 @@ export const Add = () => {
     <main>
       <Tabs/>
       <div>{phraseList}</div>
+      <Footer />
     </main>
   )
 }

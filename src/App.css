@@ -8,6 +8,9 @@
   --gap: 0.5em;
   --width: 10em;
 
+  --button: #333;
+  --button-border: #666;
+  --button-active: #333;
   --primary: #060;
   --primary-border: #393;
   --primary-active: #030;
@@ -31,6 +34,10 @@ main {
   align-items: center;
 }
 
+main {
+  padding: 2em 0;
+}
+
 h1 {
   font-size: 2.25em;
 }
@@ -44,32 +51,41 @@ h1 {
  button {
   color: inherit;
   font-size: inherit;
-  background-color: var(--primary);
-  border: 1px outset var(--primary-border);
+  background-color: var(--button);
+  border: 1px outset var(--button-border);
   border-radius: var(--gap);
   width: var(--width);
   padding: var(--gap);
   cursor: pointer;
- }
  
- button:hover {
-  background-color: var(--primary-active);
+  &.primary {
+    background-color: var(--primary);
+    border-color: var(--primary-border);
+  }
+}
+ 
+button:hover {
+  background-color: var(--button-active);
   color: #fff;
- }
- 
- button:hover:active{
-   border-style: inset;
-   background-color: #000;
- }
+}
 
- button:disabled {
+button.primary:hover {
+  background-color: var(--primary-active);
+}
+ 
+button:hover:active{
+  border-style: inset;
+  background-color: #000;
+}
+
+button:disabled {
   color: var(--disabled-color);
   background-color: var(--disabled);
   border: 1px solid var(--disabled-border);
   pointer-events: none;
- }
+}
 
- pre {
+/* pre {
   border: 1px inset #888;
   width: fit-content;
   min-width: 25em;
@@ -96,5 +112,40 @@ a {
   &:hover:active {
     border-style: inset;
     background-color: #000;
+  }
+} */
+
+ul#tabs {
+  position: fixed;
+  background-color: var(--dark);
+  top: 0;
+  display: flex;
+  list-style-type: none;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+
+  button {
+    width: 100%;
+  }
+
+  li {
+    width: auto;
+    flex: 1;
+
+    a {
+      color: inherit;
+    }
+  }
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  width: 100%;
+
+  button {
+    flex: 1;
   }
 }

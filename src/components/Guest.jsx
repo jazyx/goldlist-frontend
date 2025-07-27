@@ -18,6 +18,7 @@ export const Guest = () => {
 
   return (
     <button
+      className="primary"
       onClick={getUserData}
     >
       Continue as {shortName}

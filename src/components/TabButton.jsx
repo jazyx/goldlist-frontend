@@ -18,8 +18,17 @@ export const TabButton = ({ _id, index, reviews }) => {
   return (
     <li
       title={title}
+      draggable={false}
     >
-      <Link to={to}><button>{text}</button></Link>
+      <Link to={to}
+        draggable={false}
+      >
+        <button
+          draggable={false}
+        >
+          {text}
+        </button>
+      </Link>
     </li>
   )
 }

@@ -27,7 +27,9 @@ export const Tabs = (props) => {
 
 
   return (
-    <ul>
+    <ul
+      id="tabs"
+    >
       <TabButton key="add" />
       {redoTabs}
     </ul>
