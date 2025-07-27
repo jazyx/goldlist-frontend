@@ -19,7 +19,9 @@ export const UserContext = createContext()
 
 export const UserProvider = ({ children }) => {
   const { origin } = useContext(APIContext)
-  const [ userData, setTheUserData ] = useState({ user_name: "Guest" })
+  const [ userData, setTheUserData ] = useState({ 
+    user: { user_name: "User" }
+  })
 
 
   const setUserData = (data) => {
@@ -31,7 +33,7 @@ export const UserProvider = ({ children }) => {
   const getUserData = () => {
     const url = `${origin}/getUserData`
     const headers = { 'Content-Type': 'application/json' }
-    const body = JSON.stringify(userData)
+    const body = JSON.stringify(userData.user)
 
     fetch(url, {
       method: 'POST',
