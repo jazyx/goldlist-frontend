@@ -2,12 +2,15 @@
  * frontend/src/components/Phrase.jsx
  */
 
+import { useContext } from 'react'
+import { UserContext } from '../contexts'
 
 
-export const Phrase = ({ text, hint }) => {
+export const Phrase = ({ text, hint, _id }) => {
+  const { editText, editHint } = useContext(UserContext)
 
 
   return (
-    <h1>{text} | {hint}</h1>
+    <div>{text} | {hint}</div>
   )
 }

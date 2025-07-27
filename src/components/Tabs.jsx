@@ -18,10 +18,10 @@ export const Tabs = (props) => {
   }
 
 
-  redos.sort(byIndex)
+  redos?.sort(byIndex)
 
 
-  const redoTabs = redos.map(({ list }) => {
+  const redoTabs = redos?.map(({ list }) => {
     return <TabButton { ...list } key={list._id}/>
   })
 

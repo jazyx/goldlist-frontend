@@ -12,7 +12,7 @@ import { Footer } from '../components/Footer'
 
 export const Add = () => {
   const { userData } = useContext(UserContext)
-  const { index, phrases } = userData.list
+  const { index, phrases } = (userData.list || {})
 
   // {
   //   "_id": "6885dff18637f1dff16ff520",
@@ -25,7 +25,7 @@ export const Add = () => {
   //   "__v": 0
   // },
 
-  const phraseList = phrases.map( phrase => {
+  const phraseList = phrases?.map( phrase => {
     return <Phrase {...phrase} key={phrase._id}/>
   })
 
