@@ -3,7 +3,7 @@
  */
 
 
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { UserContext } from '../contexts'
 import { TabButton } from './TabButton'
 
@@ -12,7 +12,7 @@ export const Tabs = (props) => {
   const { userData } = useContext(UserContext)
   const { list, redos } = userData
 
-  
+
   const byIndex = (a, b) => {
     return b.list.index - a.list.index
   }

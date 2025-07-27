@@ -3,7 +3,6 @@
  */
 
 
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 
@@ -13,7 +12,7 @@ export const TabButton = ({ _id, index, reviews }) => {
     : ["Add", "Add new phrases"]
 
   const to = (reviews)
-    ? `/rev/{reviews}`
+    ? `/rev/${index}`
     : `/add`
 
   return (

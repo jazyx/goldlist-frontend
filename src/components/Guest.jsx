@@ -7,7 +7,7 @@
  */
 
 
-import React, { useContext} from 'react'
+import { useContext} from 'react'
 import { UserContext } from '../contexts/'
 
 export const Guest = () => {

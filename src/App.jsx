@@ -10,6 +10,7 @@ import {
 import './App.css'
 import { Home } from './pages/Home'
 import { Add } from './pages/Add'
+import { Rev } from './pages/Rev'
 import { NotFound } from './pages/NotFound'
 import { Provider } from './contexts/'
 
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route index element={<Home />} />
           <Route path="add" element={<Add />} />
+          <Route path="rev/:index" element={<Rev />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Provider>

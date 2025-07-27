@@ -3,7 +3,7 @@
  */
 
 
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { UserContext } from '../contexts'
 import { Tabs } from '../components/Tabs'
 import { Phrase } from '../components/Phrase'

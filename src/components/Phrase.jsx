@@ -3,8 +3,6 @@
  */
 
 
-import React from 'react'
-
 
 export const Phrase = ({ text, hint }) => {
 

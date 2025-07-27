@@ -3,7 +3,7 @@
  */
 
 
-import React, { createContext } from 'react'
+import { createContext } from 'react'
 
 const ORIGIN = import.meta.env.VITE_ORIGIN
 const dev = /^localhost:517\d$/.test(window.location.host)
