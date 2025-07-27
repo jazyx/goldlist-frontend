@@ -11,6 +11,7 @@ import React, {
   useState,
   useEffect
 } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { APIContext } from "./APIContext"
 
 
@@ -18,6 +19,7 @@ export const UserContext = createContext()
 
 
 export const UserProvider = ({ children }) => {
+  const navigate = useNavigate()
   const { origin } = useContext(APIContext)
   const [ userData, setTheUserData ] = useState({ 
     user: { user_name: "User" }
@@ -44,6 +46,16 @@ export const UserProvider = ({ children }) => {
       .then(json => setUserData(json))
       .catch(error => setUserData(error.message))
   }
+
+
+  const goAdd = () => {
+    if (userData.list) {
+      navigate("/add")
+    }
+  }
+
+
+  useEffect(goAdd, [userData.list])
 
 
   return (
