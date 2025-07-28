@@ -55,7 +55,13 @@ export const UserProvider = ({ children }) => {
 
 
   const treatUserData = (data) => {
-    const { user, lists, redos } = data
+    const { user, lists, redos, fail } = data
+
+    // If the server sends a fail message, it should be logged to
+    // the console, but this doesn't seem to be happening
+    if (fail) {
+      console.log("fail:", fail)
+    }
 
     lists.forEach(preparePhrases) // should only be one
 
@@ -65,7 +71,7 @@ export const UserProvider = ({ children }) => {
       }
       return value
     }
-    // console.log("lists", JSON.stringify(lists, replacer, '  '));
+    // console.log("data", JSON.stringify(data, replacer, '  '));
 
     // Update the user_name in LocalStorage, after removing uuid
     const user_name = user.user_name.replace(/_.*/, "")
@@ -107,7 +113,6 @@ export const UserProvider = ({ children }) => {
 
 
   const getPhrases = () => {
-    console.log("getPhrases index:", listIndex)
     const list = getActiveList()
     return list?.phrases || []
   }
@@ -160,8 +165,6 @@ export const UserProvider = ({ children }) => {
 
 
   const treatSavedPhrase = (json) => {
-    // console.log("json", JSON.stringify(json, null, '  '));
-
     const { _id, key, text, hint, length, list_id } = json
     const list = lists.find( list => list._id === list_id)
 
@@ -189,7 +192,6 @@ export const UserProvider = ({ children }) => {
       index: user.lists + 1
     }
     const body = JSON.stringify(data)
-    console.log("addList", body)
 
     fetch(url, {
       method: 'POST',
@@ -203,8 +205,6 @@ export const UserProvider = ({ children }) => {
 
 
   const treatNewList = (list) => {
-    console.log("treatNewList json", JSON.stringify(json, null, '  '));
-
     // Fill empty list.phrases with LIST_LENGTH empty phrase
     // objects
     preparePhrases(list)
