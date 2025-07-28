@@ -46,14 +46,14 @@ export const UserProvider = ({ children }) => {
     const phrases  = list.phrases.map( phrase => {
       const { text, hint } = phrase
       const db = { text, hint }
-      return { ...phrase, db, saving }
+      return { ...phrase, db }
     })
     while (phrases.length < LIST_LENGTH) {
       phrases.push({
         _id: phrases.length,
         text: "",
         hint: "",
-        db: { text: "", hint: "" },
+        db: { text: "", hint: "" }
       })
     }
     // console.log("phrases", JSON.stringify(phrases, null, '  '));
@@ -70,12 +70,60 @@ export const UserProvider = ({ children }) => {
 
 
   const editPhrase = ({ name, _id, value }) => {
-    console.log("name:", name, _id, value)
     const phrase = phrases.find(
       phrase => phrase._id === _id
     )
     phrase[name] = value
-    setList({...list})
+    setPhrases([...phrases])
+  }
+
+
+  function updatePhrase(_id) {
+    const phrase = phrases.find(
+      phrase => phrase._id === _id
+    )
+    phrase.saving = true
+    setPhrases([...phrases])
+
+    savePhrase({ ...phrase, list_id: list._id })
+  }
+
+
+  const savePhrase = (phrase) => {
+    const url = `${origin}/savePhrase`
+    const headers = { 'Content-Type': 'application/json' }
+
+    const replacer = (key, value) => {
+      if ( key === "saving" || key === "db" ) {
+        return undefined
+      }
+      return value
+    }
+
+    const body = JSON.stringify(phrase, replacer)
+
+    fetch(url, {
+      method: 'POST',
+      headers,
+      body,
+    })
+      .then(incoming => incoming.json())
+      .then(json => treatSavedPhrase(json))
+      .catch(treatDataError)
+  }
+
+
+  const treatSavedPhrase = (json) => {
+    const { _id, old_id, text, hint } = json
+
+    const phrase = phrases.find(phrase => phrase._id === _id)
+    || phrases.find(phrase => phrase._id === old_id)
+
+    phrase._id = _id
+    phrase.db = { text, hint }
+    delete phrase.saving
+
+    setPhrases([...phrases])
   }
 
 
@@ -128,7 +176,8 @@ export const UserProvider = ({ children }) => {
         phrases,
         redos,
         getUserData,
-        editPhrase
+        editPhrase,
+        updatePhrase
       }}
     >
       {children}

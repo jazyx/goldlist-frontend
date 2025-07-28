@@ -8,12 +8,20 @@ import { TextArea } from './TextArea'
 
 
 export const Phrase = ({ _id, text, hint, db, saving }) => {
-  const { editPhrase } = useContext(UserContext)
+  const {
+    editPhrase,
+    updatePhrase
+  } = useContext(UserContext)
 
 
   function onChange({target}) {
     const { name, value } = target
     editPhrase({ name, _id, value })
+  }
+
+
+  function saveChanges() {
+    updatePhrase(_id)
   }
 
 
@@ -27,13 +35,14 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
       ? "altered"
       : "hinted"
 
-  const buttonClass = (textClass || (text && hintClass))
-    ? "altered"   // only if text exists and is altered
-    : (saving)
-      ? "saving"    
+  const buttonClass = (saving)
+    ? "saving"
+    : (textClass || (text && hintClass))
+      ? "altered"   // only if text exists and is altered
       : (text)
         ? "saved" // text is like db, but hint may be missing
-        : ""      // empty text
+          : ""      // empty text
+
 
   return (
     <div
@@ -59,7 +68,10 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
       <div
         className="button"
       >
-        <button className={buttonClass}></button>
+        <button
+          className={buttonClass}
+          onClick={saveChanges}
+        ></button>
       </div>
     </div>
   )
