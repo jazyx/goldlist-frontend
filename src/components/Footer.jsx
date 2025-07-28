@@ -3,18 +3,16 @@
  */
 
 
-import { useContext } from "react"
-import { UserContext } from "../contexts"
+
+import { Counter } from "./Counter"
+import { MoreButton } from "./MoreButton"
 
 
-export const Footer = (props) => {
-  const { list } = useContext(UserContext)
-  const { length, remain } = list
-
+export const Footer = () => {
   return (
     <footer>
-      <span className="counter">{length}/{remain}</span>
-      <button disabled>Add More</button>
+      <Counter />
+      <MoreButton/>
       <button disabled>Start Review</button>
     </footer>
   )

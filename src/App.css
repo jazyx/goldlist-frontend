@@ -44,7 +44,8 @@ main {
 }
 
 main {
-  padding: 2.5em 0.5em;
+  padding: 2.5em 0;
+  box-sizing: border-box;
   /* background-color: #060; */
 }
 
@@ -147,7 +148,7 @@ div#phraseList {
     textArea {
       display: block;
       width: 40em;
-      max-width: calc(100vw - 6em);
+      max-width: calc(100vw - 7em);
 
       &.altered {
         background-color: var(--altered);
@@ -203,13 +204,14 @@ footer {
 
   span {
     display: flex;
+    flex-basis: 2.4em;
+    flex-shrink: 0;
+    justify-content: center;
     align-items: center;
     border-radius: 100vmax;
-    background-color: var(--saving);
   }
 
   button {
     flex: 1;
-
   }
 }

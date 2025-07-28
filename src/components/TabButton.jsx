@@ -6,10 +6,12 @@
 import { Link } from 'react-router-dom'
 
 
-export const TabButton = ({ _id, index, reviews }) => {
+export const TabButton = ({ edit, index, reviews }) => {
   const [text, title] = (reviews) 
     ? [`List ${index}`, `Review ${reviews}`]
-    : ["Add", "Add new phrases"]
+    : (edit)
+      ? [`Edit ${index}`, "Edit recent phrases"]
+      : ["Add", "Add new phrases"]
 
   const to = (reviews)
     ? `/rev/${index}`

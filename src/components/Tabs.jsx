@@ -9,7 +9,7 @@ import { TabButton } from './TabButton'
 
 
 export const Tabs = (props) => {
-  const { list, redos } = useContext(UserContext)
+  const { lists, redos } = useContext(UserContext)
 
 
   const byIndex = (a, b) => {
@@ -18,6 +18,13 @@ export const Tabs = (props) => {
 
 
   redos?.sort(byIndex)
+
+
+  const editTabs = lists.map(( list, edit ) => {
+    const { index } = list
+    const key = `edit_${index}`
+    return <TabButton { ...list } key={key} edit={edit}/>
+  })
 
 
   const redoTabs = redos?.map(({ list }) => {

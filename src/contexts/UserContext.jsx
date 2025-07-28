@@ -33,7 +33,8 @@ export const UserProvider = ({ children }) => {
 
   // Read initial value of userData from LocalStorage
   const [ user, setUser ] = useState(() => storage.get())
-  const [ list, setList ] = useState({})
+  const [ lists, setLists ] = useState([])
+  const [ listIndex, setListIndex ] = useState(0)
   const [ phrases, setPhrases ] = useState([])
   const [ redos, setRedos ] = useState([])
 
@@ -41,9 +42,10 @@ export const UserProvider = ({ children }) => {
   const treatUserData = (data) => {
     // console.log("userData", JSON.stringify(data, null, '  '));
 
-    const { user, list, redos } = data
+    const { user, lists, redos } = data
 
-    const phrases  = list.phrases.map( phrase => {
+    // There should be only one entry in `lists`: use its phrases
+    const phrases  = lists[0].phrases.map( phrase => {
       const { text, hint } = phrase
       const db = { text, hint }
       return { ...phrase, db }
@@ -63,14 +65,15 @@ export const UserProvider = ({ children }) => {
     //   }
     //   return value
     // }
-    // console.log("list", JSON.stringify(list, replacer, '  '));
+    // console.log("lists", JSON.stringify(lists, replacer, '  '));
 
     // Update the user_name in LocalStorage, after removing uuid
     const user_name = user.user_name.replace(/_.*/, "")
     storage.placeItems({ user: { user_name }})
 
     setUser(user)
-    setList(list)
+    setLists(lists)
+    setListIndex(0)
     setPhrases(phrases)
     setRedos(redos)
   }
@@ -92,7 +95,7 @@ export const UserProvider = ({ children }) => {
     phrase.saving = true
     setPhrases([...phrases])
 
-    savePhrase({ ...phrase, list_id: list._id })
+    savePhrase({ ...phrase, list_id: lists[listIndex]._id })
   }
 
 
@@ -123,7 +126,7 @@ export const UserProvider = ({ children }) => {
   const treatSavedPhrase = (json) => {
     // console.log("json", JSON.stringify(json, null, '  '));
 
-    const { _id, key, text, hint, length } = json
+    const { _id, key, text, hint, length, list_id } = json
 
     const phrase = phrases.find(phrase => phrase._id === _id)
     || phrases.find(phrase => phrase._id === key)
@@ -135,8 +138,18 @@ export const UserProvider = ({ children }) => {
     setPhrases([...phrases])
 
     if (length) {
-      setList({ ...list, length })
+      // This should only every apply to an incomplete list
+      const activeList = lists.find( list => list._id === list_id )
+      if (activeList) {
+        activeList.length = length
+        setLists([ ...lists ])
+      }
     }
+  }
+
+
+  const addList = () => {
+    console.log("addList")
   }
 
 
@@ -169,7 +182,7 @@ export const UserProvider = ({ children }) => {
 
   // TODO: Stay on current rev page if that's where we are
   const goAdd = () => {
-    if (list.phrases) {
+    if (lists[0]?.phrases) {
       navigate("/add")
     } else {
       navigate("/")
@@ -178,19 +191,21 @@ export const UserProvider = ({ children }) => {
 
 
   useEffect(autoLoad, [])
-  useEffect(goAdd, [list])
+  useEffect(goAdd, [lists])
 
 
   return (
     <UserContext.Provider
       value ={{
         user,
-        list,
+        lists,
+        listIndex,
         phrases,
         redos,
         getUserData,
         editPhrase,
-        updatePhrase
+        updatePhrase,
+        addList
       }}
     >
       {children}
