@@ -44,8 +44,30 @@ export const UserProvider = ({ children }) => {
 
     const { user, lists, redos } = data
 
+    refreshPhrases(lists[0].phrases)
+
+    const replacer = (key, value) => {
+      if (key === "phrases") {
+        return `${value.length} phrases`
+      }
+      return value
+    }
+    // console.log("lists", JSON.stringify(lists, replacer, '  '));
+
+    // Update the user_name in LocalStorage, after removing uuid
+    const user_name = user.user_name.replace(/_.*/, "")
+    storage.placeItems({ user: { user_name }})
+
+    setUser(user)
+    setLists(lists)
+    setListIndex(0)
+    setRedos(redos)
+  }
+
+
+  const refreshPhrases = (phrases) => {
     // There should be only one entry in `lists`: use its phrases
-    const phrases  = lists[0].phrases.map( phrase => {
+    phrases = phrases.map( phrase => {
       const { text, hint } = phrase
       const db = { text, hint }
       return { ...phrase, db }
@@ -59,23 +81,7 @@ export const UserProvider = ({ children }) => {
       })
     }
 
-    // const replacer = (key, value) => {
-    //   if (key === "phrases") {
-    //     return `${value.length} phrases`
-    //   }
-    //   return value
-    // }
-    // console.log("lists", JSON.stringify(lists, replacer, '  '));
-
-    // Update the user_name in LocalStorage, after removing uuid
-    const user_name = user.user_name.replace(/_.*/, "")
-    storage.placeItems({ user: { user_name }})
-
-    setUser(user)
-    setLists(lists)
-    setListIndex(0)
     setPhrases(phrases)
-    setRedos(redos)
   }
 
 
@@ -149,7 +155,46 @@ export const UserProvider = ({ children }) => {
 
 
   const addList = () => {
-    console.log("addList")
+
+    const url = `${origin}/addList`
+    const headers = { 'Content-Type': 'application/json' }
+    const data = {
+      _id: user._id,
+      index: user.lists + 1
+    }
+    const body = JSON.stringify(data)
+    console.log("addList", body)
+
+    fetch(url, {
+      method: 'POST',
+      headers,
+      body,
+    })
+      .then(incoming => incoming.json())
+      .then(json => treatNewList(json))
+      .catch(treatDataError)
+  }
+
+
+  const treatNewList = (json) => {
+    console.log("treatNewList json", JSON.stringify(json, null, '  '));
+
+    //  {
+    //   "_id": "6887348dadbb2e4c8c1ca475",
+    //   "index": 4,
+    //   "created": "2025-07-26T00:00:00.000Z",
+    //   "length": 0,
+    //   "remain": 21,
+    //   "phrases": []
+    // }
+
+    // Place the new empty list at the beginning of the editable
+    // lists
+    setLists([ json, ...lists ])
+    setListIndex(0)
+    setUser({ ...user, lists: json.index })
+
+    refreshPhrases(json.phrases)
   }
 
 
