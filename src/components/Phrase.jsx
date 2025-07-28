@@ -25,6 +25,18 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
   }
 
 
+  function saveOnBlur({ target, relatedTarget }) {
+    const phrase = target.closest(".phrase")
+    if (!phrase || phrase.contains(relatedTarget)) {
+      return
+    }
+    
+    if (text !== db.text || hint !== db.hint) {
+      updatePhrase(_id)
+    }
+  }
+
+
   const textClass = (text === db.text)
     ? null
     : "altered"
@@ -47,6 +59,7 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
   return (
     <div
       className="phrase"
+      onBlur={saveOnBlur}
     >
       <div
         className="number"
