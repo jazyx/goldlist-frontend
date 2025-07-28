@@ -56,7 +56,14 @@ export const UserProvider = ({ children }) => {
         db: { text: "", hint: "" }
       })
     }
-    // console.log("phrases", JSON.stringify(phrases, null, '  '));
+
+    // const replacer = (key, value) => {
+    //   if (key === "phrases") {
+    //     return `${value.length} phrases`
+    //   }
+    //   return value
+    // }
+    // console.log("list", JSON.stringify(list, replacer, '  '));
 
     // Update the user_name in LocalStorage, after removing uuid
     const user_name = user.user_name.replace(/_.*/, "")
@@ -114,16 +121,22 @@ export const UserProvider = ({ children }) => {
 
 
   const treatSavedPhrase = (json) => {
-    const { _id, old_id, text, hint } = json
+    // console.log("json", JSON.stringify(json, null, '  '));
+
+    const { _id, key, text, hint, length } = json
 
     const phrase = phrases.find(phrase => phrase._id === _id)
-    || phrases.find(phrase => phrase._id === old_id)
+    || phrases.find(phrase => phrase._id === key)
 
     phrase._id = _id
     phrase.db = { text, hint }
     delete phrase.saving
 
     setPhrases([...phrases])
+
+    if (length) {
+      setList({ ...list, length })
+    }
   }
 
 
