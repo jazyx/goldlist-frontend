@@ -17,8 +17,15 @@
   --disabled: #444;
   --disabled-color: #777;
   --disabled-border: #444;
+  --hinted: #ccc;
 
-  --altered: #fee;
+  --button-size: 1.8em;
+  --saved-button: #060;
+  --altered: #fcc;
+  --altered-button: #900;
+  --altered-active: #a00;
+  --altered-border: #c33;
+  --saving: #c70;
 }
 
 body {
@@ -38,7 +45,7 @@ main {
 
 main {
   padding: 2.5em 0.5em;
-  background-color: #060;
+  /* background-color: #060; */
 }
 
 h1 {
@@ -126,16 +133,11 @@ div#phraseList {
     counter-increment: number;
 
     div.number,
-    div.buttons {
+    div.button {
       display: flex;
       justify-content: center;
       align-items: center;
       width: 2em;
-    }
-
-    div.buttons.altered button {
-      background-color: var(--altered);
-      color: #000
     }
 
     div.number::before {
@@ -150,6 +152,44 @@ div#phraseList {
       &.altered {
         background-color: var(--altered);
       }
+
+      &.hinted {
+        background-color: var(--hinted);
+      }
+    }
+
+    div.button {
+      & button {
+        height: var(--button-size);
+        width: var(--button-size);
+        border-radius: 100vmax;
+        border: none;
+        pointer-events: none;
+
+        &.saved  {
+          background-color: var(--saved-button);
+        }
+
+        &.altered  {
+          background-color: var(--altered-button);
+          border-color: var(--altered-border);
+          border-style: outset;
+          border-width: 2px;
+          pointer-events: all;
+
+          &:hover {      
+            background-color: var(--altered-active);  
+
+            &:active {
+              border-style: inset;
+            }
+          }
+        }
+
+        &.saving  {
+          background-color: var(--saving);
+        }
+      }
     }
   }
 }
@@ -159,8 +199,17 @@ footer {
   bottom: 0;
   display: flex;
   width: 100%;
+  background-color: var(--dark);
+
+  span {
+    display: flex;
+    align-items: center;
+    border-radius: 100vmax;
+    background-color: var(--saving);
+  }
 
   button {
     flex: 1;
+
   }
 }

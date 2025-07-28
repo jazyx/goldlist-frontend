@@ -8,9 +8,9 @@ export const Footer = (props) => {
 
   return (
     <footer>
-      <button>25</button>
-      <button>Add More</button>
-      <button>Start Review</button>
+      <span className="counter">20/21</span>
+      <button disabled>Add More</button>
+      <button disabled>Start Review</button>
     </footer>
   )
 }

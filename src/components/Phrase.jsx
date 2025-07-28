@@ -7,7 +7,7 @@ import { UserContext } from '../contexts'
 import { TextArea } from './TextArea'
 
 
-export const Phrase = ({ _id, text, hint, db }) => {
+export const Phrase = ({ _id, text, hint, db, saving }) => {
   const { editPhrase } = useContext(UserContext)
 
 
@@ -23,12 +23,17 @@ export const Phrase = ({ _id, text, hint, db }) => {
 
   const hintClass = (hint === db.hint)
     ? null
-    : "altered"
+    : (text)
+      ? "altered"
+      : "hinted"
 
-  const buttonClass = (textClass || hintClass)
-    ? "buttons altered"
-    : "buttons"
-
+  const buttonClass = (textClass || (text && hintClass))
+    ? "altered"   // only if text exists and is altered
+    : (saving)
+      ? "saving"    
+      : (text)
+        ? "saved" // text is like db, but hint may be missing
+        : ""      // empty text
 
   return (
     <div
@@ -52,9 +57,9 @@ export const Phrase = ({ _id, text, hint, db }) => {
         />
       </div>
       <div
-        className={buttonClass}
+        className="button"
       >
-        <button>&gt;</button>
+        <button className={buttonClass}></button>
       </div>
     </div>
   )

@@ -46,14 +46,14 @@ export const UserProvider = ({ children }) => {
     const phrases  = list.phrases.map( phrase => {
       const { text, hint } = phrase
       const db = { text, hint }
-      return { ...phrase, db }
+      return { ...phrase, db, saving }
     })
     while (phrases.length < LIST_LENGTH) {
       phrases.push({
         _id: phrases.length,
         text: "",
         hint: "",
-        db: { text: "", hint: ""}
+        db: { text: "", hint: "" },
       })
     }
     // console.log("phrases", JSON.stringify(phrases, null, '  '));
