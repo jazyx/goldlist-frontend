@@ -15,7 +15,7 @@ export const TabButton = ({ edit, index, reviews }) => {
 
   const to = (reviews)
     ? `/rev/${index}`
-    : `/add`
+    : `/add/${index}`
 
   return (
     <li

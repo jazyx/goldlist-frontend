@@ -9,10 +9,9 @@ import { UserContext } from "../contexts"
 
 
 export const Counter = (props) => {
-  const { lists, listIndex } = useContext(UserContext)
-  const { length, remain } = (
-    lists[listIndex] || { length: 0, remain: 21 }
-  )
+  const { getActiveList } = useContext(UserContext)
+  const list = getActiveList()
+  const { length, remain } = ( list || { length: 0, remain: 21 } )
 
   const style = { backgroundColor: "#060"}
   if (length < 21) {

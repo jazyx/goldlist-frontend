@@ -21,7 +21,16 @@ function App() {
       <Provider>
         <Routes>
           <Route index element={<Home />} />
-          <Route path="add" element={<Add />} />
+          <Route path="add">
+              <Route
+                path=":index/"
+                element={<Add />}
+              />
+              <Route
+                path=""
+                element={<Add />}
+              />
+            </Route>
           <Route path="rev/:index" element={<Rev />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -8,7 +8,7 @@ import { UserContext } from '../contexts'
 import { TabButton } from './TabButton'
 
 
-export const Tabs = (props) => {
+export const Tabs = () => {
   const { lists, redos } = useContext(UserContext)
 
 
@@ -36,7 +36,7 @@ export const Tabs = (props) => {
     <ul
       id="tabs"
     >
-      <TabButton key="add" />
+      {editTabs}
       {redoTabs}
     </ul>
   )

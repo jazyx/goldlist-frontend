@@ -35,16 +35,29 @@ export const UserProvider = ({ children }) => {
   const [ user, setUser ] = useState(() => storage.get())
   const [ lists, setLists ] = useState([])
   const [ listIndex, setListIndex ] = useState(0)
-  const [ phrases, setPhrases ] = useState([])
   const [ redos, setRedos ] = useState([])
 
 
-  const treatUserData = (data) => {
-    // console.log("userData", JSON.stringify(data, null, '  '));
+  const getUserData = () => {
+    const url = `${origin}/getUserData`
+    const headers = { 'Content-Type': 'application/json' }
+    const body = JSON.stringify(user)
 
+    fetch(url, {
+      method: 'POST',
+      headers,
+      body,
+    })
+      .then(incoming => incoming.json())
+      .then(json => treatUserData(json))
+      .catch(treatDataError)
+  }
+
+
+  const treatUserData = (data) => {
     const { user, lists, redos } = data
 
-    refreshPhrases(lists[0].phrases)
+    lists.forEach(preparePhrases) // should only be one
 
     const replacer = (key, value) => {
       if (key === "phrases") {
@@ -60,18 +73,20 @@ export const UserProvider = ({ children }) => {
 
     setUser(user)
     setLists(lists)
-    setListIndex(0)
+    setListIndex(lists[0].index) // only one list
     setRedos(redos)
   }
 
 
-  const refreshPhrases = (phrases) => {
-    // There should be only one entry in `lists`: use its phrases
-    phrases = phrases.map( phrase => {
+  const preparePhrases = (list) => {
+    // Add a db field to hold the values on the database
+    const phrases = list.phrases.map( phrase => {
       const { text, hint } = phrase
       const db = { text, hint }
       return { ...phrase, db }
     })
+
+    // Ensure there are the right number of entries
     while (phrases.length < LIST_LENGTH) {
       phrases.push({
         _id: phrases.length,
@@ -81,27 +96,42 @@ export const UserProvider = ({ children }) => {
       })
     }
 
-    setPhrases(phrases)
+    list.phrases = phrases
+  }
+
+
+  const getActiveList = () => {
+    const index = Number(listIndex)
+    return lists.find( list => list.index === index) || []
+  }
+
+
+  const getPhrases = () => {
+    console.log("getPhrases index:", listIndex)
+    const list = getActiveList()
+    return list?.phrases || []
   }
 
 
   const editPhrase = ({ name, _id, value }) => {
-    const phrase = phrases.find(
+    const list = getActiveList()
+    const phrase = list.phrases.find(
       phrase => phrase._id === _id
     )
     phrase[name] = value
-    setPhrases([...phrases])
+    setLists([...lists])
   }
 
 
   function updatePhrase(_id) {
-    const phrase = phrases.find(
+    const list = getActiveList()
+    const phrase = list.phrases.find(
       phrase => phrase._id === _id
     )
     phrase.saving = true
-    setPhrases([...phrases])
+    setLists([...lists])
 
-    savePhrase({ ...phrase, list_id: lists[listIndex]._id })
+    savePhrase({ ...phrase, list_id: list._id })
   }
 
 
@@ -133,29 +163,25 @@ export const UserProvider = ({ children }) => {
     // console.log("json", JSON.stringify(json, null, '  '));
 
     const { _id, key, text, hint, length, list_id } = json
+    const list = lists.find( list => list._id === list_id)
 
-    const phrase = phrases.find(phrase => phrase._id === _id)
-    || phrases.find(phrase => phrase._id === key)
+    const phrase = list.phrases.find(phrase => phrase._id === _id)
+    || list.phrases.find(phrase => phrase._id === key)
 
     phrase._id = _id
     phrase.db = { text, hint }
     delete phrase.saving
 
-    setPhrases([...phrases])
-
     if (length) {
-      // This should only every apply to an incomplete list
-      const activeList = lists.find( list => list._id === list_id )
-      if (activeList) {
-        activeList.length = length
-        setLists([ ...lists ])
-      }
+      // This should only ever apply to an incomplete list
+      list.length = length
     }
+
+    setLists([...lists])
   }
 
 
   const addList = () => {
-
     const url = `${origin}/addList`
     const headers = { 'Content-Type': 'application/json' }
     const data = {
@@ -176,41 +202,18 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  const treatNewList = (json) => {
+  const treatNewList = (list) => {
     console.log("treatNewList json", JSON.stringify(json, null, '  '));
 
-    //  {
-    //   "_id": "6887348dadbb2e4c8c1ca475",
-    //   "index": 4,
-    //   "created": "2025-07-26T00:00:00.000Z",
-    //   "length": 0,
-    //   "remain": 21,
-    //   "phrases": []
-    // }
+    // Fill empty list.phrases with LIST_LENGTH empty phrase
+    // objects
+    preparePhrases(list)
 
-    // Place the new empty list at the beginning of the editable
+    // Place the new list at the beginning of the editable
     // lists
-    setLists([ json, ...lists ])
-    setListIndex(0)
-    setUser({ ...user, lists: json.index })
-
-    refreshPhrases(json.phrases)
-  }
-
-
-  const getUserData = () => {
-    const url = `${origin}/getUserData`
-    const headers = { 'Content-Type': 'application/json' }
-    const body = JSON.stringify(user)
-
-    fetch(url, {
-      method: 'POST',
-      headers,
-      body,
-    })
-      .then(incoming => incoming.json())
-      .then(json => treatUserData(json))
-      .catch(treatDataError)
+    setListIndex(list.index) // may be a string
+    setUser({ ...user, lists: list.index }) // match DB value
+    setLists([ list, ...lists ])
   }
 
 
@@ -245,8 +248,10 @@ export const UserProvider = ({ children }) => {
         user,
         lists,
         listIndex,
-        phrases,
         redos,
+        setListIndex,
+        getPhrases,
+        getActiveList,
         getUserData,
         editPhrase,
         updatePhrase,
