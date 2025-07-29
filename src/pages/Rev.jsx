@@ -3,19 +3,47 @@
  */
 
 
+import { useContext, useEffect } from 'react'
 import { useParams } from 'react-router'
+import { UserContext } from '../contexts'
 import { Tabs } from '../components/Tabs'
+import { Review } from '../components/Review'
+
+
 
 
 export const Rev = (props) => {
   const params = useParams()
   const { index } = params
 
+  const {
+    getPhrases,
+    listIndex,
+    setListIndex
+  } = useContext(UserContext)
+
+
+  useEffect(() => setListIndex( index || listIndex ), [index] )
+
+
+  const phrases = getPhrases("redo")
+
+
+  const phraseList = phrases.map(phrase => {
+    return (
+      <Review {...phrase} key={phrase._id} />
+    )
+  })
+
 
   return (
     <main>
       <Tabs/>
-      <h1>Rev {index} goes here</h1>
+      <div
+        id="review"
+      >
+        {phraseList}
+      </div>
     </main>
   )
 }

@@ -30,8 +30,11 @@ export const Add = () => {
   // ]
 
   const phraseList = phrases?.map( phrase => {
-    return <Phrase {...phrase} key={phrase._id}/>
+    const key = phrase._id || phrase.key
+    return <Phrase {...phrase} key={key}/>
   })
+
+  // console.log("phraseList:", phraseList)
 
 
   useEffect(() => setListIndex(index || listIndex), [index])

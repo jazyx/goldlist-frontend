@@ -32,10 +32,12 @@ export const UserProvider = ({ children }) => {
   const { origin } = useContext(APIContext)
 
   // Read initial value of userData from LocalStorage
+  const [ loaded, setLoaded ] = useState(false)
   const [ user, setUser ] = useState(() => storage.get())
   const [ lists, setLists ] = useState([])
   const [ listIndex, setListIndex ] = useState(0)
   const [ redos, setRedos ] = useState([])
+
 
 
   const getUserData = () => {
@@ -54,7 +56,7 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  const treatUserData = (data) => {
+  const treatUserData = data => {
     const { user, lists, redos, fail } = data
 
     // If the server sends a fail message, it should be logged to
@@ -64,6 +66,7 @@ export const UserProvider = ({ children }) => {
     }
 
     lists.forEach(preparePhrases) // should only be one
+    redos.forEach(preparePhrases) // should only be one
 
     const replacer = (key, value) => {
       if (key === "phrases") {
@@ -84,7 +87,7 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  const preparePhrases = (list) => {
+  const preparePhrases = list => {
     // Add a db field to hold the values on the database
     const phrases = list.phrases.map( phrase => {
       const { text, hint } = phrase
@@ -106,30 +109,47 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  const getActiveList = () => {
+  const getActive = type => {
     const index = Number(listIndex)
-    return lists.find( list => list.index === index) || []
+    const source = (type === "redo")
+      ? redos
+      : lists
+
+    const list = source.find( list => list.index === index )
+    return list || {}
   }
 
 
-  const getPhrases = () => {
-    const list = getActiveList()
-    return list?.phrases || []
+  const getPhrases = type => {
+    const source = getActive(type)
+
+    return source?.phrases || [{
+      text: `No phrases available for ${type}`,
+      hint: `listIndex: ${listIndex}
+      (available: ${(type === "redo" ? redos : lists)?.map( list => list.index )})`,
+      db: { text: "", hint: "" },
+      _id: "random_id"
+    }]
   }
 
 
-  const editPhrase = ({ name, _id, value }) => {
-    const list = getActiveList()
+  const editPhrase = ({ type, name, _id, value, db }) => {
+    const list = getActive(type)
     const phrase = list.phrases.find(
       phrase => phrase._id === _id
     )
     phrase[name] = value
+
+    if (db && value === db.text) {
+      phrase.right = true
+    }
+
     setLists([...lists])
   }
 
 
-  function updatePhrase(_id) {
-    const list = getActiveList()
+  const updatePhrase = _id => {
+    const list = getActive("list")
     const phrase = list.phrases.find(
       phrase => phrase._id === _id
     )
@@ -140,7 +160,7 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  const savePhrase = (phrase) => {
+  const savePhrase = phrase => {
     const url = `${origin}/savePhrase`
     const headers = { 'Content-Type': 'application/json' }
 
@@ -164,7 +184,7 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  const treatSavedPhrase = (json) => {
+  const treatSavedPhrase = json => {
     const { _id, key, text, hint, length, list_id } = json
     const list = lists.find( list => list._id === list_id)
 
@@ -204,7 +224,7 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  const treatNewList = (list) => {
+  const treatNewList = list => {
     // Fill empty list.phrases with LIST_LENGTH empty phrase
     // objects
     preparePhrases(list)
@@ -230,7 +250,10 @@ export const UserProvider = ({ children }) => {
 
   // TODO: Stay on current rev page if that's where we are
   const goAdd = () => {
-    if (lists[0]?.phrases) {
+    if (loaded) {
+      return
+    } else if (lists[0]?.phrases) {
+      setLoaded(true  )
       navigate("/add")
     } else {
       navigate("/")
@@ -251,7 +274,7 @@ export const UserProvider = ({ children }) => {
         redos,
         setListIndex,
         getPhrases,
-        getActiveList,
+        getActive,
         getUserData,
         editPhrase,
         updatePhrase,

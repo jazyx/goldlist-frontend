@@ -20,14 +20,13 @@ export const Tabs = () => {
   redos?.sort(byIndex)
 
 
-  const editTabs = lists.map(( list, edit ) => {
-    const { index } = list
-    const key = `edit_${index}`
-    return <TabButton { ...list } key={key} edit={edit}/>
+  const editTabs = lists.map(( list, index ) => {
+    const { _id } = list
+    return <TabButton { ...list } key={_id} edit={index}/>
   })
 
 
-  const redoTabs = redos?.map(({ list }) => {
+  const redoTabs = redos?.map( list => {
     return <TabButton { ...list } key={list._id}/>
   })
 

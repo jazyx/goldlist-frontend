@@ -3,9 +3,11 @@
  */
 
 :root {
+  --white: #fff;
   --light: #ddd;
   --dark: #222;
-  --gap: 0.5em;
+  --gap:   0.5em;
+  --bend:  0.25em;
   --width: 10em;
 
   --button: #333;
@@ -26,6 +28,11 @@
   --altered-active: #a00;
   --altered-border: #c33;
   --saving: #c70;
+
+  --input-width: min(40rem, calc(100vw - 7em));
+  --input-height: 2em;
+  --input-padding: 3px;
+  --mono-font: "Courier New", monospace;
 }
 
 body {
@@ -147,8 +154,7 @@ div#phraseList {
 
     textArea {
       display: block;
-      width: 40em;
-      max-width: calc(100vw - 7em);
+      width: var(--input-width);
 
       &.altered {
         background-color: var(--altered);
@@ -157,6 +163,116 @@ div#phraseList {
       &.hinted {
         background-color: var(--hinted);
       }
+    }
+
+    div.button {
+      & button {
+        height: var(--button-size);
+        width: var(--button-size);
+        border-radius: 100vmax;
+        border: none;
+        pointer-events: none;
+
+        &.saved  {
+          background-color: var(--saved-button);
+        }
+
+        &.altered  {
+          background-color: var(--altered-button);
+          border-color: var(--altered-border);
+          border-style: outset;
+          border-width: 2px;
+          pointer-events: all;
+
+          &:hover {      
+            background-color: var(--altered-active);  
+
+            &:active {
+              border-style: inset;
+            }
+          }
+        }
+
+        &.saving  {
+          background-color: var(--saving);
+        }
+      }
+    }
+  }
+}
+
+div#review {
+  counter-set: number;
+
+  div.review {
+    position: relative;
+    display: flex;
+    border-radius: 1.5em;
+    border: 1px inset #666;
+    box-sizing: border-box;
+    background-color: #444;
+    margin-top: var(--gap);
+    counter-increment: number;
+
+    div.number,
+    div.button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 2em;
+    }
+
+    div.number::before {
+      content: counter(number);
+    }
+
+    p {
+      width: var(--input-width);
+      height: var(--input-height);
+      border-radius: var(--bend);
+      box-sizing: border-box;
+      margin: 0;
+      
+      &.feedback {
+        border: var(--input-padding) solid var(--white);
+        color: var(--dark);
+        background-color: var(--white);
+        font-family: var(--mono-font);
+
+        &.right {
+          border-color: #090;
+        }
+
+        &.wrong {
+          border-color: #900;
+        }
+
+        b {
+          color: red;
+        }
+      }
+
+      &.hint {
+        padding: var(--input-padding);
+      }
+    }
+
+    textArea {
+      /* Display textarea over p.feedback */
+      display: block;
+      position: absolute;
+      top: 0;
+      width: var(--input-width);
+      height: var(--input-height);
+      /* Use padding where p.feedback has a border */
+      padding: var(--input-padding);
+      border: none;
+      margin: 0;
+      box-sizing: border-box;
+      /* Allow p.feedback to be visible through the textarea */
+      background-color: transparent;
+      /* opacity: 0.75; */
+      font-family: var(--mono-font);
     }
 
     div.button {

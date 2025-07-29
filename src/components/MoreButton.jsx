@@ -8,8 +8,8 @@ import { UserContext } from '../contexts'
 
 
 export const MoreButton = (props) => {
-  const { getActiveList, lists, addList } = useContext(UserContext)
-  const list = getActiveList()
+  const { getActive, lists, addList } = useContext(UserContext)
+  const list = getActive("list")
 
 
   const disabled = list !== lists[0]

@@ -10,12 +10,16 @@ export const TextArea = ({
   name,
   text,
   className,
-  onChange
+  onChange,
+  placeholder
 }) => {
 
-  const placeholder = (name === "text")
-    ? "Enter a phrase that you want to remember"
-    : "Enter a hint about meaning of the phrase"
+  text = text || ""
+  placeholder = placeholder
+    ? String(placeholder)
+    : (name === "text")
+      ? "Enter a phrase that you want to remember"
+      : "Enter a hint about meaning of the phrase"
 
   return (
     <textarea
