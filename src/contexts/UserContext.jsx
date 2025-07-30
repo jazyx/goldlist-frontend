@@ -90,12 +90,13 @@ export const UserProvider = ({ children }) => {
   const preparePhrases = list => {
     // Add a db field to hold the values on the database
     const phrases = list.phrases.map( phrase => {
-      const { text, hint } = phrase
-      const db = { text, hint }
-      return { ...phrase, db }
+      const { text, hint, retain, limit } = phrase
+      const db = { text, hint, retain, limit }
+      return { ...phrase, db, retain, limit }
     })
 
-    // Ensure there are the right number of entries
+    // Ensure there are the right number of entries.
+    // retain and limit have no meaning for a new phrase.
     while (phrases.length < LIST_LENGTH) {
       phrases.push({
         _id: phrases.length,
@@ -133,11 +134,18 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  const editPhrase = ({ type, name, _id, value, db }) => {
+  const getPhrase = (type, _id) => {
     const list = getActive(type)
     const phrase = list.phrases.find(
       phrase => phrase._id === _id
     )
+
+    return phrase
+  }
+
+
+  const editPhrase = ({ type, name, _id, value, db }) => {
+    const phrase = getPhrase(type, _id)
     phrase[name] = value
 
     if (db && value === db.text) {
@@ -199,6 +207,19 @@ export const UserProvider = ({ children }) => {
       // This should only ever apply to an incomplete list
       list.length = length
     }
+
+    setLists([...lists])
+  }
+
+
+  const toggleRedo = ({ _id, name, checked, db }) => {
+    console.log("toggleRedo _id:", _id, ", name:", name, ", checked:", checked, ", was:", db[name])
+        // const list = getActive(type)
+    // const phrase = list.phrases.find(
+    //   phrase => phrase._id === _id
+    // )
+    const phrase = getPhrase("redo", _id)
+    phrase[name] = checked
 
     setLists([...lists])
   }
@@ -278,7 +299,8 @@ export const UserProvider = ({ children }) => {
         getUserData,
         editPhrase,
         updatePhrase,
-        addList
+        addList,
+        toggleRedo
       }}
     >
       {children}

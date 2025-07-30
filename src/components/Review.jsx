@@ -8,11 +8,23 @@ import { UserContext } from '../contexts'
 import { Feedback } from './Feedback'
 import { TextArea } from './TextArea'
 import { Hint } from './Hint'
+import { Checkbox } from './Checkbox'
 
 
-export const Review = ({ _id, text, hint, db, right }) => {
+export const Review = ({
+  _id,
+  text,
+  hint,
+  db,
+  right,  // user correctly typed text
+  retain, // user checked left checkbox
+  limit   // user checked right checkbox:
+          // = show full text prompt when not retained
+          // = show hint after retained is checked
+}) => {
   const {
-    editPhrase
+    editPhrase,
+    toggleRedo
   } = useContext(UserContext)
 
 
@@ -33,10 +45,16 @@ export const Review = ({ _id, text, hint, db, right }) => {
   }
 
 
+  const toggle = ({ target }) => {
+    const { name, checked } = target
+    toggleRedo({ _id, name, checked, db })
+  }
+
+
   useEffect(resetText, [])
 
 
-  // Comparet text to best
+  // Compare text to best
   const best = db.text
   const last = text.length - 1
   const chunks = text.split("").reduce(( data, char, index ) =>{
@@ -100,21 +118,36 @@ export const Review = ({ _id, text, hint, db, right }) => {
           : <span key={`yes_${index}`}>{chunk}</span>
       ))
 
+    if (!limit) {
+      const complete = best.substring(last + 1)
+      if (complete) {
+        feedback.push(
+          <u key="end">{complete}</u>
+        )
+      }
+    }
+
 
   return (
     <div
       className="review"
     >
-      <div
-        className="number"
-      />
-      <div>
+      <div className="control front">
+        <Checkbox
+          name="retain"
+          className="front"
+          checked={retain}
+          action={toggle}
+        />
+      </div>
+      <div className="desk">
         <Feedback
           feedback={feedback}
           className={feedbackClass}
         />
         <TextArea
           name="text"
+          className="text"
           placeholder={db.text}
           text={text}
           onChange={onChange}
@@ -122,10 +155,14 @@ export const Review = ({ _id, text, hint, db, right }) => {
         <Hint hint={hint} />
       </div>
       <div
-        className="button"
+        className="control back"
       >
-        <button
-        ></button>
+        <Checkbox
+          name="limit"
+          className="back"
+          checked={limit}
+          action={toggle}
+        />
       </div>
     </div>
   )

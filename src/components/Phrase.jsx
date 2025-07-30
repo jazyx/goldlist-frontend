@@ -61,10 +61,10 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
       className="phrase"
       onBlur={saveOnBlur}
     >
-      <div
-        className="number"
-      />
-      <div>
+      <div className="number" >
+        <span></span>
+      </div>
+      <div className="desk">
         <TextArea
           name="text"
           text={text}

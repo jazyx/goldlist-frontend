@@ -5,9 +5,12 @@
 :root {
   --white: #fff;
   --light: #ddd;
-  --dark: #222;
-  --gap:   0.5em;
-  --bend:  0.25em;
+  --grey:  #ccc;
+  --dark:  #222;
+  --black: #000;
+  --gap:    0.5rem;
+  --slim:   0.25rem;
+  --edge:   0.1rem;
   --width: 10em;
 
   --button: #333;
@@ -29,10 +32,20 @@
   --altered-border: #c33;
   --saving: #c70;
 
-  --input-width: min(40rem, calc(100vw - 7em));
-  --input-height: 2em;
-  --input-padding: 3px;
-  --mono-font: "Courier New", monospace;
+  /* Input slider and Review */
+  --full:   min(calc(100vw - 20px), 60rem); /* 20px = scroll bar */
+  --size:   6rem;
+  --half:   calc(var(--size) * 0.5);
+  --count:  calc(var(--size) * 0.333);
+  --text:   "Courier New", monospace;
+  --font:   1.5rem;
+  --line:   1.5em;
+  --border: #333;
+  --right:  #090;
+  --wrong:  #900;
+  --bg:     #666;
+  --off:    #888;
+  --duration: 250ms;
 }
 
 body {
@@ -60,11 +73,15 @@ h1 {
   font-size: 2.25em;
 }
 
- img {
+img {
   display: block;
   max-width: 256px;
   margin-bottom: 2em;
- }
+}
+
+textarea {
+  resize: none;
+}
 
  button {
   color: inherit;
@@ -75,13 +92,13 @@ h1 {
   width: var(--width);
   padding: var(--gap);
   cursor: pointer;
- 
+
   &.primary {
     background-color: var(--primary);
     border-color: var(--primary-border);
   }
 
- 
+
   &:hover {
     background-color: var(--button-active);
     color: #fff;
@@ -90,7 +107,7 @@ h1 {
   &.primary:hover {
     background-color: var(--primary-active);
   }
- 
+
   &:hover:active{
     border-style: inset;
     background-color: #000;
@@ -133,11 +150,11 @@ div#phraseList {
 
   div.phrase {
     display: flex;
-    border-radius: 1.5em;
-    border: 1px inset #666;
+    width: var(--full);
+    border-radius: 100vmax;
     box-sizing: border-box;
-    background-color: #444;
-    margin-top: var(--gap);
+    background-color: var(--bg);
+    margin-bottom: var(--gap);
     counter-increment: number;
 
     div.number,
@@ -145,16 +162,40 @@ div#phraseList {
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 2em;
+      width: var(--size);
     }
 
-    div.number::before {
-      content: counter(number);
+    div.number {
+      span {
+        &::before {
+          content: counter(number);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: var(--half);
+          height: var(--half);
+          font-size: var(--count);
+          color: var(--black);
+          background-color: var(--white);
+          border: var(--edge) solid var(--border);
+          border-radius: 100vmax;
+          box-sizing: border-box;
+        }
+      }
+    }
+
+    div.desk {
+      flex: 1;
     }
 
     textArea {
       display: block;
-      width: var(--input-width);
+      width: 100%;
+      height: var(--half);
+      padding: var(--slim) var(--gap);
+      box-sizing: border-box;
+      font-family: var(--text);
+      font-size: var(--font);
 
       &.altered {
         background-color: var(--altered);
@@ -167,8 +208,8 @@ div#phraseList {
 
     div.button {
       & button {
-        height: var(--button-size);
-        width: var(--button-size);
+        height: var(--half);
+        width: var(--half);
         border-radius: 100vmax;
         border: none;
         pointer-events: none;
@@ -184,118 +225,8 @@ div#phraseList {
           border-width: 2px;
           pointer-events: all;
 
-          &:hover {      
-            background-color: var(--altered-active);  
-
-            &:active {
-              border-style: inset;
-            }
-          }
-        }
-
-        &.saving  {
-          background-color: var(--saving);
-        }
-      }
-    }
-  }
-}
-
-div#review {
-  counter-set: number;
-
-  div.review {
-    position: relative;
-    display: flex;
-    border-radius: 1.5em;
-    border: 1px inset #666;
-    box-sizing: border-box;
-    background-color: #444;
-    margin-top: var(--gap);
-    counter-increment: number;
-
-    div.number,
-    div.button {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 2em;
-    }
-
-    div.number::before {
-      content: counter(number);
-    }
-
-    p {
-      width: var(--input-width);
-      height: var(--input-height);
-      border-radius: var(--bend);
-      box-sizing: border-box;
-      margin: 0;
-      
-      &.feedback {
-        border: var(--input-padding) solid var(--white);
-        color: var(--dark);
-        background-color: var(--white);
-        font-family: var(--mono-font);
-
-        &.right {
-          border-color: #090;
-        }
-
-        &.wrong {
-          border-color: #900;
-        }
-
-        b {
-          color: red;
-        }
-      }
-
-      &.hint {
-        padding: var(--input-padding);
-      }
-    }
-
-    textArea {
-      /* Display textarea over p.feedback */
-      display: block;
-      position: absolute;
-      top: 0;
-      width: var(--input-width);
-      height: var(--input-height);
-      /* Use padding where p.feedback has a border */
-      padding: var(--input-padding);
-      border: none;
-      margin: 0;
-      box-sizing: border-box;
-      /* Allow p.feedback to be visible through the textarea */
-      background-color: transparent;
-      /* opacity: 0.75; */
-      font-family: var(--mono-font);
-    }
-
-    div.button {
-      & button {
-        height: var(--button-size);
-        width: var(--button-size);
-        border-radius: 100vmax;
-        border: none;
-        pointer-events: none;
-
-        &.saved  {
-          background-color: var(--saved-button);
-        }
-
-        &.altered  {
-          background-color: var(--altered-button);
-          border-color: var(--altered-border);
-          border-style: outset;
-          border-width: 2px;
-          pointer-events: all;
-
-          &:hover {      
-            background-color: var(--altered-active);  
+          &:hover {
+            background-color: var(--altered-active);
 
             &:active {
               border-style: inset;
@@ -329,5 +260,216 @@ footer {
 
   button {
     flex: 1;
+  }
+}
+
+
+
+
+#review {
+  counter-set: item;
+
+  .review {
+    display: flex;
+    width: var(--full);
+    height: var(--size);
+    background-color: var(--bg);
+    margin-bottom: var(--gap);
+    border-radius: 100vmax;
+    overflow: hidden;
+    transition: all var(--duration);
+
+    div.control {
+      display: flex;
+      justify-content: center;
+      align-items: center;;
+      background-color: var(--bg);
+
+    }
+
+    div.desk {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-grow: 1;
+
+      p {
+        height: var(--half);
+        padding: var(--slim);
+        box-sizing: border-box;
+        margin: 0;
+        font-size: var(--font);
+        line-height: var(--line);
+        transition: all var(--duration);
+
+        &.feedback {
+          font-family: var(--text);
+          color: var(--black);
+          background-color: var(--white);
+          padding: 0 var(--slim) ;
+          border: var(--slim) solid var(--white);
+
+          & b {
+            color: var(--wrong);
+          }
+
+          & u {
+            /* Overwrite u from underline to grey */
+            color: var(--grey);
+            text-decoration: none;
+          }
+
+          &.right {
+            border-color: var(--right);
+          }
+          &.wrong {
+            border-color: var(--wrong);
+          }
+        }
+      }
+
+      textarea {
+        position: absolute;
+        top: 0;
+        height: var(--half);
+        width: 100%;
+        margin: 0;
+        border: none;
+        padding: var(--slim) var(--gap);
+        box-sizing: border-box;
+        font-family: var(--text);
+        font-size: var(--font);
+        line-height: var(--line);
+        color: var(--black);
+        opacity: 0.75;
+        background-color: transparent;
+        transition: all var(--duration);
+      }
+    }
+
+    label {
+      display: block;
+      position: relative;
+
+      & input {
+        position: absolute;
+        left: -999vmax;
+      }
+
+      & input {
+        & ~ span {
+          &::before,
+          &::after {
+            display: flex;
+            height: var(--half);
+            border: var(--edge) solid var(--border);
+            box-sizing: border-box;
+            border-radius: 100vmax;
+          }
+
+          &::before {
+            content: "";
+            width: var(--size);
+            height: var(--half);
+            background-color: var(--off);
+          }
+
+          &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: var(--half);
+            justify-content: center;
+            align-items: center;
+            color: var(--dark);
+            background-color: var(--white);
+            font-size: var(--count);
+            transition: all var(--duration);
+          }
+        }
+
+        &:checked ~ span::after {
+          left: var(--half);
+          background-color: var(--off);
+        }
+
+        &.front {
+          ~ span::after {
+            left: var(--half);
+          }
+
+          &:not(:checked) {
+            ~ span::after {
+              counter-increment: item 1;
+              content: counter(item);
+            }
+          }
+
+          &:checked ~ span::after {
+            content: "🛟"; /* "🧠"; */
+            left: 0;
+          }
+        }
+
+        &.back {
+
+          &:not(:checked) {
+            ~ span::after {
+              content: "👓";
+            }
+          }
+
+          &:checked ~ span::after {
+            content:  "🕶️";
+          }
+        }
+      }
+    }
+
+
+    &:has(input.front:checked) {
+      height: var(--half);
+
+        div.control {
+          background-color: var(--bg);
+        }
+
+      & p.feedback,
+      & textarea {
+        height: 0;
+        padding: 0 var(--slim);
+        border-top-width: 0;
+        border-bottom-width: 0;
+        overflow: hidden;
+      }
+
+      &:has(input.back:checked) {
+        background-color: transparent;
+
+        div.control {
+          background-color: transparent;
+        }
+
+        div.desk {
+          p.hint {
+            height: 0;
+            overflow: hidden;
+            border: var(--edge) solid var(--off);
+            padding: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Ensure Phrase + Review textareas show placeholder on one line
+ * all the way down to width = 400px
+ */
+@media (max-width: 842px) {
+  :root {
+    font-size: 1.9vw;
   }
 }
