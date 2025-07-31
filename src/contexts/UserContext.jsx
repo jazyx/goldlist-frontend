@@ -68,13 +68,14 @@ export const UserProvider = ({ children }) => {
     lists.forEach(preparePhrases) // should only be one
     redos.forEach(preparePhrases) // should only be one
 
-    const replacer = (key, value) => {
-      if (key === "phrases") {
-        return `${value.length} phrases`
-      }
-      return value
-    }
+    // const replacer =(key, value) => {
+    //   if (key === "phrases") {
+    //     return `${value.length} phrases`
+    //   }
+    //   return value
+    // }
     // console.log("data", JSON.stringify(data, replacer, '  '));
+    // console.log("*************************")
 
     // Update the user_name in LocalStorage, after removing uuid
     const user_name = user.user_name.replace(/_.*/, "")
@@ -90,15 +91,15 @@ export const UserProvider = ({ children }) => {
   const preparePhrases = list => {
     // Add a db field to hold the values on the database
     const phrases = list.phrases.map( phrase => {
-      const { text, hint, retain, limit } = phrase
-      const db = { text, hint, retain, limit }
-      return { ...phrase, db, retain, limit }
+      const { text, hint, retained, limit } = phrase
+      const db = { text, hint, retained, limit }
+      return { ...phrase, db, retained, limit }
     })
 
     // Ensure there are the right number of entries.
     // The _id will be a simple integer from 0 to 20, indicating
     // that the phrase has never been saved.
-    // retain and limit have no meaning for a new phrase.
+    // retained and limit have no meaning for a new phrase.
     while (phrases.length < LIST_LENGTH) {
       phrases.push({
         _id: phrases.length,
@@ -153,7 +154,7 @@ export const UserProvider = ({ children }) => {
 
     const right =  (db && value === db.text)
     phrase.right = right
-    
+
     setLists([...lists])
   }
 
@@ -263,7 +264,7 @@ export const UserProvider = ({ children }) => {
 
     // Find all phrases which are flagged to be retained...
     const reviewed = phrases.filter( phrase => (
-      phrase.retain && !phrase.db.retain
+      phrase.retained && !phrase.db.retained
     ))
     // ...and add any whose `limited` value has changed
     const limited = phrases.filter( phrase => (
@@ -307,8 +308,9 @@ export const UserProvider = ({ children }) => {
 
 
   const treatReview = json => {
-    const { list_id, reviewed } = json
-    const list = redos.find( list => list._id === list_id )
+    const { reviewed } = json
+    const { _id, index, reviews, remain } = json.list
+    const list = redos.find( list => list._id === _id )
     if (!list) {
       return console.log("Unable to find list with id:", list_id)
     }
@@ -317,20 +319,19 @@ export const UserProvider = ({ children }) => {
     reviewed.forEach( data => {
       const phrase = phrases.find( phrase => phrase._id === data._id )
       if (phrase) {
-        const { retain, limit } = phrase
+        const { retained, limit } = phrase
 
-        // retain may be undefined or true. The database should
-        // never have a value of false for it
-        if (retain) {
-          phrase.retain = true
-          phrase.db.retain = true
+        // retained may be undefined or a Date. The database should
+        // never have a value of false for retained.
+        if (retained) {
+          phrase.retained = true
+          phrase.db.retained = true
         }
 
-        // Toggle limit only if it is explicitly set
-        if (limit || limit === false ) {
-          phrase.limit = limit
-          phrase.db.limit = limit
-        }
+        // limit will always be boolean
+        phrase.limit = limit
+        phrase.db.limit = limit
+        
       } else {
         console.log("Can't find phrase matching:", data)
       }

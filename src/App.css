@@ -288,8 +288,16 @@ footer {
     div.control {
       display: flex;
       justify-content: center;
-      align-items: center;;
+      align-items: center;
+      width: var(--size);
       background-color: var(--bg);
+    
+      div.circle {
+        height: var(--half);
+        width: var(--half);
+        border-radius: 100vmax;
+        background-color: var(--primary);
+      }
     }
 
     div.desk {

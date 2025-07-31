@@ -9,6 +9,7 @@ import { Feedback } from './Feedback'
 import { TextArea } from './TextArea'
 import { Hint } from './Hint'
 import { Checkbox } from './Checkbox'
+import { GreenCircle } from './GreenCircle'
 
 
 export const Review = ({
@@ -16,11 +17,11 @@ export const Review = ({
   text,
   hint,
   db,
-  right,  // user correctly typed text
-  retain, // user checked left checkbox
-  limit   // user checked right checkbox:
-          // = show full text prompt when not retained
-          // = show hint after retained is checked
+  right,    // user correctly typed text
+  retained, // user checked left checkbox
+  limit     // user checked right checkbox:
+            // = show full text prompt when not retained
+            // = show hint after retained is checked
 }) => {
   const {
     editPhrase,
@@ -28,7 +29,7 @@ export const Review = ({
   } = useContext(UserContext)
 
 
-  const locked = !!db?.retain
+  const locked = !!db?.retained
 
 
   const resetText = () => {
@@ -143,7 +144,7 @@ export const Review = ({
     : "front"
 
 
-  const limitClass = (locked && !retain)
+  const limitClass = (locked && !retained)
     ? "back disabled"
     : "back"
 
@@ -154,9 +155,9 @@ export const Review = ({
     >
       <div className="control front">
         <Checkbox
-          name="retain"
+          name="retained"
           className={retainClass}
-          checked={retain}
+          checked={!!retained}
           action={toggle}
         />
       </div>
@@ -178,12 +179,15 @@ export const Review = ({
       <div
         className="control back"
       >
-        <Checkbox
-          name="limit"
-          className={limitClass}
-          checked={limit}
-          action={toggle}
-        />
+        { right
+          ? <GreenCircle />
+          : <Checkbox
+            name="limit"
+            className={limitClass}
+            checked={limit}
+            action={toggle}
+          />
+        }
       </div>
     </div>
   )

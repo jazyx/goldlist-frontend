@@ -11,29 +11,39 @@ export const ReviewsFooter = (props) => {
   const { getPhrases } = useContext(UserContext)
   const phrases = getPhrases("redo")
 
-  const status = phrases.reduce(( status, phrase ) => {
-    const { retain, db } = phrase
-    status.total += (!db.retain)
-    status.count += (!!retain && !db.retain)
+
+  const retained = phrases.reduce(( status, phrase ) => {
+    // total should be the number of phrases that have not been
+    // retained in the last review
+    // count is the number of phrases flagged to be retained
+    // target should be (total - retained) * 0.3 = 30% of remainder
+    // 21 - (6.3) -> 15 - (4.5) -> 10 - (3) -> 7
+    const { retained, db } = phrase
+    status.total += (!db.retained)
+    status.count += (!!retained && !db.retained)
+    status.target = Math.round(status.total * 0.3)
     return status
-  }, { count: 0, total: 0 })
+  }, { total: 0, count: 0, target: 0 })
 
-  const { total, count } = status
 
-  // total should be the number of phrases that have not been
-  // retained in the last review
-  // count is the number of phrases flagged to be retained
-  // target should be (total - retained) * 0.3 = 30% of remainder
+ const reviewed = phrases.reduce(( status, phrase ) => {
+    const { retained, right, db } = phrase
+    const consider = !retained && !db.retained // boolean
+    status.target = status.total += consider
+    status.count += (right && consider) || 0   // avoid NaN
+    return status
+  }, { total: 0, count: 0, target: 0 })
 
-  const target = Math.round(total * 0.3) // x.5 -> x+1
-  // 21 - (6.3) -> 15 - (4.5) -> 10 - (3) -> 7
 
-  const disabled = count < target
+  const disabled = retained.count < retained.target
+    || (retained.count + reviewed.count) !== retained.total
+
 
   return (
     <footer>
-      <Counter {...{ count, target, total }} />
+      <Counter {...retained} />
       <SubmitReview disabled={disabled} />
+      <Counter {...reviewed} />
     </footer>
   )
 }

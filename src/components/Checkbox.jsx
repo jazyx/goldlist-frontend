@@ -3,9 +3,6 @@
  */
 
 
-import React from 'react'
-
-
 export const Checkbox = ({
   name      = "check",
   className = null,
