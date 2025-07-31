@@ -14,13 +14,38 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
   } = useContext(UserContext)
 
 
+  function tabNextOnEnter(event) {
+    if (event.key === "Enter") {
+      event.preventDefault()
+      tabToNextItem(event.target)
+    }
+  }
+
+
+  function tabToNextItem(activeItem) {
+    const next = activeItem.nextElementSibling // hint?
+      || activeItem.closest(".phrase").nextElementSibling?.querySelector("textarea") // text in next phrase?
+      || activeItem.closest("#phraseList").querySelector("textarea") // recycle to first entry
+
+    if (next) {
+      next.focus()
+    }
+  }
+
+
   function onChange({target}) {
     const { name, value } = target
     editPhrase({ name, _id, value })
   }
 
 
+  // Called only by the button
   function saveChanges() {
+    if (typeof _id === "number" && !text) {
+      // Can't save a new phrase with no text
+      return
+    }
+
     updatePhrase(_id)
   }
 
@@ -28,9 +53,11 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
   function saveOnBlur({ target, relatedTarget }) {
     const phrase = target.closest(".phrase")
     if (!phrase || phrase.contains(relatedTarget)) {
+      // The current focus is in the same div.phrase
       return
     }
     
+    // Only save if the phrase has changed since the last save
     if (text !== db.text || hint !== db.hint) {
       updatePhrase(_id)
     }
@@ -69,12 +96,14 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
           name="text"
           text={text}
           className={textClass}
+          onKeyDown={tabNextOnEnter}
           onChange={onChange}
         />
         <TextArea
           name="hint"
           text={hint}
           className={hintClass}
+          onKeyDown={tabNextOnEnter}
           onChange={onChange}
         />
       </div>

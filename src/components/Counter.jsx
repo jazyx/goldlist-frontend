@@ -1,6 +1,6 @@
 /**
  * frontend/src/components/Counter.jsx
- * 
+ *
  * Shows a span with a backgroundColor between orange and
  * olive, if `count` is less than `target`, or green if
  * `count` is greater than or equal to target.
@@ -18,7 +18,7 @@ export const Counter = ({ count, total, target }) => {
   }
 
   return (
-    <span 
+    <span
      className="counter"
      style={style}
     >

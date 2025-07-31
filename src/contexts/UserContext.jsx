@@ -84,24 +84,16 @@ export const UserProvider = ({ children }) => {
     setLists(lists)
     setListIndex(lists[0].index) // only one list
     setRedos(redos)
-
-    // console.log("******* TREAT USER DATA *******")
   }
 
 
   const preparePhrases = list => {
-    // Prepare to count phrases with empty text
-    let empty = 0
-
     // Add a db field to hold the values on the database
     const phrases = list.phrases.map( phrase => {
       const { text, hint, retain, limit } = phrase
       const db = { text, hint, retain, limit }
-      empty += !text
       return { ...phrase, db, retain, limit }
     })
-
-    const length = phrases.length 
 
     // Ensure there are the right number of entries.
     // The _id will be a simple integer from 0 to 20, indicating
@@ -116,8 +108,6 @@ export const UserProvider = ({ children }) => {
         db: { text: "", hint: "" }
       })
     }
-
-    list.length = length - empty
 
     list.phrases = phrases
   }
@@ -149,7 +139,7 @@ export const UserProvider = ({ children }) => {
 
   const getPhrase = (type, _id) => {
     const list = getActive(type)
-    const phrase = list.phrases.find(
+    const phrase = list.phrases?.find(
       phrase => phrase._id === _id
     )
 
@@ -161,10 +151,9 @@ export const UserProvider = ({ children }) => {
     const phrase = getPhrase(type, _id)
     phrase[name] = value
 
-    if (db && value === db.text) {
-      phrase.right = true
-    }
-
+    const right =  (db && value === db.text)
+    phrase.right = right
+    
     setLists([...lists])
   }
 
@@ -200,7 +189,7 @@ export const UserProvider = ({ children }) => {
 
     const body = JSON.stringify(phrase, replacer)
     console.log("body", JSON.stringify(body, null, '  '));
-    
+
     fetch(url, {
       method: 'POST',
       headers,
@@ -213,7 +202,7 @@ export const UserProvider = ({ children }) => {
 
 
   const treatSavedPhrase = json => {
-    const { _id, key, text, hint, length, list_id } = json
+    const { _id, key, text, hint, list_id } = json
     const list = lists.find( list => list._id === list_id)
 
     const phrase = list.phrases.find(phrase => phrase._id === _id)
@@ -222,25 +211,6 @@ export const UserProvider = ({ children }) => {
     phrase._id = _id
     phrase.db = { text, hint }
     delete phrase.saving
-
-    if (length) {
-      // This should only ever apply to an incomplete list, or if
-      // a phrase has been re-saved with no text
-      if (length < 0) {
-        list.length += length // which is negative
-
-      } else {
-        list.length = length
-      }
-    }
-
-    setLists([...lists])
-  }
-
-
-  const toggleRedo = ({ _id, name, checked, db }) => {
-    const phrase = getPhrase("redo", _id)
-    phrase[name] = checked
 
     setLists([...lists])
   }
@@ -279,6 +249,14 @@ export const UserProvider = ({ children }) => {
   }
 
 
+  const toggleRedo = ({ _id, name, checked, db }) => {
+    const phrase = getPhrase("redo", _id)
+    phrase[name] = checked
+
+    setLists([...lists])
+  }
+
+
   const submitReview = () => {
     const { _id } = getActive("redo")
     const phrases = getPhrases("redo")
@@ -291,7 +269,7 @@ export const UserProvider = ({ children }) => {
     const limited = phrases.filter( phrase => (
       phrase.limit !== phrase.db.limit
     ))
-    
+
     limited.forEach( phrase => {
       if (reviewed.indexOf(phrase) === -1) {
         reviewed.push(phrase)
@@ -335,7 +313,7 @@ export const UserProvider = ({ children }) => {
       return console.log("Unable to find list with id:", list_id)
     }
     const { phrases } = list
-    
+
     reviewed.forEach( data => {
       const phrase = phrases.find( phrase => phrase._id === data._id )
       if (phrase) {

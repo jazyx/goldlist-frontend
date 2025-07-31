@@ -17,15 +17,16 @@ import { MoreButton } from "./MoreButton"
 export const PhraseFooter = () => {
   const { getActive, lists, addList } = useContext(UserContext)
   const list = getActive("list")
+  const phrases = list.phrases || []
   const target = 21
-  const { length: count, remain: total } = (
-    list || { length: 0, remain: target }
-  )
+  const total = list.remain || target
 
-
-  // const { getActive, lists, addList } = useContext(UserContext)
-  // const list = getActive("list")
-
+  // There may be saved phrase objects which no longer have any
+  // text. Don't count them.
+  const count = phrases.reduce(
+    ( sum, phrase ) => sum += !!phrase.text
+    , 0
+  ) || 0
 
   const disabled = list !== lists[0]
     ? true

@@ -27,9 +27,12 @@ export const Review = ({
     toggleRedo
   } = useContext(UserContext)
 
-  
+
+  const locked = !!db?.retain
+
+
   const resetText = () => {
-    if (!right && text === db.text && !db.retain) {
+    if (!right && text === db.text && !locked) {
       const type = "redo"
       const name = "text"
       const value = ""
@@ -52,7 +55,7 @@ export const Review = ({
   }
 
 
-  useEffect(resetText, [])
+  useEffect(resetText, []) // set text to "" when first displayed
 
 
   // Compare text to best
@@ -99,14 +102,12 @@ export const Review = ({
 
     return data
   }, { chunks: [], chunk: "", match: 0, }).chunks
-  const locked = (db.retain)
 
 
   // Check if text is complete or if it contains an error
-  const complete = (chunks.length === 1 && chunks[0] === best)
   const feedbackClass = (locked)
     ? "feedback locked"
-    : (complete)
+    : (right)
       ? "feedback right"
       : chunks.find( item => typeof item === "object" )
         ? "feedback wrong" // contains a span
@@ -115,7 +116,7 @@ export const Review = ({
 
   // Ensure that all items in feedback array have a unique key
   // to keep React happy
-  const feedback = (locked) 
+  const feedback = (locked)
     ? [ <span key={`yes`}>{best}</span> ]
     : (chunks.length === 1)
       ? chunks
