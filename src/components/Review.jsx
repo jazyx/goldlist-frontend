@@ -27,9 +27,9 @@ export const Review = ({
     toggleRedo
   } = useContext(UserContext)
 
-
+  
   const resetText = () => {
-    if (!right && text === db.text) {
+    if (!right && text === db.text && !db.retain) {
       const type = "redo"
       const name = "text"
       const value = ""
@@ -47,6 +47,7 @@ export const Review = ({
 
   const toggle = ({ target }) => {
     const { name, checked } = target
+
     toggleRedo({ _id, name, checked, db })
   }
 
@@ -98,34 +99,52 @@ export const Review = ({
 
     return data
   }, { chunks: [], chunk: "", match: 0, }).chunks
+  const locked = (db.retain)
 
 
   // Check if text is complete or if it contains an error
   const complete = (chunks.length === 1 && chunks[0] === best)
-  const feedbackClass = complete
-    ? "feedback right"
-    : chunks.find( item => typeof item === "object" )
-      ? "feedback wrong" // contains a span
-      : "feedback"
+  const feedbackClass = (locked)
+    ? "feedback locked"
+    : (complete)
+      ? "feedback right"
+      : chunks.find( item => typeof item === "object" )
+        ? "feedback wrong" // contains a span
+        : "feedback"
+
 
   // Ensure that all items in feedback array have a unique key
   // to keep React happy
-  const feedback = (chunks.length === 1)
-    ? chunks
-    : chunks.map(( chunk, index ) => (
-        typeof chunk === "object"
-          ? chunk // already has a unique key
-          : <span key={`yes_${index}`}>{chunk}</span>
-      ))
+  const feedback = (locked) 
+    ? [ <span key={`yes`}>{best}</span> ]
+    : (chunks.length === 1)
+      ? chunks
+      : chunks.map(( chunk, index ) => (
+          typeof chunk === "object"
+            ? chunk // already has a unique key
+            : <span key={`yes_${index}`}>{chunk}</span>
+        ))
 
-    if (!limit) {
-      const complete = best.substring(last + 1)
-      if (complete) {
-        feedback.push(
-          <u key="end">{complete}</u>
-        )
-      }
+
+  if (!limit && !locked) {
+    // Show the remainder of the phrase, if there is more
+    const complete = best.substring(last + 1)
+    if (complete) {
+      feedback.push(
+        <u key="end">{complete}</u>
+      )
     }
+  }
+
+
+  const retainClass = (locked)
+    ? "front locked"
+    : "front"
+
+
+  const limitClass = (locked && !retain)
+    ? "back disabled"
+    : "back"
 
 
   return (
@@ -135,7 +154,7 @@ export const Review = ({
       <div className="control front">
         <Checkbox
           name="retain"
-          className="front"
+          className={retainClass}
           checked={retain}
           action={toggle}
         />
@@ -145,13 +164,14 @@ export const Review = ({
           feedback={feedback}
           className={feedbackClass}
         />
-        <TextArea
-          name="text"
-          className="text"
-          placeholder={db.text}
-          text={text}
-          onChange={onChange}
-        />
+        {!locked && <TextArea
+            name="text"
+            className="text"
+            placeholder={db.text}
+            text={text}
+            onChange={onChange}
+          />
+        }
         <Hint hint={hint} />
       </div>
       <div
@@ -159,7 +179,7 @@ export const Review = ({
       >
         <Checkbox
           name="limit"
-          className="back"
+          className={limitClass}
           checked={limit}
           action={toggle}
         />

@@ -8,10 +8,13 @@
   --grey:  #ccc;
   --dark:  #222;
   --black: #000;
-  --gap:    0.5rem;
-  --slim:   0.25rem;
-  --edge:   0.1rem;
-  --width: 10em;
+
+  --tab:      5rem;
+  --tab-font: 2rem;
+  --gap:      0.5rem;
+  --slim:     0.25rem;
+  --edge:     0.1rem;
+  --width:   10em;
 
   --button: #333;
   --button-border: #666;
@@ -64,7 +67,7 @@ main {
 }
 
 main {
-  padding: 2.5em 0;
+  padding: var(--tab) 0;
   box-sizing: border-box;
   /* background-color: #060; */
 }
@@ -73,17 +76,18 @@ h1 {
   font-size: 2.25em;
 }
 
-img {
+/* img {
   display: block;
   max-width: 256px;
   margin-bottom: 2em;
-}
+} */
 
 textarea {
   resize: none;
 }
 
- button {
+/* For connections on Home page */
+button {
   color: inherit;
   font-size: inherit;
   background-color: var(--button);
@@ -97,7 +101,6 @@ textarea {
     background-color: var(--primary);
     border-color: var(--primary-border);
   }
-
 
   &:hover {
     background-color: var(--button-active);
@@ -118,6 +121,7 @@ textarea {
     background-color: var(--disabled);
     border: 1px solid var(--disabled-border);
     pointer-events: none;
+    cursor: default;
   }
 }
 
@@ -128,11 +132,14 @@ ul#tabs {
   display: flex;
   list-style-type: none;
   width: 100%;
+  height: var(--tab);
+  font-size: var(--tab-font);
   padding: 0;
   margin: 0;
 
   button {
     width: 100%;
+    height: var(--tab)
   }
 
   li {
@@ -247,11 +254,13 @@ footer {
   bottom: 0;
   display: flex;
   width: 100%;
+  height: var(--tab);
   background-color: var(--dark);
+  font-size: var(--tab-font);
 
-  span {
+  span { /* Counter */
     display: flex;
-    flex-basis: 2.4em;
+    flex-basis: var(--tab);
     flex-shrink: 0;
     justify-content: center;
     align-items: center;
@@ -263,11 +272,8 @@ footer {
   }
 }
 
-
-
-
 #review {
-  counter-set: item;
+  counter-set: phraseCounter;
 
   .review {
     display: flex;
@@ -284,7 +290,6 @@ footer {
       justify-content: center;
       align-items: center;;
       background-color: var(--bg);
-
     }
 
     div.desk {
@@ -326,6 +331,10 @@ footer {
           &.wrong {
             border-color: var(--wrong);
           }
+          &.locked {
+            color: var(--black);
+            border-color: var(--grey);
+          }
         }
       }
 
@@ -352,12 +361,15 @@ footer {
       display: block;
       position: relative;
 
-      & input {
-        position: absolute;
-        left: -999vmax;
+      &:has(.disabled) {
+        /* For input.back.disabled when retain is set */
+        pointer-events: none;
       }
 
       & input {
+        position: absolute;
+        left: -999vmax;
+
         & ~ span {
           &::before,
           &::after {
@@ -366,6 +378,7 @@ footer {
             border: var(--edge) solid var(--border);
             box-sizing: border-box;
             border-radius: 100vmax;
+            cursor: pointer;
           }
 
           &::before {
@@ -400,29 +413,52 @@ footer {
             left: var(--half);
           }
 
-          &:not(:checked) {
-            ~ span::after {
-              counter-increment: item 1;
-              content: counter(item);
+          /* Increment phraseCounter only if phrase is neither
+           * retained nor flagged to be retained
+           */
+          &:not(.locked) {
+              &:not(:checked) {
+              ~ span::after {
+                counter-increment: phraseCounter 1;
+                content: counter(phraseCounter);
+              }
+            }
+
+            &:checked ~ span::after {
+              content: "🛟";
+              left: 0;
             }
           }
 
-          &:checked ~ span::after {
-            content: "🛟"; /* "🧠"; */
-            left: 0;
+          &.locked {
+            & ~ span::after {
+              content: "🔓"; 
+            }
+
+            &:checked ~ span::after {
+              content: "🔒";
+              left: 0;
+            }
           }
         }
 
         &.back {
-
-          &:not(:checked) {
-            ~ span::after {
-              content: "👓";
-            }
+          &:not(:checked) ~ span::after {
+            content: "👓";
           }
 
           &:checked ~ span::after {
             content:  "🕶️";
+          }
+
+          &.disabled {
+            & ~ span::before,
+            & ~ span::after {
+              content:  "";
+              background-color: var(--bg);
+              border-color: var(--disabled);
+              cursor: default;
+            }
           }
         }
       }

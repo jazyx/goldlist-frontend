@@ -8,7 +8,7 @@ import { useParams } from 'react-router'
 import { UserContext } from '../contexts'
 import { Tabs } from '../components/Tabs'
 import { Phrase } from '../components/Phrase'
-import { Footer } from '../components/Footer'
+import { PhraseFooter } from '../components/PhraseFooter'
 
 
 export const Add = () => {
@@ -16,25 +16,12 @@ export const Add = () => {
   const { index } = params
   const { getPhrases, setListIndex, listIndex } = useContext(UserContext)
   const phrases = getPhrases()
-
-  // [ {
-  //     "_id": "6885dff18637f1dff16ff520",
-  //     "lists": [
-  //       "6885dff18637f1dff16ff4dd"
-  //     ],
-  //     "text": "Great Britain",
-  //     "hint": "Великобритания",
-  //     "created": "2025-07-27T08:14:41.635Z",
-  //     "__v": 0
-  //   }, ...
-  // ]
+  
 
   const phraseList = phrases?.map( phrase => {
     const key = phrase._id || phrase.key
     return <Phrase {...phrase} key={key}/>
   })
-
-  // console.log("phraseList:", phraseList)
 
 
   useEffect(() => setListIndex(index || listIndex), [index])
@@ -42,13 +29,13 @@ export const Add = () => {
 
   return (
     <main>
-      <Tabs/>
       <div
         id="phraseList"
       >
         {phraseList}
       </div>
-      <Footer />
+      <Tabs/>
+      <PhraseFooter />
     </main>
   )
 }

@@ -84,27 +84,40 @@ export const UserProvider = ({ children }) => {
     setLists(lists)
     setListIndex(lists[0].index) // only one list
     setRedos(redos)
+
+    // console.log("******* TREAT USER DATA *******")
   }
 
 
   const preparePhrases = list => {
+    // Prepare to count phrases with empty text
+    let empty = 0
+
     // Add a db field to hold the values on the database
     const phrases = list.phrases.map( phrase => {
       const { text, hint, retain, limit } = phrase
       const db = { text, hint, retain, limit }
+      empty += !text
       return { ...phrase, db, retain, limit }
     })
 
+    const length = phrases.length 
+
     // Ensure there are the right number of entries.
+    // The _id will be a simple integer from 0 to 20, indicating
+    // that the phrase has never been saved.
     // retain and limit have no meaning for a new phrase.
     while (phrases.length < LIST_LENGTH) {
       phrases.push({
         _id: phrases.length,
+        key: phrases.length,
         text: "",
         hint: "",
         db: { text: "", hint: "" }
       })
     }
+
+    list.length = length - empty
 
     list.phrases = phrases
   }
@@ -156,6 +169,12 @@ export const UserProvider = ({ children }) => {
   }
 
 
+  /**
+   * Phrases are saved to the database when the Phrase component
+   * is blurred or when the SaveChanges button is pressed. However,
+   * the user can delete the text of a phrase after it has been
+   * saved, which would lead to a blank.
+   */
   const updatePhrase = _id => {
     const list = getActive("list")
     const phrase = list.phrases.find(
@@ -180,7 +199,8 @@ export const UserProvider = ({ children }) => {
     }
 
     const body = JSON.stringify(phrase, replacer)
-
+    console.log("body", JSON.stringify(body, null, '  '));
+    
     fetch(url, {
       method: 'POST',
       headers,
@@ -204,8 +224,14 @@ export const UserProvider = ({ children }) => {
     delete phrase.saving
 
     if (length) {
-      // This should only ever apply to an incomplete list
-      list.length = length
+      // This should only ever apply to an incomplete list, or if
+      // a phrase has been re-saved with no text
+      if (length < 0) {
+        list.length += length // which is negative
+
+      } else {
+        list.length = length
+      }
     }
 
     setLists([...lists])
@@ -213,11 +239,6 @@ export const UserProvider = ({ children }) => {
 
 
   const toggleRedo = ({ _id, name, checked, db }) => {
-    console.log("toggleRedo _id:", _id, ", name:", name, ", checked:", checked, ", was:", db[name])
-        // const list = getActive(type)
-    // const phrase = list.phrases.find(
-    //   phrase => phrase._id === _id
-    // )
     const phrase = getPhrase("redo", _id)
     phrase[name] = checked
 
@@ -255,6 +276,89 @@ export const UserProvider = ({ children }) => {
     setListIndex(list.index) // may be a string
     setUser({ ...user, lists: list.index }) // match DB value
     setLists([ list, ...lists ])
+  }
+
+
+  const submitReview = () => {
+    const { _id } = getActive("redo")
+    const phrases = getPhrases("redo")
+
+    // Find all phrases which are flagged to be retained...
+    const reviewed = phrases.filter( phrase => (
+      phrase.retain && !phrase.db.retain
+    ))
+    // ...and add any whose `limited` value has changed
+    const limited = phrases.filter( phrase => (
+      phrase.limit !== phrase.db.limit
+    ))
+    
+    limited.forEach( phrase => {
+      if (reviewed.indexOf(phrase) === -1) {
+        reviewed.push(phrase)
+      }
+    })
+
+    requestReview({ list_id: _id, reviewed })
+  }
+
+
+  const requestReview = (data) => {
+    const url = `${origin}/submitReview`
+    const headers = { 'Content-Type': 'application/json' }
+
+    // Exclude text, hint and db entries from body, as the server
+    // will not change these
+    const replacer = (key, value) => {
+      if (key === "db" || key === "text" || key === "hint") {
+        return
+      }
+      return value
+    }
+
+    const body = JSON.stringify(data, replacer)
+
+    fetch(url, {
+      method: 'POST',
+      headers,
+      body,
+    })
+      .then(incoming => incoming.json())
+      .then(json => treatReview(json))
+      .catch(treatDataError)
+  }
+
+
+  const treatReview = json => {
+    const { list_id, reviewed } = json
+    const list = redos.find( list => list._id === list_id )
+    if (!list) {
+      return console.log("Unable to find list with id:", list_id)
+    }
+    const { phrases } = list
+    
+    reviewed.forEach( data => {
+      const phrase = phrases.find( phrase => phrase._id === data._id )
+      if (phrase) {
+        const { retain, limit } = phrase
+
+        // retain may be undefined or true. The database should
+        // never have a value of false for it
+        if (retain) {
+          phrase.retain = true
+          phrase.db.retain = true
+        }
+
+        // Toggle limit only if it is explicitly set
+        if (limit || limit === false ) {
+          phrase.limit = limit
+          phrase.db.limit = limit
+        }
+      } else {
+        console.log("Can't find phrase matching:", data)
+      }
+    })
+
+    setLists([ ...lists ])
   }
 
 
@@ -300,7 +404,8 @@ export const UserProvider = ({ children }) => {
         editPhrase,
         updatePhrase,
         addList,
-        toggleRedo
+        toggleRedo,
+        submitReview
       }}
     >
       {children}

@@ -1,22 +1,20 @@
 /**
  * frontend/src/components/Counter.jsx
+ * 
+ * Shows a span with a backgroundColor between orange and
+ * olive, if `count` is less than `target`, or green if
+ * `count` is greater than or equal to target.
  */
 
 
-import { useContext } from "react"
-import { UserContext } from "../contexts"
-
-
-
-export const Counter = (props) => {
-  const { getActive } = useContext(UserContext)
-  const list = getActive("list")
-  const { length, remain } = ( list || { length: 0, remain: 21 } )
-
+export const Counter = ({ count, total, target }) => {
   const style = { backgroundColor: "#060"}
-  if (length < 21) {
-    const red = 255 - (4 * length)
-    style.backgroundColor = `rgb(${red}, 102, 0)`
+  const green = 102
+
+  if (count < target) {
+    const step = (green / target )
+    const red = Math.floor(255 - (step * count))
+    style.backgroundColor = `rgb(${red}, ${green}, 0)`
   }
 
   return (
@@ -24,7 +22,7 @@ export const Counter = (props) => {
      className="counter"
      style={style}
     >
-      {length}/{remain}
+      {count}/{total}
     </span>
   )
 }

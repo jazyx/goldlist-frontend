@@ -8,11 +8,11 @@ import { useParams } from 'react-router'
 import { UserContext } from '../contexts'
 import { Tabs } from '../components/Tabs'
 import { Review } from '../components/Review'
+import { ReviewsFooter } from '../components/ReviewsFooter'
 
 
 
-
-export const Rev = (props) => {
+export const Reviews = (props) => {
   const params = useParams()
   const { index } = params
 
@@ -38,12 +38,13 @@ export const Rev = (props) => {
 
   return (
     <main>
-      <Tabs/>
       <div
         id="review"
       >
         {phraseList}
       </div>
+      <Tabs/>
+      <ReviewsFooter />
     </main>
   )
 }

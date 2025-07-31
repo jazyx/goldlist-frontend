@@ -10,7 +10,7 @@ import {
 import './App.css'
 import { Home } from './pages/Home'
 import { Add } from './pages/Add'
-import { Rev } from './pages/Rev'
+import { Reviews } from './pages/Reviews'
 import { NotFound } from './pages/NotFound'
 import { Provider } from './contexts/'
 
@@ -31,7 +31,7 @@ function App() {
                 element={<Add />}
               />
             </Route>
-          <Route path="rev/:index" element={<Rev />} />
+          <Route path="rev/:index" element={<Reviews />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Provider>
