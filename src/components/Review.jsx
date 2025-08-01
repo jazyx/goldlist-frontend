@@ -8,7 +8,7 @@ import { UserContext } from '../contexts'
 import { Feedback } from './Feedback'
 import { TextArea } from './TextArea'
 import { Hint } from './Hint'
-import { Checkbox } from './Checkbox'
+import { CheckSlider } from './CheckSlider'
 import { GreenCircle } from './GreenCircle'
 
 
@@ -18,8 +18,8 @@ export const Review = ({
   hint,
   db,
   right,    // user correctly typed text
-  retained, // user checked left checkbox
-  limit     // user checked right checkbox:
+  retained, // user checked left CheckSlider
+  limit     // user checked right CheckSlider:
             // = show full text prompt when not retained
             // = show hint after retained is checked
 }) => {
@@ -27,11 +27,15 @@ export const Review = ({
     editPhrase,
     toggleRedo,
     tabNextOnEnter,
-    scrollIntoView
+    scrollIntoView,
+    openAll
   } = useContext(UserContext)
 
 
   const locked = !!db?.retained
+  const retainCheck = (locked && openAll) ? false : !!retained
+  // Don't limit feedback or visibility of hint if openAll is true
+  const limitCheck = (openAll) ? false : limit
 
 
   const resetText = () => {
@@ -130,7 +134,7 @@ export const Review = ({
         ))
 
 
-  if (!limit && !locked) {
+  if (openAll || (!limit && !locked)) {
     // Show the remainder of the phrase, if there is more
     const complete = best.substring(last + 1)
     if (complete) {
@@ -143,12 +147,20 @@ export const Review = ({
 
   const retainClass = (locked)
     ? "front locked"
-    : "front"
+    : (openAll)
+      ? "front open"
+      : "front"
 
 
-  const limitClass = (locked && !retained)
-    ? "back disabled"
-    : "back"
+  // Disable Limit CheckSlider if:
+  // * openAll is true (so you have no choice for limit)
+  // * OR if the phrase has been retained (locked), but the user
+  //   wants to display it anyway (!retained)
+  const limitClass = (openAll)
+    ? "back disabled open" 
+    : (!locked || retained)
+      ? "back"
+      : "back disabled"
 
 
   return (
@@ -156,10 +168,10 @@ export const Review = ({
       className="review"
     >
       <div className="control front">
-        <Checkbox
+        <CheckSlider
           name="retained"
           className={retainClass}
-          checked={!!retained}
+          checked={retainCheck}
           action={toggle}
         />
       </div>
@@ -185,10 +197,10 @@ export const Review = ({
       >
         { right
           ? <GreenCircle />
-          : <Checkbox
+          : <CheckSlider
             name="limit"
             className={limitClass}
-            checked={limit}
+            checked={limitCheck}
             action={toggle}
           />
         }

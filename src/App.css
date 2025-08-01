@@ -48,6 +48,7 @@
   --right:  #090;
   --wrong:  #900;
   --bg:     #666;
+  --on:     #fff;
   --off:    #888;
   --duration: 250ms;
 }
@@ -117,6 +118,58 @@ button {
     border: 1px solid var(--disabled-border);
     pointer-events: none;
     cursor: default;
+  }
+}
+
+label.checkSlider {
+  display: block;
+  position: relative;
+
+  &:has(.disabled) {
+    pointer-events: none;
+  }
+
+  & input {
+    position: absolute;
+    left: -999vmax;
+
+    & ~ span {
+      &::before,
+      &::after {
+        display: flex;
+        height: var(--half);
+        border: var(--edge) solid var(--border);
+        box-sizing: border-box;
+        border-radius: 100vmax;
+        cursor: pointer;
+      }
+
+      &::before {
+        content: "";
+        width: var(--size);
+        height: var(--half);
+        background-color: var(--off);
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: var(--half);
+        justify-content: center;
+        align-items: center;
+        color: var(--dark);
+        background-color: var(--on);
+        font-size: var(--count);
+        transition: all var(--duration);
+      }
+    }
+
+    &:checked ~ span::after {
+      left: var(--half);
+      background-color: var(--off);
+    }
   }
 }
 
@@ -245,6 +298,7 @@ div#phraseList {
 
 footer {
   display: flex;
+  align-items: center;
   width: 100%;
   height: var(--tab);
   background-color: var(--dark);
@@ -280,6 +334,22 @@ footer {
 
   button {
     flex: 1;
+    height: 100%;
+  }
+
+  /* Specific controls for CheckSlider in ReviewFooter */
+  label.checkSlider input.open-all {
+    ~ span::after {
+      content: "📗";
+      background-color: var(--off);
+
+      /* 📗📖 🥢🪭*/
+    }
+
+    &:checked ~ span::after {
+      content: "📖";
+      background-color: var(--on);
+    }
   }
 }
 
@@ -304,7 +374,7 @@ footer {
       align-items: center;
       width: var(--size);
       background-color: var(--bg);
-    
+
       div.circle {
         height: var(--half);
         width: var(--half);
@@ -379,115 +449,72 @@ footer {
       }
     }
 
-    label {
-      display: block;
-      position: relative;
-
-      &:has(.disabled) {
-        /* For input.back.disabled when retain is set */
-        pointer-events: none;
+  /* Specific controls for CheckSlider in Review */
+  label.checkSlider input {
+    &.front {
+      ~ span::after {
+        left: var(--half);
       }
 
-      & input {
-        position: absolute;
-        left: -999vmax;
-
-        & ~ span {
-          &::before,
-          &::after {
-            display: flex;
-            height: var(--half);
-            border: var(--edge) solid var(--border);
-            box-sizing: border-box;
-            border-radius: 100vmax;
-            cursor: pointer;
-          }
-
-          &::before {
-            content: "";
-            width: var(--size);
-            height: var(--half);
-            background-color: var(--off);
-          }
-
-          &::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: var(--half);
-            justify-content: center;
-            align-items: center;
-            color: var(--dark);
-            background-color: var(--white);
-            font-size: var(--count);
-            transition: all var(--duration);
+      /* Increment phraseCounter only if phrase is neither
+        * retained nor flagged to be retained
+        */
+      &:not(.locked) {
+          &:not(:checked) {
+          ~ span::after {
+            counter-increment: phraseCounter 1;
+            content: counter(phraseCounter);
           }
         }
 
         &:checked ~ span::after {
-          left: var(--half);
-          background-color: var(--off);
+          content: "🛟";
+          left: 0;
+        }
+      }
+
+      &.locked {
+        & ~ span::after {
+          content: "🔓";
         }
 
-        &.front {
-          ~ span::after {
-            left: var(--half);
-          }
-
-          /* Increment phraseCounter only if phrase is neither
-           * retained nor flagged to be retained
-           */
-          &:not(.locked) {
-              &:not(:checked) {
-              ~ span::after {
-                counter-increment: phraseCounter 1;
-                content: counter(phraseCounter);
-              }
-            }
-
-            &:checked ~ span::after {
-              content: "🛟";
-              left: 0;
-            }
-          }
-
-          &.locked {
-            & ~ span::after {
-              content: "🔓"; 
-            }
-
-            &:checked ~ span::after {
-              content: "🔒";
-              left: 0;
-            }
-          }
-        }
-
-        &.back {
-          &:not(:checked) ~ span::after {
-            content: "👓";
-          }
-
-          &:checked ~ span::after {
-            content:  "🕶️";
-          }
-
-          &.disabled {
-            & ~ span::before,
-            & ~ span::after {
-              content:  "";
-              background-color: var(--bg);
-              border-color: var(--disabled);
-              cursor: default;
-            }
-          }
+        &:checked ~ span::after {
+          content: "🔒";
+          left: 0;
         }
       }
     }
 
+    &.back {
+      &:not(:checked) ~ span::after {
+        content: "👓";
+      }
 
-    &:has(input.front:checked) {
+      &:checked ~ span::after {
+        content:  "🕶️";
+      }
+
+      &.disabled {
+        & ~ span::before {
+          content:  "";
+          background-color: var(--bg);
+          border-color: var(--disabled);
+          cursor: default;
+        }
+        & ~ span::after {
+          content: "👓";
+          background-color: var(--off);
+          border-color: var(--disabled);
+        }
+        &:not(.open) ~ span::after {
+          display: none
+        }
+      }
+    }
+  }
+
+    /* Specific controls for collapsing CheckSlider in Review */
+    &:has(input.front:checked:not(.open)) {
       height: var(--half);
 
         div.control {

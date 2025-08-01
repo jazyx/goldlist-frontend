@@ -1,9 +1,9 @@
 /**
- * frontend/src/components/Checkbox.jsx
+ * frontend/src/components/CheckSlider.jsx
  */
 
 
-export const Checkbox = ({
+export const CheckSlider = ({
   name      = "check",
   className = null,
   checked   = false,
@@ -12,7 +12,7 @@ export const Checkbox = ({
 
 
   return (
-    <label>
+    <label className="checkSlider">
       <input
         type="checkbox"
         name={name}

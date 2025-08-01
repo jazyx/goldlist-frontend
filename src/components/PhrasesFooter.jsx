@@ -36,7 +36,7 @@ export const PhrasesFooter = () => {
     <footer>
       <Counter {...{ count, total, target }}/>
       <MoreButton {...{disabled, addList}} />
-      <button disabled>Start Review</button>
+      {/* <button disabled>Start Review</button> */}
     </footer>
   )
 }

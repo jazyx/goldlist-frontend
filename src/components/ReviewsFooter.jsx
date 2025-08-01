@@ -6,9 +6,14 @@ import { useContext } from "react"
 import { UserContext } from "../contexts"
 import { SubmitReview } from "./SubmitReview"
 import { Counter } from "./Counter"
+import { CheckSlider } from './CheckSlider'
 
 export const ReviewsFooter = (props) => {
-  const { getPhrases } = useContext(UserContext)
+  const {
+    getPhrases,
+    openAll,
+    toggleOpenAll
+  } = useContext(UserContext)
   const phrases = getPhrases("redo")
 
 
@@ -38,10 +43,17 @@ export const ReviewsFooter = (props) => {
   const disabled = retained.count < retained.target
     || (retained.count + reviewed.count) !== retained.total
 
+  const open = {
+    name: "openAll",
+    className: "open-all",
+    checked: openAll,
+    action: toggleOpenAll
+  }
 
   return (
     <footer>
       <Counter {...retained} icon="🛟" />
+      <CheckSlider {...open}/>
       <SubmitReview disabled={disabled} />
       <Counter {...reviewed} icon="🟢" name="reviewed" />
     </footer>

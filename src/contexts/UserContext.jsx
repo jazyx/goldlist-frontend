@@ -37,7 +37,10 @@ export const UserProvider = ({ children }) => {
   const [ lists, setLists ] = useState([])
   const [ listIndex, setListIndex ] = useState(0)
   const [ redos, setRedos ] = useState([])
+  const [ openAll, setOpenAll ] = useState(false)
+  
 
+  //////////////////////// INITIALIZATION ////////////////////////
 
 
   const getUserData = () => {
@@ -114,6 +117,9 @@ export const UserProvider = ({ children }) => {
   }
 
 
+  ///////////////////////// SELECT items /////////////////////////
+
+
   const getActive = type => {
     const index = Number(listIndex)
     const source = (type === "redo")
@@ -146,6 +152,9 @@ export const UserProvider = ({ children }) => {
 
     return phrase
   }
+
+
+  ///////////////////////// EDIT AND SAVE /////////////////////////
 
 
   const editPhrase = ({ type, name, _id, value, db }) => {
@@ -217,6 +226,14 @@ export const UserProvider = ({ children }) => {
   }
 
 
+  const toggleOpenAll = ({ target }) => {
+    setOpenAll(target.checked)
+  }
+
+
+  /////////////////////////// NEW LIST ///////////////////////////
+
+
   const addList = () => {
     const url = `${origin}/addList`
     const headers = { 'Content-Type': 'application/json' }
@@ -248,6 +265,9 @@ export const UserProvider = ({ children }) => {
     setUser({ ...user, lists: list.index }) // match DB value
     setLists([ list, ...lists ])
   }
+
+
+  //////////////////////////// REVIEW ////////////////////////////
 
 
   const toggleRedo = ({ _id, name, checked, db }) => {
@@ -431,6 +451,7 @@ export const UserProvider = ({ children }) => {
         lists,
         listIndex,
         redos,
+        openAll,
         setListIndex,
         getPhrases,
         getActive,
@@ -441,7 +462,8 @@ export const UserProvider = ({ children }) => {
         toggleRedo,
         submitReview,
         tabNextOnEnter,
-        scrollIntoView
+        scrollIntoView,
+        toggleOpenAll
       }}
     >
       {children}
