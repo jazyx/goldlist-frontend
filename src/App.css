@@ -478,6 +478,11 @@ footer {
           content: "🔓";
         }
 
+        &.disabled ~ span::after {
+          background-color: var(--off);
+          border-color: var(--disabled);
+        }
+
         &:checked ~ span::after {
           content: "🔒";
           left: 0;

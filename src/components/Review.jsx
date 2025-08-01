@@ -144,9 +144,13 @@ export const Review = ({
     }
   }
 
-
+  // Show a lock icon if locked, disable if openAll
+  // Show number or 🛟 if not locked, allow CheckSlider to work
+  // as usual even if openAll.
   const retainClass = (locked)
-    ? "front locked"
+    ? (openAll)
+      ? "front locked disabled"
+      : "front locked"
     : (openAll)
       ? "front open"
       : "front"
