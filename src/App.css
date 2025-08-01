@@ -13,6 +13,7 @@
   --tab-font: 2rem;
   --gap:      0.5rem;
   --slim:     0.25rem;
+  --drop:    -0.5rem;
   --edge:     0.1rem;
   --width:   10em;
 
@@ -67,20 +68,14 @@ main {
 }
 
 main {
-  padding: var(--tab) 0;
-  box-sizing: border-box;
-  /* background-color: #060; */
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
 }
 
 h1 {
   font-size: 2.25em;
 }
-
-/* img {
-  display: block;
-  max-width: 256px;
-  margin-bottom: 2em;
-} */
 
 textarea {
   resize: none;
@@ -126,9 +121,6 @@ button {
 }
 
 ul#tabs {
-  position: fixed;
-  background-color: var(--dark);
-  top: 0;
   display: flex;
   list-style-type: none;
   width: 100%;
@@ -154,6 +146,8 @@ ul#tabs {
 
 div#phraseList {
   counter-set: number;
+  overflow-y: auto;
+  width: 100%;
 
   div.phrase {
     display: flex;
@@ -250,21 +244,38 @@ div#phraseList {
 }
 
 footer {
-  position: fixed;
-  bottom: 0;
   display: flex;
   width: 100%;
   height: var(--tab);
   background-color: var(--dark);
   font-size: var(--tab-font);
 
-  span { /* Counter */
+  div.counter {
+    position: relative;
+    height: var(--tab);
+    width: var(--tab);
     display: flex;
-    flex-basis: var(--tab);
-    flex-shrink: 0;
     justify-content: center;
     align-items: center;
-    border-radius: 100vmax;
+
+    span.counter { /* Counter */
+      display: flex;
+      flex-basis: var(--tab);
+      flex-shrink: 0;
+      justify-content: center;
+      align-items: center;
+      height: var(--tab);
+      border-radius: 100vmax;
+    }
+    span.icon {
+      position: absolute;
+      bottom: var(--drop);
+      left: 0;
+    }
+  }
+  div.counter.reviewed span {
+    left: auto;
+    right: 0;
   }
 
   button {
@@ -274,6 +285,8 @@ footer {
 
 #review {
   counter-set: phraseCounter;
+  overflow-y: auto;
+  width: 100%;
 
   .review {
     display: flex;
@@ -341,7 +354,8 @@ footer {
           }
           &.locked {
             color: var(--black);
-            border-color: var(--grey);
+            border-color: var(--off);
+            background-color: var(--light);
           }
         }
       }
@@ -507,6 +521,10 @@ footer {
       }
     }
   }
+}
+
+.spacer {
+  flex-grow: 1;
 }
 
 /* Ensure Phrase + Review textareas show placeholder on one line

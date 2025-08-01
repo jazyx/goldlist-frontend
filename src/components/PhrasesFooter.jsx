@@ -1,5 +1,5 @@
 /**
- * frontend/src/pages/PhraseFooter.jsx
+ * frontend/src/pages/PhrasesFooter.jsx
  * 
  * Reads `length` and `remain` from the active list and tells the
  * Counter component to display `length / remain` in the right
@@ -14,7 +14,7 @@ import { Counter } from "./Counter"
 import { MoreButton } from "./MoreButton"
 
 
-export const PhraseFooter = () => {
+export const PhrasesFooter = () => {
   const { getActive, lists, addList } = useContext(UserContext)
   const list = getActive("list")
   const phrases = list.phrases || []
@@ -30,7 +30,7 @@ export const PhraseFooter = () => {
 
   const disabled = list !== lists[0]
     ? true
-    : !lists[0] || list?.length < target
+    : !lists[0] || count < target
   
   return (
     <footer>

@@ -10,27 +10,10 @@ import { TextArea } from './TextArea'
 export const Phrase = ({ _id, text, hint, db, saving }) => {
   const {
     editPhrase,
-    updatePhrase
+    updatePhrase,
+    tabNextOnEnter,
+    scrollIntoView
   } = useContext(UserContext)
-
-
-  function tabNextOnEnter(event) {
-    if (event.key === "Enter") {
-      event.preventDefault()
-      tabToNextItem(event.target)
-    }
-  }
-
-
-  function tabToNextItem(activeItem) {
-    const next = activeItem.nextElementSibling // hint?
-      || activeItem.closest(".phrase").nextElementSibling?.querySelector("textarea") // text in next phrase?
-      || activeItem.closest("#phraseList").querySelector("textarea") // recycle to first entry
-
-    if (next) {
-      next.focus()
-    }
-  }
 
 
   function onChange({target}) {
@@ -98,6 +81,7 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
           className={textClass}
           onKeyDown={tabNextOnEnter}
           onChange={onChange}
+          onFocus={scrollIntoView}
         />
         <TextArea
           name="hint"
@@ -105,6 +89,7 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
           className={hintClass}
           onKeyDown={tabNextOnEnter}
           onChange={onChange}
+          onFocus={scrollIntoView}
         />
       </div>
       <div

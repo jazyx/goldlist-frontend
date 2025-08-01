@@ -13,7 +13,7 @@ export const Tabs = () => {
 
 
   const byIndex = (a, b) => {
-    return b.list.index - a.list.index
+    return b.index - a.index
   }
 
 

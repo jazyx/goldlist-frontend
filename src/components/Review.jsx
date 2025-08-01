@@ -25,7 +25,9 @@ export const Review = ({
 }) => {
   const {
     editPhrase,
-    toggleRedo
+    toggleRedo,
+    tabNextOnEnter,
+    scrollIntoView
   } = useContext(UserContext)
 
 
@@ -171,7 +173,9 @@ export const Review = ({
             className="text"
             placeholder={db.text}
             text={text}
+            onKeyDown={tabNextOnEnter}
             onChange={onChange}
+            onFocus={scrollIntoView}
           />
         }
         <Hint hint={hint} />

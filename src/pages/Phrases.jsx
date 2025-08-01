@@ -1,5 +1,5 @@
 /**
- * frontend/src/pages/Add.jsx
+ * frontend/src/pages/Phrases.jsx
  */
 
 
@@ -8,10 +8,10 @@ import { useParams } from 'react-router'
 import { UserContext } from '../contexts'
 import { Tabs } from '../components/Tabs'
 import { Phrase } from '../components/Phrase'
-import { PhraseFooter } from '../components/PhraseFooter'
+import { PhrasesFooter } from '../components/PhrasesFooter'
 
 
-export const Add = () => {
+export const Phrases = () => {
   const params = useParams()
   const { index } = params
   const { getPhrases, setListIndex, listIndex } = useContext(UserContext)
@@ -29,13 +29,14 @@ export const Add = () => {
 
   return (
     <main>
+      <Tabs/>
       <div
         id="phraseList"
       >
         {phraseList}
       </div>
-      <Tabs/>
-      <PhraseFooter />
+      <div className="spacer"></div>
+      <PhrasesFooter />
     </main>
   )
 }

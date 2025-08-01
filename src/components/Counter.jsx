@@ -7,7 +7,13 @@
  */
 
 
-export const Counter = ({ count, total, target }) => {
+export const Counter = ({
+  count,
+  total,
+  target,
+  icon,
+  name
+}) => {
   const style = { backgroundColor: "#060"}
   const green = 102
 
@@ -17,12 +23,20 @@ export const Counter = ({ count, total, target }) => {
     style.backgroundColor = `rgb(${red}, ${green}, 0)`
   }
 
+
+  const className = (name)
+    ? `counter ${name}`
+    : "counter"
+
   return (
-    <span
-     className="counter"
-     style={style}
-    >
-      {count}/{total}
-    </span>
+    <div className={className}>
+      <span
+       className="counter"
+       style={style}
+      >
+        {count}/{total}
+      </span>
+      <span className="icon">{icon}</span>
+    </div>
   )
 }

@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom'
 import './App.css'
 import { Home } from './pages/Home'
-import { Add } from './pages/Add'
+import { Phrases } from './pages/Phrases'
 import { Reviews } from './pages/Reviews'
 import { NotFound } from './pages/NotFound'
 import { Provider } from './contexts/'
@@ -24,11 +24,11 @@ function App() {
           <Route path="add">
               <Route
                 path=":index/"
-                element={<Add />}
+                element={<Phrases />}
               />
               <Route
                 path=""
-                element={<Add />}
+                element={<Phrases />}
               />
             </Route>
           <Route path="rev/:index" element={<Reviews />} />

@@ -12,6 +12,7 @@ export const TextArea = ({
   className,
   onKeyDown,
   onChange,
+  onFocus,
   placeholder
 }) => {
 
@@ -28,6 +29,7 @@ export const TextArea = ({
       className={className}
       onKeyDown={onKeyDown}
       onChange={onChange}
+      onFocus={onFocus}
       value={text}
       placeholder={placeholder}
     />

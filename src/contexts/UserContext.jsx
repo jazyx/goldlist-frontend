@@ -346,6 +346,61 @@ export const UserProvider = ({ children }) => {
   }
 
 
+  ///////// UTILITIES FOR TABBING BETWEEN phrases/reviews /////////
+
+
+  function tabNextOnEnter(event) {
+    if (event.key === "Enter") {
+      event.preventDefault()
+      tabToNextItem(event.target)
+    }
+  }
+
+
+  /**
+   * Fails if the next review is locked
+   * Focuses on collapsed textarea if next review is to be retained
+  */
+  function tabToNextItem(activeItem) {
+    const next = activeItem.nextElementSibling
+    const target = (next?.tagName === "TEXTAREA" ? next : null)
+         // hint?
+      || activeItem.closest(".phrase, .review")
+         .nextElementSibling.querySelector("textarea")
+         // text in next phrase?
+      || activeItem.closest("#phraseList, #review")
+         .querySelector("textarea") // recycle to first entry
+
+    if (target) {
+      scrollIntoView({ target })
+      target.focus()
+    }
+  }
+
+
+  const scrollIntoView = ({ target }) => {
+    // Find div#phraseList or div#review
+    const parent = target.closest("[id]")
+
+    if (!parent) {return}
+
+    // The div.desk element contains both text and hint
+    const desk = target.closest(".desk")
+
+    const { x: up, bottom: down } = parent.getBoundingClientRect();
+    const { top, bottom } = desk.getBoundingClientRect();
+
+    if (top < up) {
+      desk.scrollIntoView(true);
+    } else if (bottom > down) {
+      desk.scrollIntoView(false);
+    }
+  }
+
+
+  /////////////////////////// USEFFECTS ///////////////////////////
+
+
   const autoLoad = () => {
     if (INITIALIZED) {
       getUserData()
@@ -384,7 +439,9 @@ export const UserProvider = ({ children }) => {
         updatePhrase,
         addList,
         toggleRedo,
-        submitReview
+        submitReview,
+        tabNextOnEnter,
+        scrollIntoView
       }}
     >
       {children}

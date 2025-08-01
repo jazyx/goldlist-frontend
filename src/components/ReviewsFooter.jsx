@@ -41,9 +41,9 @@ export const ReviewsFooter = (props) => {
 
   return (
     <footer>
-      <Counter {...retained} />
+      <Counter {...retained} icon="🛟" />
       <SubmitReview disabled={disabled} />
-      <Counter {...reviewed} />
+      <Counter {...reviewed} icon="🟢" name="reviewed" />
     </footer>
   )
 }

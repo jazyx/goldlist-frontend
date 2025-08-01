@@ -38,12 +38,13 @@ export const Reviews = (props) => {
 
   return (
     <main>
+      <Tabs/>
       <div
         id="review"
       >
         {phraseList}
       </div>
-      <Tabs/>
+      <div className="spacer"></div>
       <ReviewsFooter />
     </main>
   )
