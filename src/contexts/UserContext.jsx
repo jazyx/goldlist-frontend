@@ -82,7 +82,7 @@ export const UserProvider = ({ children }) => {
 
     // Update the user_name in LocalStorage, after removing uuid
     const user_name = user.user_name.replace(/_.*/, "")
-    storage.placeItems({ user: { user_name }})
+    storage.placeItems({ user_name  })
 
     setUser(user)
     setLists(lists)
