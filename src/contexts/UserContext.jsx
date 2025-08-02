@@ -38,7 +38,7 @@ export const UserProvider = ({ children }) => {
   const [ listIndex, setListIndex ] = useState(0)
   const [ redos, setRedos ] = useState([])
   const [ openAll, setOpenAll ] = useState(false)
-  
+
 
   //////////////////////// INITIALIZATION ////////////////////////
 
@@ -343,7 +343,7 @@ export const UserProvider = ({ children }) => {
 
     reviewed.forEach( data => {
       const phrase = phrases.find(phrase => (
-        phrase._id === data._id 
+        phrase._id === data._id
       ))
 
       if (phrase) {
@@ -359,7 +359,7 @@ export const UserProvider = ({ children }) => {
         // limit will always be boolean
         phrase.limit = limit
         phrase.db.limit = limit
-        
+
       } else {
         console.log("Can't find phrase matching:", data)
       }
@@ -375,7 +375,20 @@ export const UserProvider = ({ children }) => {
 
 
   const dismissReview = () => {
-    
+    // Remove reviewed list from redos
+    const done = getActive("redo")
+    const index = redos.findIndex( list => list === done )
+    redos.splice(index, 1)
+
+    // Check if there are older lists to review. If so navigate
+    // to the next list. If not, go to `/add/X` which should always
+    // be available
+    const next = redos[index] // moved up a place?
+    const to = (next)
+      ? `/rev/${next.index}`
+      : `/add/${lists[0].index}`
+
+    navigate(to)
   }
 
 

@@ -33,8 +33,6 @@ export const Reviews = (props) => {
       <Review {...phrase} key={phrase._id} />
     )
   })
-      // console.log("phrases", JSON.stringify(phrases, null, '  '));
-
 
 
   const createMask = () => {
