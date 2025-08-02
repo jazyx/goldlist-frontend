@@ -18,8 +18,9 @@ export const MoreButton = ({disabled, addList}) => {
 
   return (
     <button
-       disabled={disabled}
-       onClick={addList}
+      className="primary"
+      disabled={disabled}
+      onClick={addList}
     >
       Add More
     </button>

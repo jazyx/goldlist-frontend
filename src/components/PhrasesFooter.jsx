@@ -31,12 +31,15 @@ export const PhrasesFooter = () => {
   const disabled = list !== lists[0]
     ? true
     : !lists[0] || count < target
+
+  const icon = "🟢"
+  const side = "right"
   
   return (
     <footer>
-      <Counter {...{ count, total, target }}/>
       <MoreButton {...{disabled, addList}} />
       {/* <button disabled>Start Review</button> */}
+      <Counter {...{ count, total, target, icon, side }} />
     </footer>
   )
 }

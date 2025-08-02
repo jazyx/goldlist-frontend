@@ -12,11 +12,12 @@ export const Counter = ({
   total,
   target,
   icon,
-  name
+  side
 }) => {
-  const style = { backgroundColor: "#060"}
-  const green = 102
+  const style = { backgroundColor: "#040"}
 
+
+  const green = 102
   if (count < target) {
     const step = (green / target )
     const red = Math.floor(255 - (step * count))
@@ -24,8 +25,8 @@ export const Counter = ({
   }
 
 
-  const className = (name)
-    ? `counter ${name}`
+  const className = (side)
+    ? `counter ${side}`
     : "counter"
 
   return (

@@ -14,6 +14,7 @@ export const SubmitReview = ({ disabled }) => {
 
   return (
     <button 
+      className="primary"
       disabled={disabled}
       onClick={submitReview}
     >

@@ -7,8 +7,15 @@ export const CheckSlider = ({
   name      = "check",
   className = null,
   checked   = false,
-  action    = () => {}
+  action    = () => {},
+  vertical  = false
  }) => {
+
+  if (vertical) {
+    className = (className)
+      ? `${className} vertical`
+      : "vertical"
+  }
 
 
   return (
