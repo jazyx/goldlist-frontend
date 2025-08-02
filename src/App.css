@@ -191,6 +191,10 @@ ul#tabs {
     width: auto;
     flex: 1;
 
+    &.active button{
+      background-color: transparent;
+    }
+
     a {
       color: inherit;
     }

@@ -20,7 +20,7 @@ const LIST_LENGTH = 21
 const INITIALIZED = (Object.entries(storage.settings).length)
 
 if (!INITIALIZED) {
-  storage.set({ user_name: "User" })
+  storage.set({ user_name: "Guest" })
 }
 
 
@@ -264,6 +264,8 @@ export const UserProvider = ({ children }) => {
     setListIndex(list.index) // may be a string
     setUser({ ...user, lists: list.index }) // match DB value
     setLists([ list, ...lists ])
+
+    navigate("/add")
   }
 
 
