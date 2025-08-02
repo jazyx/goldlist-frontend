@@ -46,12 +46,14 @@ export const UserProvider = ({ children }) => {
   const getUserData = () => {
     const url = `${origin}/getUserData`
     const headers = { 'Content-Type': 'application/json' }
+    const credentials = "include"
     const body = JSON.stringify(user)
 
     fetch(url, {
       method: 'POST',
       headers,
-      body,
+      credentials,
+      body
     })
       .then(incoming => incoming.json())
       .then(json => treatUserData(json))
@@ -336,10 +338,14 @@ export const UserProvider = ({ children }) => {
     if (!list) {
       return console.log("Unable to find list with id:", list_id)
     }
+
     const { phrases } = list
 
     reviewed.forEach( data => {
-      const phrase = phrases.find( phrase => phrase._id === data._id )
+      const phrase = phrases.find(phrase => (
+        phrase._id === data._id 
+      ))
+
       if (phrase) {
         const { retained, limit } = phrase
 
@@ -359,7 +365,17 @@ export const UserProvider = ({ children }) => {
       }
     })
 
+    // Update the list properties, and flag it as reviewed
+    list.remain = remain
+    list.reviews = reviews
+    list.reviewed = true
+
     setLists([ ...lists ])
+  }
+
+
+  const dismissReview = () => {
+    
   }
 
 
@@ -463,6 +479,7 @@ export const UserProvider = ({ children }) => {
         addList,
         toggleRedo,
         submitReview,
+        dismissReview,
         tabNextOnEnter,
         scrollIntoView,
         toggleOpenAll

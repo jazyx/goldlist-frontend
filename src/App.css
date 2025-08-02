@@ -8,6 +8,7 @@
   --grey:  #ccc;
   --dark:  #222;
   --black: #000;
+  --mask:  #222c;
 
   --tab:      5rem;
   --tab-font: 2rem;
@@ -16,6 +17,7 @@
   --drop:    -0.4rem;
   --edge:     0.1rem;
   --width:   10em;
+  --scroll:  20px;
 
   --button: #333;
   --button-border: #666;
@@ -37,7 +39,7 @@
   --saving: #c70;
 
   /* Input slider and Review */
-  --full:   min(calc(100vw - 20px), 60rem); /* 20px = scroll bar */
+  --full:   min(calc(100vw - var(--scroll)), 60rem);
   --size:   6rem;
   --half:   calc(var(--size) * 0.5);
   --count:  calc(var(--size) * 0.333);
@@ -217,7 +219,6 @@ ul#tabs {
 div#phraseList {
   counter-set: number;
   overflow-y: auto;
-  width: 100%;
 
   div.phrase {
     display: flex;
@@ -225,6 +226,7 @@ div#phraseList {
     border-radius: 100vmax;
     box-sizing: border-box;
     background-color: var(--bg);
+    margin: 0 var(--scroll) var(--gap) 0;
     margin-bottom: var(--gap);
     counter-increment: number;
 
@@ -372,15 +374,21 @@ footer {
 
 #review {
   counter-set: phraseCounter;
-  overflow-y: auto;
-  width: 100%;
+  position: relative;
+  overflow: hidden;
+
+  div.reviews {
+    position: relative;
+    height: 100%;
+    overflow-y: auto;
+  }
 
   .review {
     display: flex;
     width: var(--full);
     height: var(--size);
     background-color: var(--bg);
-    margin-bottom: var(--gap);
+    margin: 0 var(--scroll) var(--gap) 0;
     border-radius: 100vmax;
     overflow: hidden;
     transition: all var(--duration);
@@ -466,74 +474,74 @@ footer {
       }
     }
 
-  /* Specific controls for CheckSlider in Review */
-  label.checkSlider input {
-    &.front {
-      ~ span::after {
-        left: var(--half);
-      }
+    /* Specific controls for CheckSlider in Review */
+    label.checkSlider input {
+      &.front {
+        ~ span::after {
+          left: var(--half);
+        }
 
-      /* Increment phraseCounter only if phrase is neither
-        * retained nor flagged to be retained
-        */
-      &:not(.locked) {
-          &:not(:checked) {
-          ~ span::after {
-            counter-increment: phraseCounter 1;
-            content: counter(phraseCounter);
+        /* Increment phraseCounter only if phrase is neither
+          * retained nor flagged to be retained
+          */
+        &:not(.locked) {
+            &:not(:checked) {
+            ~ span::after {
+              counter-increment: phraseCounter 1;
+              content: counter(phraseCounter);
+            }
+          }
+
+          &:checked ~ span::after {
+            content: "🛟";
+            left: 0;
           }
         }
 
-        &:checked ~ span::after {
-          content: "🛟";
-          left: 0;
+        &.locked {
+          & ~ span::after {
+            content: "🔓";
+          }
+
+          &.disabled ~ span::after {
+            background-color: var(--off);
+            border-color: var(--disabled);
+          }
+
+          &:checked ~ span::after {
+            content: "🔒";
+            left: 0;
+          }
         }
       }
 
-      &.locked {
-        & ~ span::after {
-          content: "🔓";
-        }
-
-        &.disabled ~ span::after {
-          background-color: var(--off);
-          border-color: var(--disabled);
-        }
-
-        &:checked ~ span::after {
-          content: "🔒";
-          left: 0;
-        }
-      }
-    }
-
-    &.back {
-      &:not(:checked) ~ span::after {
-        content: "👓";
-      }
-
-      &:checked ~ span::after {
-        content:  "🕶️";
-      }
-
-      &.disabled {
-        & ~ span::before {
-          content:  "";
-          background-color: var(--bg);
-          border-color: var(--disabled);
-          cursor: default;
-        }
-        & ~ span::after {
+      &.back {
+        &:not(:checked) ~ span::after {
           content: "👓";
-          background-color: var(--off);
-          border-color: var(--disabled);
         }
-        &:not(.open) ~ span::after {
-          display: none
+
+        &:checked ~ span::after {
+          content:  "🕶️";
+        }
+
+        &.disabled {
+          & ~ span::before {
+            content:  "";
+            background-color: var(--bg);
+            border-color: var(--disabled);
+            cursor: default;
+          }
+          & ~ span::after {
+            content: "👓";
+            background-color: var(--off);
+            border-color: var(--disabled);
+          }
+          &:not(.open) ~ span::after {
+            display: none
+          }
         }
       }
     }
-  }
 
     /* Specific controls for collapsing CheckSlider in Review */
     &:has(input.front:checked:not(.open)) {
@@ -567,6 +575,52 @@ footer {
             padding: 0;
           }
         }
+      }
+    }
+  }
+  
+  /* Prevent actions on the elements behind the mask */
+  &.mask .review {
+    pointer-events: none;
+  }
+
+  div.mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--mask);
+    /* Allow the div.review behind the mask to scroll */
+    pointer-events: none;
+
+    & .retained {
+      display: flex;
+      flex-direction: column;
+      max-height: 100%;
+      width: min(50%, 50vw);
+      padding: var(--gap);
+      border: 1px solid var(--white);
+      border-radius: var(--gap);
+      box-sizing: border-box;
+      font-size: 1.5em;
+      pointer-events: all;
+
+      h3 {
+        margin: 0;
+      }
+
+      ul {
+        flex: 1;
+        overflow: auto;
+        min-height: 1.2em;
+      }
+
+      button {
+        align-self: flex-end
       }
     }
   }
