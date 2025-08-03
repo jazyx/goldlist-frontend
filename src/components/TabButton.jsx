@@ -35,10 +35,16 @@ export const TabButton = ({ edit, index, reviews }) => {
     }
   })()
 
+
+  const name = (index < 0) 
+    ? `R${-index}` // This is a recycled list of knotty words
+    : index
+
+
   const [text, title] = (reviews)
-    ? [`List ${index}`, `Review list ${index} (${label})`]
+    ? [`List ${name}`, `Review list ${name} (${label})`]
     : (edit)
-      ? [`Edit ${index}`, "Edit recent phrases"]
+      ? [`Edit ${name}`, "Edit recent phrases"]
       : ["Add", "Add new phrases"]
 
   const to = (reviews)

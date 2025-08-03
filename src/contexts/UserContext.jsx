@@ -105,14 +105,18 @@ export const UserProvider = ({ children }) => {
     // The _id will be a simple integer from 0 to 20, indicating
     // that the phrase has never been saved.
     // retained and limit have no meaning for a new phrase.
-    while (phrases.length < LIST_LENGTH) {
-      phrases.push({
-        _id: phrases.length,
-        key: phrases.length,
-        text: "",
-        hint: "",
-        db: { text: "", hint: "" }
-      })
+    if (list.index < 0) {
+      // Knotty phrases may be in lists shorter than 21 phrases
+    } else {
+      while (phrases.length < LIST_LENGTH) {
+        phrases.push({
+          _id: phrases.length,
+          key: phrases.length,
+          text: "",
+          hint: "",
+          db: { text: "", hint: "" }
+        })
+      }
     }
 
     list.phrases = phrases
