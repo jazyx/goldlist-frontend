@@ -14,11 +14,23 @@ import { PhrasesFooter } from '../components/PhrasesFooter'
 export const Phrases = () => {
   const params = useParams()
   const { index } = params
-  const { getPhrases, setListIndex, listIndex } = useContext(UserContext)
+  const {
+    getPhrases,
+    setListIndex,
+    listIndex
+  } = useContext(UserContext)
   const phrases = getPhrases()
+
+  
+  // There may be saved phrase objects which no longer have any
+  // text. Don't count them.
+  const count = phrases.reduce(
+    ( sum, phrase ) => sum += !!phrase.db.text
+    , 0
+  ) || 0
   
 
-  const phraseList = phrases?.map( phrase => {
+  const phraseList = phrases.map( phrase => {
     const key = phrase._id || phrase.key
     return <Phrase {...phrase} key={key}/>
   })
@@ -36,7 +48,7 @@ export const Phrases = () => {
         {phraseList}
       </div>
       <div className="spacer"></div>
-      <PhrasesFooter />
+      <PhrasesFooter count={count} />
     </main>
   )
 }

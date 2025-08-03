@@ -12,14 +12,6 @@ export const Tabs = () => {
   const { lists, redos } = useContext(UserContext)
 
 
-  const byIndex = (a, b) => {
-    return b.index - a.index
-  }
-
-
-  redos?.sort(byIndex)
-
-
   const editTabs = lists.map(( list, index ) => {
     const { _id } = list
     return <TabButton { ...list } key={_id} edit={index}/>

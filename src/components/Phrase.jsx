@@ -22,28 +22,28 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
   }
 
 
-  // Called only by the button
-  function saveChanges() {
-    if (typeof _id === "number" && !text) {
-      // Can't save a new phrase with no text
-      return
-    }
-
-    updatePhrase(_id)
-  }
-
-
   function saveOnBlur({ target, relatedTarget }) {
     const phrase = target.closest(".phrase")
     if (!phrase || phrase.contains(relatedTarget)) {
       // The current focus is in the same div.phrase
       return
     }
-    
+
     // Only save if the phrase has changed since the last save
     if (text !== db.text || hint !== db.hint) {
-      updatePhrase(_id)
+      checkForUpdate()
     }
+  }
+
+
+  const checkForUpdate = () => {
+    if (!(text.trim())) {
+      // Can't save a phrase with no text; restore db version
+      return onChange({target: {name: "text", value: db.text}})
+      // TODO: Show flash to indicate that text has been restored
+    }
+
+    updatePhrase(_id)
   }
 
 
@@ -97,7 +97,7 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
       >
         <button
           className={buttonClass}
-          onClick={saveChanges}
+          onClick={checkForUpdate}
         ></button>
       </div>
     </div>

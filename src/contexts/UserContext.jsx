@@ -14,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { APIContext } from "./APIContext"
 import storage from "../tools/storage"
+import { byIndex } from '../tools/array'
 
 const LIST_LENGTH = 21
 // Initialize storage if it is empty
@@ -69,6 +70,9 @@ export const UserProvider = ({ children }) => {
     if (fail) {
       console.log("fail:", fail)
     }
+
+    lists.sort(byIndex)
+    redos.sort(byIndex)
 
     lists.forEach(preparePhrases) // should only be one
     redos.forEach(preparePhrases) // should only be one
@@ -275,6 +279,51 @@ export const UserProvider = ({ children }) => {
   }
 
 
+  const submitList = (_id) => {
+    console.log("submitList list_id:", _id)
+
+    const url = `${origin}/submitList`
+    const headers = { 'Content-Type': 'application/json' }
+    const data = { _id }
+    const body = JSON.stringify(data)
+
+    fetch(url, {
+      method: 'POST',
+      headers,
+      body,
+    })
+      .then(incoming => incoming.json())
+      .then(json => treatListSubmit(json))
+      .catch(treatDataError)
+  }
+
+
+  const treatListSubmit = (json) => {
+    console.log("treatListSubmit json", JSON.stringify(json, null, '  '));
+    
+    const { _id, submitted } = json
+
+    if (!submitted) {
+      return console.log("submitList didn't return submitted")
+    }
+
+    const index = lists.findIndex( list => list._id === _id )
+    lists.splice(index, 1)
+
+    setLists([ ...lists ])
+
+    // Navigate to the first redo or the Add page
+    const [ path, param ] = (redos[0]?.index)
+      ? [ "/rev/", redos[0].index ]
+      : (lists[0]?.index)
+        ? [ "/add/", lists[0].index ]
+        : ["/", ""]
+
+    navigate(`${path}${param}`)
+
+  }
+
+
   //////////////////////////// REVIEW ////////////////////////////
 
 
@@ -421,7 +470,7 @@ export const UserProvider = ({ children }) => {
     const target = (next?.tagName === "TEXTAREA" ? next : null)
          // hint?
       || activeItem.closest(".phrase, .review")
-         .nextElementSibling.querySelector("textarea")
+         .nextElementSibling?.querySelector("textarea")
          // text in next phrase?
       || activeItem.closest("#phraseList, #review")
          .querySelector("textarea") // recycle to first entry
@@ -494,6 +543,7 @@ export const UserProvider = ({ children }) => {
         editPhrase,
         updatePhrase,
         addList,
+        submitList,
         toggleRedo,
         submitReview,
         dismissReview,
