@@ -26,8 +26,6 @@ export const DaysWorkDone = (props) => {
      : "."
     )
 
-  // console.log("DaysWorkDone:", message)
-
 
   return (
     <div className="mask">

@@ -390,7 +390,7 @@ footer {
   }
 }
 
-#review {
+#reviews {
   counter-set: phraseCounter;
   position: relative;
   overflow: hidden;

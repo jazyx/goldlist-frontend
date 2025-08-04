@@ -502,8 +502,6 @@ export const UserProvider = ({ children }) => {
     setRedos([ ...redos ])
     setRedosDone(redosDone + 1)
 
-    // console.log("redosDone + 1:", redosDone + 1)
-
     // Check if there are older lists to review. If so navigate
     // to the next list. If not, go to `/add/X` which should always
     // be available
@@ -543,7 +541,7 @@ export const UserProvider = ({ children }) => {
       || activeItem.closest(".phrase, .review")
          .nextElementSibling?.querySelector("textarea")
          // text in next phrase?
-      || activeItem.closest("#phraseList, #review")
+      || activeItem.closest("#phrases, #reviews")
          .querySelector("textarea") // recycle to first entry
 
     if (target) {
@@ -554,7 +552,7 @@ export const UserProvider = ({ children }) => {
 
 
   const scrollIntoView = ({ target }) => {
-    // Find div#phraseList or div#review
+    // Find div#phrases or div#reviews
     const parent = target.closest("[id]")
 
     if (!parent) {return}
@@ -597,11 +595,9 @@ export const UserProvider = ({ children }) => {
 
   const checkIfDone = () => {
     const dayBreak = + getLocalTime(DAY_BREAK) // milliseconds
-    // console.log("dayBreak:", dayBreak, ", dayList:", dayList)
     if (dayList === dayBreak && (!redos.length)) {
       // A new list has been created today since 3 a.m., and there
       // are no more redos to review
-      // console.log("setDayDone(true)")
       setDayDone(true)
     }
   }

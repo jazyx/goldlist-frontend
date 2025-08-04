@@ -74,7 +74,7 @@ export const Reviews = (props) => {
     <main>
       <Tabs/>
       <div
-        id="review"
+        id="reviews"
         className={className}
       >
         <div className="reviews">
