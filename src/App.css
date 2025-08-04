@@ -216,9 +216,16 @@ ul#tabs {
   }
 }
 
-div#phraseList {
+div#phrases {
   counter-set: number;
   overflow-y: auto;
+  position: relative;
+
+  div.phrases {
+    position: relative;
+    height: 100%;
+    overflow-y: auto;
+  }
 
   div.phrase {
     display: flex;
@@ -312,6 +319,17 @@ div#phraseList {
         }
       }
     }
+  }
+
+  &:has(.mask) {
+    /* Prevent actions on the elements behind the mask */
+      & .lists {
+        pointer-events: all;
+      }
+
+      & textarea {
+        pointer-events: none;
+      }
   }
 }
 
@@ -580,54 +598,63 @@ footer {
   }
   
   /* Prevent actions on the elements behind the mask */
-  &.mask .review {
-    pointer-events: none;
-  }
-
-  div.mask {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--mask);
-    /* Allow the div.review behind the mask to scroll */
-    pointer-events: none;
-
-    & .retained {
-      display: flex;
-      flex-direction: column;
-      max-height: 100%;
-      width: min(50%, 50vw);
-      padding: var(--gap);
-      border: 1px solid var(--white);
-      border-radius: var(--gap);
-      box-sizing: border-box;
-      font-size: 1.5em;
+  &.mask {
+    & .reviews {
       pointer-events: all;
+    }
 
-      h3 {
-        margin: 0;
-      }
-
-      ul {
-        flex: 1;
-        overflow: auto;
-        min-height: 1.2em;
-      }
-
-      button {
-        align-self: flex-end
-      }
+    & .review {
+      pointer-events: none;
     }
   }
 }
 
 .spacer {
   flex-grow: 1;
+}
+
+div.mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--mask);
+  /* Allow the div.review behind the mask to scroll */
+  pointer-events: none;
+
+  & .dialog {
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    width: min(50%, 50vw);
+    padding: var(--gap);
+    border: 1px solid var(--white);
+    border-radius: var(--gap);
+    box-sizing: border-box;
+    font-size: 1.5em;
+    text-align: center;
+    background-color: var(--dark);
+    pointer-events: all;
+
+    h3 {
+      margin: 0;
+    }
+
+    ul {
+      flex: 1;
+      overflow: auto;
+      min-height: 1.2em;
+      text-align: left;
+    }
+
+    button {
+      align-self: flex-end
+    }
+  }
 }
 
 /* Ensure Phrase + Review textareas show placeholder on one line

@@ -20,7 +20,7 @@ export const debounce = (debouncedFunction, immediate, delay = 300) => {
   }
   let timeout
 
-  return (...args) => {    
+  return (...args) => {
     const callNow = immediate && !timeout
     clearTimeout(timeout);
 
@@ -47,3 +47,38 @@ export const debounce = (debouncedFunction, immediate, delay = 300) => {
 //   processChange(2,3,4)
 // }
 // // Will print Done 2 3 4 after bouncing is done
+
+
+/**
+ * 
+ * @param data may be an object with (24) hour and minute integer
+ *             entries, a date string, and a boolean past.
+ * @returns    If past is truthy, returns the closest time in the
+ *             past when the time was the given time; if not,
+ *             returns the time today when it was or will be that
+ *             time
+ */
+export const getLocalTime = (data) => {
+  const { hour=0, minute=0, past=true, date } = (data || {})
+  const now = date ? new Date(date) : new Date()
+  const year = now.getFullYear()
+  const month = now.getMonth()
+  const day = now.getDate()
+
+  let time = new Date(
+    year, month, day,     // today's date
+    hour, minute, 0, 0
+  );
+
+  if (past) {
+  // If current time is before timeToday, use yesterday's time
+    if (now < time) {
+      time = new Date(
+        year, month, day - 1, // yesterday's date
+        hour, minute, 0, 0
+      );
+    }
+  }
+
+  return time
+}

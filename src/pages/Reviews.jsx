@@ -9,6 +9,7 @@ import { UserContext } from '../contexts'
 import { Tabs } from '../components/Tabs'
 import { Review } from '../components/Review'
 import { ReviewsFooter } from '../components/ReviewsFooter'
+import { DaysWorkDone } from '../components/DaysWorkDone'
 
 
 
@@ -50,7 +51,7 @@ export const Reviews = (props) => {
       : `You have decided to remember these ${reviewedCount} phrases:`
 
     return <div className="mask">
-      <div className="retained">
+      <div className="dialog">
         <h3>{header}</h3>
         <ul>
           {reviewed}
@@ -80,6 +81,7 @@ export const Reviews = (props) => {
           {phraseList}
         </div>
         {mask}
+        <DaysWorkDone />
       </div>
       <div className="spacer"></div>
       <ReviewsFooter />

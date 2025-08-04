@@ -28,7 +28,8 @@ export const Review = ({
     toggleRedo,
     tabNextOnEnter,
     scrollIntoView,
-    openAll
+    openAll,
+    getPathAndIndex
   } = useContext(UserContext)
 
 
@@ -37,9 +38,13 @@ export const Review = ({
   // Don't limit feedback or visibility of hint if openAll is true
   const limitCheck = (openAll) ? false : limit
 
+  // HACK: Ensure that text is not set to "" by useEffect if
+  // Reviews tries to show a Phrases page
+  const isRev = getPathAndIndex().path === "rev"
+
 
   const resetText = () => {
-    if (!right && text === db.text && !locked) {
+    if (isRev && !right && text === db.text && !locked) {
       const name = "text"
       const value = ""
       editPhrase({ _id, name, value })

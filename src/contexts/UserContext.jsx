@@ -15,8 +15,13 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { APIContext } from "./APIContext"
 import storage from "../tools/storage"
-import { byIndex, debounce } from '../tools/utilities'
+import {
+  byIndex,
+  debounce,
+  getLocalTime
+} from '../tools/utilities'
 
+const DAY_BREAK = { hour: 3 }
 const LIST_LENGTH = 21
 // Initialize storage if it is empty
 const INITIALIZED = (Object.entries(storage.settings).length)
@@ -34,11 +39,16 @@ export const UserProvider = ({ children }) => {
   const { origin } = useContext(APIContext)
 
   // Read initial value of userData from LocalStorage
-  const [ loaded, setLoaded ] = useState(false)
   const [ user, setUser ] = useState(() => storage.get())
+
+  const [ loaded, setLoaded ] = useState(false)
   const [ lists, setLists ] = useState([])
   const [ redos, setRedos ] = useState([])
   const [ openAll, setOpenAll ] = useState(false)
+  const [ redosDone, setRedosDone ] = useState(0)
+  const [ dayList, setDayList ] = useState(0)
+  const [ dayDone, setDayDone ] = useState(0)
+  
 
   const debounced = useRef(debounce(requestUserData))
   const refocus = debounced.current
@@ -55,7 +65,7 @@ export const UserProvider = ({ children }) => {
     if ( type === "focus"
       || type === "visibilitychange" && !document.hidden
     ) {
-      getUserData()
+      // getUserData()
     }
   }
 
@@ -308,6 +318,7 @@ export const UserProvider = ({ children }) => {
     // Place the new list at the beginning of the editable lists
     setUser({ ...user, lists: list.index }) // match DB value
     setLists([ list, ...lists ])
+    setDayList(+ getLocalTime(DAY_BREAK)) // milliseconds
 
     navigate("/add")
   }
@@ -420,12 +431,15 @@ export const UserProvider = ({ children }) => {
 
   const treatReview = json => {
     const { reviewed } = json
-    const { _id, index, reviews, remain } = json.list
+    const { _id, reviews, remain } = json.list
     const list = redos.find( list => list._id === _id )
     if (!list) {
       return console.log("Unable to find list with id:", list_id)
     }
 
+    // This redo list is about to be deleted, but it will remain
+    // visible behind the Dismiss Review dialog, so the `retain`
+    // lifebuoys should be replaced with locks.
     const { phrases } = list
 
     reviewed.forEach( data => {
@@ -457,7 +471,7 @@ export const UserProvider = ({ children }) => {
     list.reviews = reviews
     list.reviewed = true
 
-    setLists([ ...lists ])
+    setRedos([ ...redos ])
   }
 
 
@@ -466,6 +480,9 @@ export const UserProvider = ({ children }) => {
     const done = getActive()
     const index = redos.findIndex( list => list === done )
     redos.splice(index, 1)
+
+    setRedos([ ...redos ])
+    setRedosDone(redosDone + 1)
 
     // Check if there are older lists to review. If so navigate
     // to the next list. If not, go to `/add/X` which should always
@@ -558,8 +575,19 @@ export const UserProvider = ({ children }) => {
   }
 
 
+  const checkIfDone = () => {
+    const dayBreak = + getLocalTime(DAY_BREAK) // milliseconds
+    if (dayList === dayBreak && (!redos.length)) {
+      // A new list has been created today since 3 a.m., and there
+      // are no more redos to review
+      setDayDone(true)
+    }
+  }
+
+
   useEffect(autoLoad, [])
   useEffect(goAdd, [lists])
+  useEffect(checkIfDone, [ dayList, redos.length ])
 
 
   return (
@@ -569,6 +597,8 @@ export const UserProvider = ({ children }) => {
         lists,
         redos,
         openAll,
+        dayDone,
+        redosDone,
         getPhrases,
         getActive,
         getUserData,
@@ -581,7 +611,9 @@ export const UserProvider = ({ children }) => {
         dismissReview,
         tabNextOnEnter,
         scrollIntoView,
-        toggleOpenAll
+        toggleOpenAll,
+        setDayDone,
+        getPathAndIndex
       }}
     >
       {children}

@@ -9,6 +9,7 @@ import { UserContext } from '../contexts'
 import { Tabs } from '../components/Tabs'
 import { Phrase } from '../components/Phrase'
 import { PhrasesFooter } from '../components/PhrasesFooter'
+import { DaysWorkDone } from '../components/DaysWorkDone'
 
 
 export const Phrases = () => {
@@ -38,9 +39,12 @@ export const Phrases = () => {
     <main>
       <Tabs/>
       <div
-        id="phraseList"
+        id="phrases"
       >
-        {phraseList}
+        <div className="phrases">
+          {phraseList}
+        </div>
+        <DaysWorkDone />
       </div>
       <div className="spacer"></div>
       <PhrasesFooter count={count} />
