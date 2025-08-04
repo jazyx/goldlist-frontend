@@ -16,7 +16,7 @@ export const Phrases = () => {
   const { index } = params
   const {
     getPhrases,
-    setListIndex,
+    // setListIndex,
     listIndex
   } = useContext(UserContext)
   const phrases = getPhrases()
@@ -36,7 +36,7 @@ export const Phrases = () => {
   })
 
 
-  useEffect(() => setListIndex(index || listIndex), [index])
+  // useEffect(() => setListIndex(index || listIndex), [index])
 
 
   return (

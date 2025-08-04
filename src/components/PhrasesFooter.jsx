@@ -17,9 +17,9 @@ import { SubmitList } from "./SubmitList"
 
 export const PhrasesFooter = ({ count }) => {
   const { getActive, lists, addList } = useContext(UserContext)
-  const list = getActive("list")
+  const list = getActive()
   const target = 21
-  const total = list.remain || target
+  const total = list?.remain || target
 
 
   const isAddList = list === lists[0]

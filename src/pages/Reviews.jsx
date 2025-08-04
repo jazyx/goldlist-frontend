@@ -18,13 +18,13 @@ export const Reviews = (props) => {
 
   const {
     getActive,
-    listIndex,
-    setListIndex,
+    // listIndex,
+    // setListIndex,
     dismissReview
   } = useContext(UserContext)
 
 
-  const list = getActive("redo")
+  const list = getActive()
   const { phrases = [], reviewed } = list
 
 
@@ -71,7 +71,7 @@ export const Reviews = (props) => {
     : [ null, undefined ]
 
 
-  useEffect(() => setListIndex( index || listIndex ), [index] )
+  // useEffect(() => setListIndex( index || listIndex ), [index] )
 
 
   return (

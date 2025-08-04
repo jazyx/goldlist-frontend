@@ -9,12 +9,13 @@ import {
   createContext,
   useContext,
   useState,
-  useEffect
+  useEffect,
+  useRef
 } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { APIContext } from "./APIContext"
 import storage from "../tools/storage"
-import { byIndex } from '../tools/array'
+import { byIndex, debounce } from '../tools/utilities'
 
 const LIST_LENGTH = 21
 // Initialize storage if it is empty
@@ -30,21 +31,47 @@ export const UserContext = createContext()
 
 export const UserProvider = ({ children }) => {
   const navigate = useNavigate()
+  const { index } = useParams()
   const { origin } = useContext(APIContext)
 
   // Read initial value of userData from LocalStorage
   const [ loaded, setLoaded ] = useState(false)
   const [ user, setUser ] = useState(() => storage.get())
   const [ lists, setLists ] = useState([])
-  const [ listIndex, setListIndex ] = useState(0)
+  // const [ listIndex, setTheListIndex ] = useState(0)
   const [ redos, setRedos ] = useState([])
   const [ openAll, setOpenAll ] = useState(false)
+
+  // console.log("index:", index, ", listIndex:", listIndex)
+
+  const debounced = useRef(debounce(requestUserData))
+  const refocus = debounced.current
+
+
+  // const setListIndex = (index) => {
+  //   console.log("setListIndex:", index)
+  //   setTheListIndex(index)
+  // }
+  /////////////////////// WHEN TO REFRESH ///////////////////////
+  
+
+  window.addEventListener("focus", refocus)
+  window.addEventListener("visibilitychange", refocus)
+
+
+  function requestUserData({ type, target }){
+    if ( type === "focus"
+      || type === "visibilitychange" && !document.hidden
+    ) {
+      getUserData()
+    }
+  }
 
 
   //////////////////////// INITIALIZATION ////////////////////////
 
 
-  const getUserData = () => {
+  function getUserData() {
     const url = `${origin}/getUserData`
     const headers = { 'Content-Type': 'application/json' }
     const credentials = "include"
@@ -92,7 +119,7 @@ export const UserProvider = ({ children }) => {
 
     setUser(user)
     setLists(lists)
-    setListIndex(lists[0].index) // only one list
+    // setListIndex(index || lists[0].index) // only one list
     setRedos(redos)
   }
 
@@ -130,32 +157,51 @@ export const UserProvider = ({ children }) => {
   ///////////////////////// SELECT items /////////////////////////
 
 
-  const getActive = type => {
-    const index = Number(listIndex)
-    const source = (type === "redo")
+  const getPathAndIndex = () => {
+    const match = /\/(\w+)(\/(\d+))?/.exec(location.pathname)
+    if (!match) {
+      return {}
+    }
+    const [ , path, , index=(lists[0]?.index || 0) ] = match
+
+    return { path, index }
+  }
+
+  const getActive = (forceNull) => {
+    const { path, index } = getPathAndIndex()
+
+    const source = (path === "rev")
       ? redos
       : lists
 
-    const list = source.find( list => list.index === index )
-    return list || {}
+    const list = source.find( list => list.index == index )
+    return list || ( forceNull ? null : {} )
   }
 
 
-  const getPhrases = type => {
-    const source = getActive(type)
+  const getPhrases = () => {
+    const source = getActive(true)
 
-    return source?.phrases || [{
-      text: `No phrases available for ${type}`,
-      hint: `listIndex: ${listIndex}
-      (available: ${(type === "redo" ? redos : lists)?.map( list => list.index )})`,
-      db: { text: "", hint: "" },
-      _id: "random_id"
-    }]
+    const fallback = (() => {
+      if (source) { return }
+
+      const { path, index } = getPathAndIndex()
+      const type = path === "rev" ? redos : lists
+      return [{
+        text: `No phrases available for ${path}`,
+        hint: `index: ${index}
+        (available: ${type.map( list => list.index )})`,
+        db: { text: "", hint: "" },
+        _id: "random_id"
+      }]
+    })()
+
+    return source?.phrases || fallback
   }
 
 
   const getPhrase = (type, _id) => {
-    const list = getActive(type)
+    const list = getActive()
     const phrase = list.phrases?.find(
       phrase => phrase._id === _id
     )
@@ -185,7 +231,7 @@ export const UserProvider = ({ children }) => {
    * saved, which would lead to a blank.
    */
   const updatePhrase = _id => {
-    const list = getActive("list")
+    const list = getActive()
     const phrase = list.phrases.find(
       phrase => phrase._id === _id
     )
@@ -208,7 +254,6 @@ export const UserProvider = ({ children }) => {
     }
 
     const body = JSON.stringify(phrase, replacer)
-    console.log("body", JSON.stringify(body, null, '  '));
 
     fetch(url, {
       method: 'POST',
@@ -271,7 +316,7 @@ export const UserProvider = ({ children }) => {
 
     // Place the new list at the beginning of the editable
     // lists
-    setListIndex(list.index) // may be a string
+    // setListIndex(list.index) // may be a string
     setUser({ ...user, lists: list.index }) // match DB value
     setLists([ list, ...lists ])
 
@@ -336,8 +381,8 @@ export const UserProvider = ({ children }) => {
 
 
   const submitReview = () => {
-    const { _id } = getActive("redo")
-    const phrases = getPhrases("redo")
+    const { _id } = getActive()
+    const phrases = getPhrases()
 
     // Find all phrases which are flagged to be retained...
     const reviewed = phrases.filter( phrase => (
@@ -429,7 +474,7 @@ export const UserProvider = ({ children }) => {
 
   const dismissReview = () => {
     // Remove reviewed list from redos
-    const done = getActive("redo")
+    const done = getActive()
     const index = redos.findIndex( list => list === done )
     redos.splice(index, 1)
 
@@ -533,10 +578,10 @@ export const UserProvider = ({ children }) => {
       value ={{
         user,
         lists,
-        listIndex,
+        // listIndex,
         redos,
         openAll,
-        setListIndex,
+        // setListIndex,
         getPhrases,
         getActive,
         getUserData,
