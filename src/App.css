@@ -640,7 +640,7 @@ div.mask {
     background-color: var(--dark);
     pointer-events: all;
 
-    h3 {
+    h2 {
       margin: 0;
     }
 

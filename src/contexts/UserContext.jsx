@@ -48,14 +48,14 @@ export const UserProvider = ({ children }) => {
   const [ redosDone, setRedosDone ] = useState(0)
   const [ dayList, setDayList ] = useState(0)
   const [ dayDone, setDayDone ] = useState(0)
-  
+
 
   const debounced = useRef(debounce(requestUserData))
   const refocus = debounced.current
 
 
   /////////////////////// WHEN TO REFRESH ///////////////////////
-  
+
 
   window.addEventListener("focus", refocus)
   window.addEventListener("visibilitychange", refocus)
@@ -85,6 +85,16 @@ export const UserProvider = ({ children }) => {
       credentials,
       body
     })
+      // .then(incoming => incoming.text())
+      // .then(text => {
+      //    try {
+      //      const json = JSON.parse(text)
+      //      return json
+      //    } catch (error) {
+      //      console.log("error:", error)
+      //      console.log("text:", text)
+      //    }
+      //  })
       .then(incoming => incoming.json())
       .then(json => treatUserData(json))
       .catch(treatDataError)
@@ -320,13 +330,13 @@ export const UserProvider = ({ children }) => {
     setLists([ list, ...lists ])
     setDayList(+ getLocalTime(DAY_BREAK)) // milliseconds
 
+    // console.log("dayList:", + getLocalTime(DAY_BREAK))
+
     navigate("/add")
   }
 
 
   const submitList = (_id) => {
-    console.log("submitList list_id:", _id)
-
     const url = `${origin}/submitList`
     const headers = { 'Content-Type': 'application/json' }
     const data = { _id }
@@ -337,6 +347,16 @@ export const UserProvider = ({ children }) => {
       headers,
       body,
     })
+      // .then(incoming => incoming.text())
+      // .then(text => {
+      //    try {
+      //      const json = JSON.parse(text)
+      //      return json
+      //    } catch (error) {
+      //      console.log("error:", error)
+      //      console.log("text:", text)
+      //    }
+      //  })
       .then(incoming => incoming.json())
       .then(json => treatListSubmit(json))
       .catch(treatDataError)
@@ -344,8 +364,6 @@ export const UserProvider = ({ children }) => {
 
 
   const treatListSubmit = (json) => {
-    console.log("treatListSubmit json", JSON.stringify(json, null, '  '));
-    
     const { _id, submitted } = json
 
     if (!submitted) {
@@ -484,6 +502,8 @@ export const UserProvider = ({ children }) => {
     setRedos([ ...redos ])
     setRedosDone(redosDone + 1)
 
+    // console.log("redosDone + 1:", redosDone + 1)
+
     // Check if there are older lists to review. If so navigate
     // to the next list. If not, go to `/add/X` which should always
     // be available
@@ -577,9 +597,11 @@ export const UserProvider = ({ children }) => {
 
   const checkIfDone = () => {
     const dayBreak = + getLocalTime(DAY_BREAK) // milliseconds
+    // console.log("dayBreak:", dayBreak, ", dayList:", dayList)
     if (dayList === dayBreak && (!redos.length)) {
       // A new list has been created today since 3 a.m., and there
       // are no more redos to review
+      // console.log("setDayDone(true)")
       setDayDone(true)
     }
   }

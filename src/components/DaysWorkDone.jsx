@@ -26,11 +26,13 @@ export const DaysWorkDone = (props) => {
      : "."
     )
 
+  // console.log("DaysWorkDone:", message)
+
 
   return (
     <div className="mask">
       <div className="dialog done">
-        <h1>Congratulations!</h1>
+        <h2>Congratulations!</h2>
         <p>{message}</p>
         <button
           className="primary"

@@ -52,7 +52,7 @@ export const Reviews = (props) => {
 
     return <div className="mask">
       <div className="dialog">
-        <h3>{header}</h3>
+        <h2>{header}</h2>
         <ul>
           {reviewed}
         </ul>
