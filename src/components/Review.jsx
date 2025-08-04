@@ -40,10 +40,9 @@ export const Review = ({
 
   const resetText = () => {
     if (!right && text === db.text && !locked) {
-      const type = "redo"
       const name = "text"
       const value = ""
-      editPhrase({ type, _id, name, value })
+      editPhrase({ _id, name, value })
     }
   }
 
@@ -51,7 +50,7 @@ export const Review = ({
   const onChange = ({ target }) => {
     const { name, value } = target
     const type = "redo"
-    editPhrase({ type, _id, name, value, db })
+    editPhrase({ _id, name, value, db })
   }
 
 

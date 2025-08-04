@@ -16,8 +16,6 @@ export const Phrases = () => {
   const { index } = params
   const {
     getPhrases,
-    // setListIndex,
-    listIndex
   } = useContext(UserContext)
   const phrases = getPhrases()
 
@@ -34,9 +32,6 @@ export const Phrases = () => {
     const key = phrase._id || phrase.key
     return <Phrase {...phrase} key={key}/>
   })
-
-
-  // useEffect(() => setListIndex(index || listIndex), [index])
 
 
   return (

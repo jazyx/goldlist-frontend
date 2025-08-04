@@ -18,8 +18,6 @@ export const Reviews = (props) => {
 
   const {
     getActive,
-    // listIndex,
-    // setListIndex,
     dismissReview
   } = useContext(UserContext)
 
@@ -69,9 +67,6 @@ export const Reviews = (props) => {
   const [ className, mask ] = (reviewed)
     ? [ "mask", createMask() ]
     : [ null, undefined ]
-
-
-  // useEffect(() => setListIndex( index || listIndex ), [index] )
 
 
   return (

@@ -12,7 +12,7 @@ import {
   useEffect,
   useRef
 } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { APIContext } from "./APIContext"
 import storage from "../tools/storage"
 import { byIndex, debounce } from '../tools/utilities'
@@ -31,27 +31,19 @@ export const UserContext = createContext()
 
 export const UserProvider = ({ children }) => {
   const navigate = useNavigate()
-  const { index } = useParams()
   const { origin } = useContext(APIContext)
 
   // Read initial value of userData from LocalStorage
   const [ loaded, setLoaded ] = useState(false)
   const [ user, setUser ] = useState(() => storage.get())
   const [ lists, setLists ] = useState([])
-  // const [ listIndex, setTheListIndex ] = useState(0)
   const [ redos, setRedos ] = useState([])
   const [ openAll, setOpenAll ] = useState(false)
-
-  // console.log("index:", index, ", listIndex:", listIndex)
 
   const debounced = useRef(debounce(requestUserData))
   const refocus = debounced.current
 
 
-  // const setListIndex = (index) => {
-  //   console.log("setListIndex:", index)
-  //   setTheListIndex(index)
-  // }
   /////////////////////// WHEN TO REFRESH ///////////////////////
   
 
@@ -119,7 +111,6 @@ export const UserProvider = ({ children }) => {
 
     setUser(user)
     setLists(lists)
-    // setListIndex(index || lists[0].index) // only one list
     setRedos(redos)
   }
 
@@ -200,7 +191,7 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  const getPhrase = (type, _id) => {
+  const getPhrase = (_id) => {
     const list = getActive()
     const phrase = list.phrases?.find(
       phrase => phrase._id === _id
@@ -213,8 +204,8 @@ export const UserProvider = ({ children }) => {
   ///////////////////////// EDIT AND SAVE /////////////////////////
 
 
-  const editPhrase = ({ type, name, _id, value, db }) => {
-    const phrase = getPhrase(type, _id)
+  const editPhrase = ({ name, _id, value, db }) => {
+    const phrase = getPhrase(_id)
     phrase[name] = value
 
     const right =  (db && value === db.text)
@@ -314,9 +305,7 @@ export const UserProvider = ({ children }) => {
     // objects
     preparePhrases(list)
 
-    // Place the new list at the beginning of the editable
-    // lists
-    // setListIndex(list.index) // may be a string
+    // Place the new list at the beginning of the editable lists
     setUser({ ...user, lists: list.index }) // match DB value
     setLists([ list, ...lists ])
 
@@ -373,7 +362,7 @@ export const UserProvider = ({ children }) => {
 
 
   const toggleRedo = ({ _id, name, checked, db }) => {
-    const phrase = getPhrase("redo", _id)
+    const phrase = getPhrase(_id)
     phrase[name] = checked
 
     setLists([...lists])
@@ -578,10 +567,8 @@ export const UserProvider = ({ children }) => {
       value ={{
         user,
         lists,
-        // listIndex,
         redos,
         openAll,
-        // setListIndex,
         getPhrases,
         getActive,
         getUserData,
