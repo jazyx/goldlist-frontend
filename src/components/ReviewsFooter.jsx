@@ -7,6 +7,7 @@ import { UserContext } from "../contexts"
 import { SubmitReview } from "./SubmitReview"
 import { Counter } from "./Counter"
 import { CheckSlider } from './CheckSlider'
+import { ThreeWaySlider } from "./ThreeWaySlider"
 
 export const ReviewsFooter = (props) => {
   const {
@@ -55,6 +56,7 @@ export const ReviewsFooter = (props) => {
       <Counter {...retained} icon="🛟" />
       <CheckSlider {...open} vertical={true}/>
       <SubmitReview disabled={disabled} />
+      <ThreeWaySlider vertical={true} name="limit"/>
       <Counter {...reviewed} icon="🟢" side="right" />
     </footer>
   )

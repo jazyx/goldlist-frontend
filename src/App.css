@@ -225,6 +225,8 @@ div#phrases {
     position: relative;
     height: 100%;
     overflow-y: auto;
+    /* Hide horizontal scroll bar */
+    overflow-x: hidden;
   }
 
   div.phrase {
@@ -399,6 +401,8 @@ footer {
     position: relative;
     height: 100%;
     overflow-y: auto;
+    /* Hide horizontal scroll bar */
+    overflow-x: hidden;
   }
 
   .review {
@@ -596,7 +600,7 @@ footer {
       }
     }
   }
-  
+
   /* Prevent actions on the elements behind the mask */
   &.mask {
     & .reviews {
@@ -653,6 +657,149 @@ div.mask {
 
     button {
       align-self: flex-end
+    }
+  }
+}
+
+
+div.three-way {
+  --long:  60vmin;                    /* long side */
+  --cross: calc(var(--size) * 0.5);   /* ratio of short side */
+  --twice: calc(var(--size) - var(--cross));
+  --once:  calc(var(--twice)* 0.5);
+  --icon:  calc(var(--cross) * 0.85); /* font-size for icon */
+  --edge:  calc(var(--size) * 0.02);  /* border width */
+  --side:  #fff;                    /* border color */
+  /* backgroundColor of dots in various states */
+  --off:   #900;
+  --mid:   #a50;
+  --on:    #060;
+  /* backgroundColor of slider in various states */
+  --bgoff: #333;
+  --bgmid: #666;
+  --bgon:  #999;
+  /* icons for various states */
+  --ioff:  "☁️";
+  --imid:  "🌤️";
+  --ion:   "☀️";
+
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--long);
+  height: var(--cross);
+  background-color: var(--bgoff);
+  border: var(--edge) solid var(--side);
+  border-radius: 100vmax;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  /* Make labels fill one-third each, shrunk to fit by flex */
+  label {
+    width: 100%;
+    height: 100%;
+
+    /* UNCOMMENT THE RULES BELOW TO SHOW LABEL WIDTHS */
+    /* background-color: var(--bgoff);
+
+    &:has(.mid) {
+      background-color: var(--bgmid);
+    }
+
+    &:has(.on) {
+      background-color: var(--bgon);
+    } */
+    /* UNCOMMENT THE RULES ABOVE TO SHOW LABEL WIDTHS */
+
+    /* Hide the radio buttons, but labels keep them active */
+    input {
+      display: none;
+    }
+  }
+
+
+  &::after {
+    /* Specific for off state */
+    content: var(--ioff);
+    background-color: var(--off);
+
+    /* Generic for all states */
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Center the icon */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--icon);
+    /* Round button */
+    width: var(--cross);
+    height: var(--cross);
+    border-radius: 100vmax;
+    overflow: hidden; /* allows click above edge */
+
+    transition: all 250ms;
+  }
+
+  /* Specific settings for mid and on states */
+  &:has(.mid:checked) {
+    background-color: var(--bgmid);
+
+    &::after {
+      content: var(--imid);
+      left: var(--once);
+      background-color: var(--mid);
+    }
+  }
+
+  &:has(.on:checked) {
+    background-color: var(--bgon);
+
+    &::after {
+      content: var(--ion);
+      left: var(--twice);
+      background-color: var(--on);
+    }
+  }
+
+  /* Custom settings for a vertical three-way slider */
+  &.vertical {
+    flex-direction: column;
+    width: var(--cross);
+    height: var(--long);
+
+    &:has(.mid:checked)::after {
+      left: 0;
+      top: var(--once);
+    }
+
+    &:has(.on:checked)::after {
+      left: 0;
+      top: var(--twice);
+    }
+  }
+
+  /* Custom settings for named three-way sliders */
+  &.limit {
+    --long:  var(--size);
+    /* backgroundColor of dots in various states */
+    --off:   var(--light);
+    --mid:   var(--grey);
+    --on:    #888; /* can't use var(--off) from root */
+    /* backgroundColor of slider in various states */
+    --bgoff: #888;
+    --bgmid: #888; /* can't use var(--off) from root */
+    --bgon:  #888;
+    /* icons for various states */
+    --ioff:  "☀️";
+    --imid:  "🌤️";
+    --ion:   "☁️";
+    border: none;
+
+    &::after {
+      border: var(--edge) solid var(--border);
+      box-sizing: border-box;
     }
   }
 }

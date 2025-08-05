@@ -85,19 +85,23 @@ export const UserProvider = ({ children }) => {
       credentials,
       body
     })
-      // .then(incoming => incoming.text())
-      // .then(text => {
-      //    try {
-      //      const json = JSON.parse(text)
-      //      return json
-      //    } catch (error) {
-      //      console.log("error:", error)
-      //      console.log("text:", text)
-      //    }
-      //  })
-      .then(incoming => incoming.json())
+      .then(incoming => {
+        return incoming.text()
+      })
+      .then(text => {
+         try {
+           const json = JSON.parse(text)
+           return json
+         } catch (error) {
+           console.log("error:", error)
+           console.log("text:", text)
+         }
+       })
+      // .then(incoming => incoming.json())
       .then(json => treatUserData(json))
-      .catch(treatDataError)
+      .catch(error => {
+        treatDataError(error)
+      })
   }
 
 
@@ -105,9 +109,9 @@ export const UserProvider = ({ children }) => {
     const { user, lists, redos, fail } = data
 
     // If the server sends a fail message, it should be logged to
-    // the console, but this doesn't seem to be happening
+    // the console, and nothing else should happen.
     if (fail) {
-      console.log("fail:", fail)
+      return console.log("fail:", fail)
     }
 
     lists.sort(byIndex)
