@@ -18,7 +18,8 @@ import storage from "../tools/storage"
 import {
   byIndex,
   debounce,
-  getLocalTime
+  getLocalTime,
+  set__scroll
 } from '../tools/utilities'
 
 const DAY_BREAK = { hour: 3 }
@@ -29,6 +30,8 @@ const INITIALIZED = (Object.entries(storage.settings).length)
 if (!INITIALIZED) {
   storage.set({ user_name: "Guest" })
 }
+
+set__scroll()
 
 
 export const UserContext = createContext()

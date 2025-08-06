@@ -82,3 +82,22 @@ export const getLocalTime = (data) => {
 
   return time
 }
+
+
+export const set__scroll = (css="--scroll") => {
+  // Create a temporary div with scrollbars
+  const div = document.createElement('div');
+  div.style.overflow = 'scroll';
+  div.style.visibility = 'hidden';
+  div.style.width = '100px';
+  div.style.height = '100px';
+  document.body.appendChild(div);
+
+  // Get the width of the scrollbar
+  const scroll = div.offsetWidth - div.clientWidth;
+
+  // Remove the temporary div from the document
+  document.body.removeChild(div);
+
+  document.documentElement.style.setProperty(css, scroll);
+}

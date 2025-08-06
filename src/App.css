@@ -17,7 +17,7 @@
   --drop:    -0.4rem;
   --edge:     0.1rem;
   --width:   10em;
-  --scroll:  20px;
+  --scroll:  20px; /* can be tweaked for browser by JavaScript */
 
   --button: #333;
   --button-border: #666;
@@ -39,7 +39,8 @@
   --saving: #c70;
 
   /* Input slider and Review */
-  --full:   min(calc(100vw - var(--scroll)), 60rem);
+  --full:   min(100vw, 60rem);
+  --fill:   calc(var(--full) - var(--scroll));
   --size:   6rem;
   --half:   calc(var(--size) * 0.5);
   --count:  calc(var(--size) * 0.333);
@@ -225,17 +226,15 @@ div#phrases {
     position: relative;
     height: 100%;
     overflow-y: auto;
-    /* Hide horizontal scroll bar */
-    overflow-x: hidden;
+    width: var(--full);
   }
 
   div.phrase {
     display: flex;
-    width: var(--full);
+    width: var(--fill);
     border-radius: 100vmax;
     box-sizing: border-box;
     background-color: var(--bg);
-    margin: 0 var(--scroll) var(--gap) 0;
     margin-bottom: var(--gap);
     counter-increment: number;
 
@@ -401,16 +400,15 @@ footer {
     position: relative;
     height: 100%;
     overflow-y: auto;
-    /* Hide horizontal scroll bar */
-    overflow-x: hidden;
+    width: var(--full);
   }
 
   .review {
     display: flex;
-    width: var(--full);
+    width: var(--fill);
     height: var(--size);
     background-color: var(--bg);
-    margin: 0 var(--scroll) var(--gap) 0;
+    margin-bottom: var(--gap);
     border-radius: 100vmax;
     overflow: hidden;
     transition: all var(--duration);
