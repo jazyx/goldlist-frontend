@@ -266,8 +266,14 @@ export const UserProvider = ({ children }) => {
 
     const replacer = (key, value) => {
       if ( key === "saving" || key === "db" ) {
+        // Not wanted on voyage
         return undefined
       }
+      if (key === "text") {
+        // Remove leading and trailing spaces
+        return value.trim()
+      }
+
       return value
     }
 
@@ -293,6 +299,8 @@ export const UserProvider = ({ children }) => {
 
     phrase._id = _id
     phrase.db = { text, hint }
+    phrase.text = text
+    phrase.hint = hint
     delete phrase.saving
 
     setLists([...lists])
