@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom'
 import './App.css'
 import { Home } from './pages/Home'
+import { Connect } from './pages/Connect'
 import { Phrases } from './pages/Phrases'
 import { Reviews } from './pages/Reviews'
 import { NotFound } from './pages/NotFound'
@@ -20,7 +21,7 @@ function App() {
     <Router>
       <Provider>
         <Routes>
-          <Route index element={<Home />} />
+          <Route index element={<Connect />} />
           <Route path="add">
               <Route
                 path=":index/"

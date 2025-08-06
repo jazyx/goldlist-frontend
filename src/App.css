@@ -6,6 +6,8 @@
   --white: #fff;
   --light: #ddd;
   --grey:  #ccc;
+  --shady: #888;
+  --shade: #666;
   --dark:  #222;
   --black: #000;
   --mask:  #222c;
@@ -16,8 +18,8 @@
   --slim:     0.25rem;
   --drop:    -0.4rem;
   --edge:     0.1rem;
-  --width:   10em;
-  --scroll:  20px; /* can be tweaked for browser by JavaScript */
+  --width:    16rem;
+  --scroll:   20px; /* can be tweaked for browser by JavaScript */
 
   --button: #333;
   --button-border: #666;
@@ -38,6 +40,17 @@
   --altered-border: #c33;
   --saving: #c70;
 
+  /* Connect */
+  --warn:  2.25rem;
+  --wide:  calc(var(--width) + var(--warn));
+  --span:  11rem;
+  --side:  1rem;
+  --form:  calc(var(--wide) - var(--gap)); /* 5px HACK */
+  --pass:  calc(var(--form) - var(--warn));
+  --warning: #640;
+  --warning-border: #960;
+  --warning-active: #420;
+
   /* Input slider and Review */
   --full:   min(100vw, 60rem);
   --fill:   calc(var(--full) - var(--scroll));
@@ -46,7 +59,7 @@
   --count:  calc(var(--size) * 0.333);
   --text:   "Courier New", monospace;
   --font:   1.5rem;
-  --line:   1.5em;
+  --line:   1.5rem;
   --border: #333;
   --right:  #090;
   --wrong:  #900;
@@ -78,7 +91,7 @@ main {
 }
 
 h1 {
-  font-size: 2.25em;
+  font-size: 2.25rem;
 }
 
 textarea {
@@ -213,6 +226,166 @@ ul#tabs {
 
     a {
       color: inherit;
+    }
+  }
+}
+
+#connect {
+  position: relative;
+  border: 1px inset var(--grey);
+  border-radius: var(--gap);
+  overflow: hidden;
+  font-size: 1.5rem;
+
+  & div.connect {
+    display: flex;
+    align-items: stretch;
+    width: calc(100% + 2px);
+    margin: -1px;
+
+    & label {
+      flex: 1;
+      height: 100%;
+      margin: 0;
+      border-style: inset;
+      background-color: var(--shade);
+      border-color: var(--shade);
+      border-width: 1px;
+      border-top-right-radius: var(--gap);
+      border-top-left-radius: var(--gap);
+      color: var(--dim);
+
+      &.selected {
+        border-bottom: none;
+        background-color: var(--dark);
+        color: var(--light);
+      }
+
+      &:not(.selected):hover {
+        background-color: var(--shady);
+        color: var(--white);
+        cursor: pointer;
+      }
+
+      & input {
+        display: none;
+      }
+
+      & span {
+        display: inline-block;
+        width: 100%;
+        padding: var(--gap) 0 var(--slim);
+        text-align: center;
+      }
+    }
+  }
+
+  & div.inputs {
+    padding: var(--side);
+    padding-bottom: 0;
+
+    & label {
+      display: block;
+      margin: var(--gap) 0;
+
+      & span {
+        display: inline-block;
+        width: var(--span);
+      }
+
+      & input {
+        display: inline-block;
+        width: var(--form);
+        font-size: inherit;
+      }
+
+      &.password {
+        display: flex;
+
+        & input {
+          width: var(--pass);
+        }
+
+        & button {
+          width: var(--warn);
+          height: var(--warn);
+          padding: 0;
+          border-radius: 100vmax;
+          background-color: var(--white);
+          /* overflow: hidden; */
+          img {
+            width: 95%;
+          }
+        }
+      }
+    }
+  }
+
+  & .buttons {
+    padding: var(--side);
+    text-align: right;
+
+    & button.primary {
+      width: var(--wide);
+    }
+
+    & .guest {
+      margin-top: var(--gap);
+    }
+  }
+
+  button.warning,
+  div.warning button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--warn);
+    height: var(--warn);
+    border-radius: var(--warn);
+    padding: 0;
+    background-color: var(--warning);
+    border-color: var(--warning-border);
+
+    &:hover {
+      background-color: var(--warning-active);
+      color: var(--white);
+    }
+
+    &:hover:active{
+      border-style: inset;
+    }
+  }
+
+  & div.warning {
+    position: fixed;
+    width: min(100vw, 30rem);
+    height: fit-content;
+    padding: var(--gap);
+    border: 1px inset var(--warning-border);
+    border-radius: var(--gap);
+    background-color: var(--warning);
+    text-align: left; /* Counters the right align of the buttons */
+    /* Centre in viewport */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+
+    & h2 {
+      text-align: center;
+      margin: var(--slim);
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+
+    & button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      font-size: var(--warn);
     }
   }
 }
@@ -637,7 +810,7 @@ div.mask {
     border: 1px solid var(--white);
     border-radius: var(--gap);
     box-sizing: border-box;
-    font-size: 1.5em;
+    font-size: 1.5rem;
     text-align: center;
     background-color: var(--dark);
     pointer-events: all;
@@ -649,7 +822,7 @@ div.mask {
     ul {
       flex: 1;
       overflow: auto;
-      min-height: 1.2em;
+      min-height: 1.2rem;
       text-align: left;
     }
 
@@ -658,7 +831,6 @@ div.mask {
     }
   }
 }
-
 
 div.three-way {
   --long:  60vmin;                    /* long side */
@@ -715,7 +887,6 @@ div.three-way {
       display: none;
     }
   }
-
 
   &::after {
     /* Specific for off state */

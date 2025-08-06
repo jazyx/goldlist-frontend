@@ -591,7 +591,7 @@ export const UserProvider = ({ children }) => {
 
   const autoLoad = () => {
     if (INITIALIZED) {
-      getUserData()
+      // getUserData()
     }
   }
 
