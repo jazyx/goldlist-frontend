@@ -19,7 +19,9 @@ export const Connect = () => {
   const [ show, setShow ] = useState(false)
 
 
-  const registerUser = () => {
+  const connect = ({ target }) => {
+    const { name } = target
+    console.log("name:", name)
     console.log("details", JSON.stringify(details, null, '  '));
   }
 
@@ -53,9 +55,9 @@ export const Connect = () => {
   }
 
 
-  const buttonName = (register)
-    ? "Register"
-    : "Log In"
+  const [ name, buttonName ] = (register)
+    ? [ "register", "Register"]
+    : [ "login", "Log In"]
 
   const [ registerClass, loginClass ] = (register)
     ? [ "selected", null ]
@@ -65,7 +67,7 @@ export const Connect = () => {
     ? [ "text", "/open.svg", "open" ]
     : [ "password", "/shut.svg", "shut" ]
 
-  const disabled = true // !details.user_name || !details.password
+  const disabled = !details.user_name || !details.password || !register
 
 
   return (
@@ -138,8 +140,9 @@ export const Connect = () => {
       </div>
         <div className="buttons">
           <button
+            name={name}
             className="primary"
-            onClick={registerUser}
+            onClick={connect}
             disabled={disabled}
           >
             {buttonName}
