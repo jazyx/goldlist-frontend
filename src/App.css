@@ -21,9 +21,9 @@
   --width:    16rem;
   --scroll:   20px; /* can be tweaked for browser by JavaScript */
 
-  --button: #333;
-  --button-border: #666;
-  --button-active: #333;
+  --button: #666;
+  --button-border: #999;
+  --button-active: #555;
   --primary: #060;
   --primary-border: #393;
   --primary-active: #030;

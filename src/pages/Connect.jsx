@@ -4,12 +4,13 @@
 
 
 import { useContext, useState } from 'react'
-import { APIContext } from '../contexts'
+import { APIContext, UserContext } from '../contexts'
 import { Guest } from '../components/Guest'
 
 
 export const Connect = () => {
   const { cookies } = useContext(APIContext)
+  const { registerUser, getUserData } = useContext(UserContext)
   const [ register, setRegister ] = useState(false)
   const [ details, setDetails ] = useState({
     user_name: "",
@@ -23,6 +24,9 @@ export const Connect = () => {
     const { name } = target
     console.log("name:", name)
     console.log("details", JSON.stringify(details, null, '  '));
+    if (name === "register") {
+      registerUser(details)
+    }
   }
 
 

@@ -43,7 +43,7 @@ export const UserProvider = ({ children }) => {
 
   // Read initial value of userData from LocalStorage
   const [ user, setUser ] = useState(() => storage.get())
-
+  const [ failed, setFailed ] = useState("")
   const [ loaded, setLoaded ] = useState(false)
   const [ lists, setLists ] = useState([])
   const [ redos, setRedos ] = useState([])
@@ -70,6 +70,15 @@ export const UserProvider = ({ children }) => {
     ) {
       // getUserData()
     }
+  }
+
+
+  ///////////////////////// REGISTRATION /////////////////////////
+
+
+  const registerUser = (data) => {
+    const { user_name, email, password } = data
+    console.log("registerUser data", JSON.stringify(data, null, '  '));
   }
 
 
@@ -632,9 +641,10 @@ export const UserProvider = ({ children }) => {
         openAll,
         dayDone,
         redosDone,
+        registerUser,
+        getUserData,
         getPhrases,
         getActive,
-        getUserData,
         editPhrase,
         updatePhrase,
         addList,
