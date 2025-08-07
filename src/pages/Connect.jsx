@@ -10,7 +10,11 @@ import { Guest } from '../components/Guest'
 
 export const Connect = () => {
   const { cookies } = useContext(APIContext)
-  const { registerUser, getUserData } = useContext(UserContext)
+  const {
+    registerUser,
+    getUserData,
+    failed
+  } = useContext(UserContext)
   const [ register, setRegister ] = useState(false)
   const [ details, setDetails ] = useState({
     user_name: "",
@@ -142,17 +146,22 @@ export const Connect = () => {
           </button>
         </label>
       </div>
-        <div className="buttons">
-          <button
-            name={name}
-            className="primary"
-            onClick={connect}
-            disabled={disabled}
-          >
-            {buttonName}
-          </button>
-          <Guest {...{cookies}} />
-        </div>
+      <p
+        className="failed"
+      >
+        {failed}
+      </p>
+      <div className="buttons">
+        <button
+          name={name}
+          className="primary"
+          onClick={connect}
+          disabled={disabled}
+        >
+          {buttonName}
+        </button>
+        <Guest {...{cookies}} />
+      </div>
     </div>
   )
 }

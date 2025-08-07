@@ -79,6 +79,45 @@ export const UserProvider = ({ children }) => {
   const registerUser = (data) => {
     const { user_name, email, password } = data
     console.log("registerUser data", JSON.stringify(data, null, '  '));
+
+    const url = `${origin}/register`
+    const headers = { 'Content-Type': 'application/json' }
+    const credentials = "include"
+    const body = JSON.stringify(data)
+
+    fetch(url, {
+      method: 'POST',
+      headers,
+      credentials,
+      body
+    })
+      .then(incoming => {
+        return incoming.text()
+      })
+      .then(text => {
+         try {
+           const json = JSON.parse(text)
+           return json
+         } catch (error) {
+           console.log("error:", error)
+           console.log("text:", text)
+         }
+       })
+      // .then(incoming => incoming.json())
+      .then(json => treatRegistration(json))
+      .catch(error => {
+        treatDataError(error)
+      })
+  }
+
+
+  const treatRegistration = json => {
+    const { users, lists, repos, fail } = json
+    if (fail) {
+      return setFailed(fail.reason)
+    }
+
+    treatUserData(json)
   }
 
 
@@ -638,6 +677,7 @@ export const UserProvider = ({ children }) => {
         user,
         lists,
         redos,
+        failed,
         openAll,
         dayDone,
         redosDone,

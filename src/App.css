@@ -281,8 +281,8 @@ ul#tabs {
   }
 
   & div.inputs {
-    padding: var(--side);
-    padding-bottom: 0;
+    margin-top: var(--warn);
+    padding: var(--warn) var(--side) var(--side);
 
     & label {
       display: block;
@@ -319,6 +319,12 @@ ul#tabs {
         }
       }
     }
+  }
+
+  & p.failed {
+    height: var(--warn);
+    margin: 0 var(--side);
+    color: #fa0;
   }
 
   & .buttons {
@@ -374,7 +380,6 @@ ul#tabs {
 
     & h2 {
       text-align: center;
-      margin: var(--slim);
     }
 
     p {
