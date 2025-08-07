@@ -34,11 +34,22 @@ export const APIProvider = ({ children }) => {
 
     const url = `${origin}/checkCookie`
     const options = {
-       method: 'GET',
-       credentials: 'include'
+      method: 'GET',
+      credentials: 'include'
     }
 
     fetch(url, options)
+      // .then(incoming => incoming.text())
+      // .then(text => {
+      //   try {
+      //     console.log("checkForCookies text:", text)
+      //     const json = JSON.parse(text)
+      //     return text
+      //   } catch (error) {
+      //     console.log("catch(error):", error)
+      //     return Promise.reject(error)
+      //   }
+      //  })
       .then(incoming => incoming.json())
       .then(json => treatCheckResponse(json))
       .catch(error => {

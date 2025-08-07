@@ -12,7 +12,7 @@ export const Connect = () => {
   const { cookies } = useContext(APIContext)
   const [ register, setRegister ] = useState(false)
   const [ details, setDetails ] = useState({
-    username: "",
+    user_name: "",
     email: "",
     password: ""
   })
@@ -46,7 +46,7 @@ export const Connect = () => {
     const { key, target } = event
     if (key === "Enter") {
       event.preventDefault()
-      if (details.username && details.email && details.password) {
+      if (details.user_name && details.email && details.password) {
         registerUser()
       }
     }
@@ -64,7 +64,10 @@ export const Connect = () => {
   const [ type, src, alt ] = (show)
     ? [ "text", "/open.svg", "open" ]
     : [ "password", "/shut.svg", "shut" ]
-    
+
+  const disabled = true // !details.user_name || !details.password
+
+
   return (
     <div id="connect">
       <div className="connect">
@@ -98,9 +101,9 @@ export const Connect = () => {
           <span>Username:</span>
           <input
             type="text"
-            id="username"
-            name="username"
-            value={details.username}
+            id="user_name"
+            name="user_name"
+            value={details.user_name}
             onKeyDown={treatEnterKey}
             onChange={update}
           />
@@ -137,6 +140,7 @@ export const Connect = () => {
           <button
             className="primary"
             onClick={registerUser}
+            disabled={disabled}
           >
             {buttonName}
           </button>
