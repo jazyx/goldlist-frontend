@@ -325,6 +325,7 @@ ul#tabs {
     height: var(--warn);
     margin: 0 var(--side);
     color: #fa0;
+    text-align: center;
   }
 
   & .buttons {

@@ -104,27 +104,17 @@ export const UserProvider = ({ children }) => {
          }
        })
       // .then(incoming => incoming.json())
-      .then(json => treatRegistration(json))
+      .then(json => treatUserData(json))
       .catch(error => {
         treatDataError(error)
       })
   }
 
 
-  const treatRegistration = json => {
-    const { users, lists, repos, fail } = json
-    if (fail) {
-      return setFailed(fail.reason)
-    }
-
-    treatUserData(json)
-  }
-
-
   //////////////////////// INITIALIZATION ////////////////////////
 
 
-  function getUserData() {
+  function getUserData(user) { // may be undefined as Guest
     const url = `${origin}/getUserData`
     const headers = { 'Content-Type': 'application/json' }
     const credentials = "include"
@@ -162,7 +152,7 @@ export const UserProvider = ({ children }) => {
     // If the server sends a fail message, it should be logged to
     // the console, and nothing else should happen.
     if (fail) {
-      return console.log("fail:", fail)
+      return setFailed(fail.reason)
     }
 
     lists.sort(byIndex)
@@ -181,7 +171,7 @@ export const UserProvider = ({ children }) => {
     // console.log("*************************")
 
     // Update the user_name in LocalStorage, after removing uuid
-    const user_name = user.user_name.replace(/_.*/, "")
+    const { user_name } = user
     storage.placeItems({ user_name  })
 
     setUser(user)

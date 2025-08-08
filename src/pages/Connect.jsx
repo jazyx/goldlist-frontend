@@ -9,7 +9,7 @@ import { Guest } from '../components/Guest'
 
 
 export const Connect = () => {
-  const { cookies } = useContext(APIContext)
+  const { cookies, user } = useContext(APIContext)
   const {
     registerUser,
     getUserData,
@@ -17,7 +17,7 @@ export const Connect = () => {
   } = useContext(UserContext)
   const [ register, setRegister ] = useState(false)
   const [ details, setDetails ] = useState({
-    user_name: "",
+    user_name: user || "",
     email: "",
     password: ""
   })
@@ -30,6 +30,8 @@ export const Connect = () => {
     console.log("details", JSON.stringify(details, null, '  '));
     if (name === "register") {
       registerUser(details)
+    } else {
+      getUserData(details)
     }
   }
 
@@ -75,7 +77,7 @@ export const Connect = () => {
     ? [ "text", "/open.svg", "open" ]
     : [ "password", "/shut.svg", "shut" ]
 
-  const disabled = !details.user_name || !details.password || !register
+  const disabled = !details.user_name || !details.password
 
 
   return (
