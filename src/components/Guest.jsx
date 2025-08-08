@@ -8,12 +8,12 @@ import { UserContext } from '../contexts'
 
 
 export const Guest = ({ cookies }) => {
-  const { getUserData } = useContext(UserContext)
+  const { connectUser } = useContext(UserContext)
   const [ show, setShow ] = useState(false)
 
 
   const enterAsGuest = () => {
-    getUserData()
+    connectUser()
   }
 
 

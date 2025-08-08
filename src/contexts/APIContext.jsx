@@ -59,7 +59,7 @@ export const APIProvider = ({ children }) => {
   const treatCheckResponse = (json) => {
     const checked = document.cookie.indexOf("check=") > -1
 
-    // Delete the cookie by setting its expiry date to the paste
+    // Delete the cookie by setting its expiry date to the past
     document.cookie = "check=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
 
     setCookies(checked)

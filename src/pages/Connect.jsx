@@ -13,8 +13,7 @@ export const Connect = () => {
   const { user } = useContext(UserContext)
   // const cookies = true
   const {
-    registerUser,
-    getUserData,
+    connectUser,
     failed
   } = useContext(UserContext)
   const [ register, setRegister ] = useState(false)
@@ -28,12 +27,8 @@ export const Connect = () => {
 
 
   const connect = ({ target }) => {
-    const { name } = target
-    if (name === "register") {
-      registerUser(details)
-    } else {
-      getUserData(details)
-    }
+    const { name: action  } = target
+    connectUser({ ...details, action })
   }
 
 
@@ -60,7 +55,7 @@ export const Connect = () => {
     if (key === "Enter") {
       event.preventDefault()
       if (details.user_name && details.email && details.password) {
-        registerUser()
+        connectUser()
       }
     }
   }

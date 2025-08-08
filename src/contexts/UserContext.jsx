@@ -53,37 +53,22 @@ export const UserProvider = ({ children }) => {
   const [ dayDone, setDayDone ] = useState(0)
 
 
-  const debounced = useRef(debounce(requestUserData))
-  const refocus = debounced.current
+  /////////////// REGISTRATION, LOG IN and GUESTS ///////////////
 
 
-  /////////////////////// WHEN TO REFRESH ///////////////////////
+  const connectUser = (connect = {}) => {
+    const { action } = connect
+    // user_name, email, password, action
 
+    const url = (action === "register")
+      ? `${origin}/register`
+      : (action === "login")
+        ? `${origin}/login`
+        : `${origin}/guest`
 
-  window.addEventListener("focus", refocus)
-  window.addEventListener("visibilitychange", refocus)
-
-
-  function requestUserData({ type, target }){
-    if ( type === "focus"
-      || type === "visibilitychange" && !document.hidden
-    ) {
-      // getUserData()
-    }
-  }
-
-
-  ///////////////////////// REGISTRATION /////////////////////////
-
-
-  const registerUser = (data) => {
-    const { user_name, email, password } = data
-    console.log("registerUser data", JSON.stringify(data, null, '  '));
-
-    const url = `${origin}/register`
     const headers = { 'Content-Type': 'application/json' }
     const credentials = "include"
-    const body = JSON.stringify(data)
+    const body = JSON.stringify(connect)
 
     fetch(url, {
       method: 'POST',
@@ -112,38 +97,6 @@ export const UserProvider = ({ children }) => {
 
 
   //////////////////////// INITIALIZATION ////////////////////////
-
-
-  function getUserData(user) { // may be undefined as Guest
-    const url = `${origin}/getUserData`
-    const headers = { 'Content-Type': 'application/json' }
-    const credentials = "include"
-    const body = JSON.stringify(user)
-
-    fetch(url, {
-      method: 'POST',
-      headers,
-      credentials,
-      body
-    })
-      .then(incoming => {
-        return incoming.text()
-      })
-      .then(text => {
-         try {
-           const json = JSON.parse(text)
-           return json
-         } catch (error) {
-           console.log("error:", error)
-           console.log("text:", text)
-         }
-       })
-      // .then(incoming => incoming.json())
-      .then(json => treatUserData(json))
-      .catch(error => {
-        treatDataError(error)
-      })
-  }
 
 
   const treatUserData = data => {
@@ -332,7 +285,8 @@ export const UserProvider = ({ children }) => {
     const { _id, key, text, hint, list_id } = json
     const list = lists.find( list => list._id === list_id)
 
-    const phrase = list.phrases.find(phrase => phrase._id === _id)
+    const phrase =
+       list.phrases.find(phrase => phrase._id === _id)
     || list.phrases.find(phrase => phrase._id === key)
 
     phrase._id = _id
@@ -376,6 +330,7 @@ export const UserProvider = ({ children }) => {
   const treatNewList = list => {
     // Fill empty list.phrases with LIST_LENGTH empty phrase
     // objects
+    console.log("treatNewList:", list)
     preparePhrases(list)
 
     // Place the new list at the beginning of the editable lists
@@ -629,7 +584,7 @@ export const UserProvider = ({ children }) => {
 
   const autoLoad = () => {
     if (INITIALIZED) {
-      // getUserData()
+      // guest()
     }
   }
 
@@ -671,8 +626,7 @@ export const UserProvider = ({ children }) => {
         openAll,
         dayDone,
         redosDone,
-        registerUser,
-        getUserData,
+        connectUser,
         getPhrases,
         getActive,
         editPhrase,
