@@ -9,7 +9,9 @@ import { Guest } from '../components/Guest'
 
 
 export const Connect = () => {
-  const { cookies, user } = useContext(APIContext)
+  const { cookies } = useContext(APIContext)
+  const { user } = useContext(UserContext)
+  // const cookies = true
   const {
     registerUser,
     getUserData,
@@ -17,7 +19,8 @@ export const Connect = () => {
   } = useContext(UserContext)
   const [ register, setRegister ] = useState(false)
   const [ details, setDetails ] = useState({
-    user_name: user || "",
+    user_name: user?.user_name || "",
+    // user_name: "",
     email: "",
     password: ""
   })
@@ -26,8 +29,6 @@ export const Connect = () => {
 
   const connect = ({ target }) => {
     const { name } = target
-    console.log("name:", name)
-    console.log("details", JSON.stringify(details, null, '  '));
     if (name === "register") {
       registerUser(details)
     } else {
