@@ -116,7 +116,7 @@ export const Connect = () => {
             onChange={update}
           />
         </label>
-        <label>
+        {/* <label>
           <span>Email (optional):</span>
           <input
             type="email"
@@ -126,7 +126,7 @@ export const Connect = () => {
             onKeyDown={treatEnterKey}
             onChange={update}
           />
-        </label>
+        </label> */}
         <label className="password">
           <span>Password:</span>
           <input
