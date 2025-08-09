@@ -555,19 +555,18 @@ footer {
   }
 
   /* Specific controls for CheckSlider in ReviewFooter */
-  label.checkSlider input.open-all {
+  /* label.checkSlider input.open-state {
     ~ span::after {
       content: "📗";
       background-color: var(--off);
-
-      /* 📗📖 🥢🪭*/
-    }
+   }
 
     &:checked ~ span::after {
       content: "📖";
       background-color: var(--on);
     }
-  }
+  } */
+  /* 📗📖 🥢🪭 🛟*/
 }
 
 #reviews {
@@ -692,7 +691,7 @@ footer {
           }
 
           &:checked ~ span::after {
-            content: "🛟";
+            content: "✅";
             left: 0;
           }
         }
@@ -731,12 +730,13 @@ footer {
             cursor: default;
           }
           & ~ span::after {
-            content: "👓";
-            background-color: var(--off);
+            background-color: var(--bg);
             border-color: var(--disabled);
           }
-          &:not(.open) ~ span::after {
-            display: none
+          &.shut {
+            & ~ span::after {
+              content: "🕶️";
+            }
           }
         }
       }
@@ -746,9 +746,9 @@ footer {
     &:has(input.front:checked:not(.open)) {
       height: var(--half);
 
-        div.control {
-          background-color: var(--bg);
-        }
+      & div.control {
+        background-color: var(--bg);
+      }
 
       & p.feedback,
       & textarea {
@@ -848,15 +848,15 @@ div.three-way {
   --side:  #fff;                    /* border color */
   /* backgroundColor of dots in various states */
   --off:   #900;
-  --mid:   #a50;
+  --mix:   #a50;
   --on:    #060;
   /* backgroundColor of slider in various states */
   --bgoff: #333;
-  --bgmid: #666;
+  --bgmix: #666;
   --bgon:  #999;
   /* icons for various states */
   --ioff:  "☁️";
-  --imid:  "🌤️";
+  --imix:  "🌤️";
   --ion:   "☀️";
 
   position: relative;
@@ -879,8 +879,8 @@ div.three-way {
     /* UNCOMMENT THE RULES BELOW TO SHOW LABEL WIDTHS */
     /* background-color: var(--bgoff);
 
-    &:has(.mid) {
-      background-color: var(--bgmid);
+    &:has(.mix) {
+      background-color: var(--bgmix);
     }
 
     &:has(.on) {
@@ -894,11 +894,11 @@ div.three-way {
     }
   }
 
+  &::before,
   &::after {
     /* Specific for off state */
     content: var(--ioff);
     background-color: var(--off);
-
     /* Generic for all states */
     position: absolute;
     top: 0;
@@ -917,20 +917,22 @@ div.three-way {
     transition: all 250ms;
   }
 
-  /* Specific settings for mid and on states */
-  &:has(.mid:checked) {
-    background-color: var(--bgmid);
+  /* Specific settings for mix and on states */
+  &:has(.mix:checked) {
+    background-color: var(--bgmix);
 
+    &::before,
     &::after {
-      content: var(--imid);
+      content: var(--imix);
       left: var(--once);
-      background-color: var(--mid);
+      background-color: var(--light);
     }
   }
 
   &:has(.on:checked) {
     background-color: var(--bgon);
 
+    &::before,
     &::after {
       content: var(--ion);
       left: var(--twice);
@@ -944,14 +946,20 @@ div.three-way {
     width: var(--cross);
     height: var(--long);
 
-    &:has(.mid:checked)::after {
-      left: 0;
-      top: var(--once);
+    &:has(.mix:checked) {
+      &::before,
+      &::after {
+        left: 0;
+        top: var(--once);
+      }
     }
 
-    &:has(.on:checked)::after {
-      left: 0;
-      top: var(--twice);
+    &:has(.on:checked){
+      &::before,
+      &::after {
+        left: 0;
+        top: var(--twice);
+      }
     }
   }
 
@@ -960,21 +968,36 @@ div.three-way {
     --long:  var(--size);
     /* backgroundColor of dots in various states */
     --off:   var(--light);
-    --mid:   var(--grey);
+    --mix:   var(--grey);
     --on:    #888; /* can't use var(--off) from root */
     /* backgroundColor of slider in various states */
     --bgoff: #888;
-    --bgmid: #888; /* can't use var(--off) from root */
+    --bgmix: #888; /* can't use var(--off) from root */
     --bgon:  #888;
     /* icons for various states */
-    --ioff:  "☀️";
-    --imid:  "🌤️";
-    --ion:   "☁️";
+    --ioff:  "👓";
+    --imix:  "🌤️";
+    --ion:   "🕶️";
     border: none;
 
+    &::before,
     &::after {
       border: var(--edge) solid var(--border);
       box-sizing: border-box;
+    }
+
+    /* Specific settings for mix state, with split emoji */
+    &:has(.mix:checked) {
+      /* Show full size off icon, underneath... */
+      &::before {
+        content: var(--ioff);
+      }
+      /* ...half an ::after on icon */
+      &::after {
+        content: var(--ion);
+        clip-path: rect(0 100% 100% 50%);
+        background-color: var(--bgmix);
+      }
     }
   }
 }

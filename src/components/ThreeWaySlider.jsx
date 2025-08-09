@@ -1,19 +1,37 @@
 /**
  * frontend/src/components/ThreeWaySlider.jsx
+ * 
+ * Creates a div with three radio buttons, associated with the
+ * states:
+ * 
+ * - "off"
+ * - "mix"
+ * - "on"
+ * 
+ * The initial state is set by the prop `check`. By default, the
+ * value "mix" will be assumed.
  */
 
 
 import { useState } from 'react'
 
 
-export const ThreeWaySlider = ({ name, vertical, check }) => {
+export const ThreeWaySlider = ({
+  name,
+  vertical,
+  check,
+  action
+}) => {
   const [ checked, setChecked ] = useState(check)
   
   name = name || "name"
+  action = typeof action === "function" ? action : ()=>{}
 
   const onChange = ({ target }) => {
     const check = target.id.replace(`three-way-${name}-`, "")
+    // Update default `checked` unless `action` is a function
     setChecked(check)
+    action(check)
   }
 
   const className = (vertical)
@@ -36,9 +54,9 @@ export const ThreeWaySlider = ({ name, vertical, check }) => {
         <input 
           type="radio" 
           name={name}
-          id={`three-way-${name}-mid`}
-          className="mid"
-          checked={!checked || checked === "mid" }
+          id={`three-way-${name}-mix`}
+          className="mix"
+          checked={!checked || checked === "mix" }
           onChange={onChange}
         />
       </label>

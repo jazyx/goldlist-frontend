@@ -9,11 +9,11 @@ import { Counter } from "./Counter"
 import { CheckSlider } from './CheckSlider'
 import { ThreeWaySlider } from "./ThreeWaySlider"
 
-export const ReviewsFooter = (props) => {
+export const ReviewsFooter = () => {
   const {
     getPhrases,
-    openAll,
-    toggleOpenAll
+    closedState,
+    toggleOpenState
   } = useContext(UserContext)
   const phrases = getPhrases("redo")
 
@@ -45,18 +45,18 @@ export const ReviewsFooter = (props) => {
     || (retained.count + reviewed.count) !== retained.total
 
   const open = {
-    name: "openAll",
-    className: "open-all",
-    checked: openAll,
-    action: toggleOpenAll
+    name: "closedState",
+    className: "open-state",
+    check: closedState,
+    action: toggleOpenState
   }
 
   return (
     <footer>
-      <Counter {...retained} icon="🛟" />
-      <CheckSlider {...open} vertical={true}/>
+      <Counter {...retained} icon="✅" />
+      {/* <CheckSlider {...open} vertical={true}/> */}
       <SubmitReview disabled={disabled} />
-      <ThreeWaySlider vertical={true} name="limit"/>
+      <ThreeWaySlider {...open} vertical={true} name="limit"/>
       <Counter {...reviewed} icon="🟢" side="right" />
     </footer>
   )

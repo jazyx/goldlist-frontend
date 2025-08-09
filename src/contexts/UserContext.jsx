@@ -47,7 +47,7 @@ export const UserProvider = ({ children }) => {
   const [ loaded, setLoaded ] = useState(false)
   const [ lists, setLists ] = useState([])
   const [ redos, setRedos ] = useState([])
-  const [ openAll, setOpenAll ] = useState(false)
+  const [ closedState, setOpenState ] = useState("mid")
   const [ redosDone, setRedosDone ] = useState(0)
   const [ dayList, setDayList ] = useState(0)
   const [ dayDone, setDayDone ] = useState(0)
@@ -299,8 +299,8 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  const toggleOpenAll = ({ target }) => {
-    setOpenAll(target.checked)
+  const toggleOpenState = (state) => {
+    setOpenState(state)
   }
 
 
@@ -623,7 +623,7 @@ export const UserProvider = ({ children }) => {
         lists,
         redos,
         failed,
-        openAll,
+        closedState,
         dayDone,
         redosDone,
         connectUser,
@@ -638,7 +638,7 @@ export const UserProvider = ({ children }) => {
         dismissReview,
         tabNextOnEnter,
         scrollIntoView,
-        toggleOpenAll,
+        toggleOpenState,
         setDayDone,
         getPathAndIndex
       }}
