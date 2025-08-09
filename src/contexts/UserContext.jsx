@@ -47,7 +47,7 @@ export const UserProvider = ({ children }) => {
   const [ loaded, setLoaded ] = useState(false)
   const [ lists, setLists ] = useState([])
   const [ redos, setRedos ] = useState([])
-  const [ closedState, setOpenState ] = useState("mid")
+  const [ limitState, setLimitState ] = useState("mix")
   const [ redosDone, setRedosDone ] = useState(0)
   const [ dayList, setDayList ] = useState(0)
   const [ dayDone, setDayDone ] = useState(0)
@@ -300,7 +300,7 @@ export const UserProvider = ({ children }) => {
 
 
   const toggleOpenState = (state) => {
-    setOpenState(state)
+    setLimitState(state)
   }
 
 
@@ -623,7 +623,7 @@ export const UserProvider = ({ children }) => {
         lists,
         redos,
         failed,
-        closedState,
+        limitState,
         dayDone,
         redosDone,
         connectUser,

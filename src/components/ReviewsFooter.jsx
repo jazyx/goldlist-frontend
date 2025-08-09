@@ -6,13 +6,12 @@ import { useContext } from "react"
 import { UserContext } from "../contexts"
 import { SubmitReview } from "./SubmitReview"
 import { Counter } from "./Counter"
-import { CheckSlider } from './CheckSlider'
 import { ThreeWaySlider } from "./ThreeWaySlider"
 
 export const ReviewsFooter = () => {
   const {
     getPhrases,
-    closedState,
+    limitState,
     toggleOpenState
   } = useContext(UserContext)
   const phrases = getPhrases("redo")
@@ -45,16 +44,15 @@ export const ReviewsFooter = () => {
     || (retained.count + reviewed.count) !== retained.total
 
   const open = {
-    name: "closedState",
+    name: "limitState",
     className: "open-state",
-    check: closedState,
+    check: limitState,
     action: toggleOpenState
   }
 
   return (
     <footer>
       <Counter {...retained} icon="✅" />
-      {/* <CheckSlider {...open} vertical={true}/> */}
       <SubmitReview disabled={disabled} />
       <ThreeWaySlider {...open} vertical={true} name="limit"/>
       <Counter {...reviewed} icon="🟢" side="right" />

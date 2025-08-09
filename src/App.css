@@ -732,6 +732,7 @@ footer {
           & ~ span::after {
             background-color: var(--bg);
             border-color: var(--disabled);
+            opacity: 0.5;
           }
           &.shut {
             & ~ span::after {
@@ -898,7 +899,7 @@ div.three-way {
   &::after {
     /* Specific for off state */
     content: var(--ioff);
-    background-color: var(--off);
+    background-color: var(--light);
     /* Generic for all states */
     position: absolute;
     top: 0;
