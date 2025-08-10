@@ -10,11 +10,14 @@ import { ThreeWaySlider } from "./ThreeWaySlider"
 
 export const ReviewsFooter = () => {
   const {
+    user,
     getPhrases,
-    limitState,
-    toggleOpenState,
+    toggleLimitState,
     cancelReview
   } = useContext(UserContext)
+
+  const { limitState } = user
+   // "on" (limit=>true), "mix", "off" (limit=>false)
   const phrases = getPhrases("redo")
 
 
@@ -45,11 +48,12 @@ export const ReviewsFooter = () => {
     || (retained.count + reviewed.count) !== retained.total
 
 
-  const open = {
-    name: "limitState",
-    className: "open-state",
+  const limitProps = {
+    name: "limit",
     check: limitState,
-    action: toggleOpenState
+    action: toggleLimitState,
+    vertical: true,
+    title: "Set preview preference"
   }
 
 
@@ -72,7 +76,7 @@ export const ReviewsFooter = () => {
     <footer>
       <Counter {...retained} icon="✅" />
       <SubmitReview disabled={disabled} />
-      <ThreeWaySlider {...open} vertical={true} name="limit"/>
+      <ThreeWaySlider {...limitProps}/>
       <Counter {...reviewed} icon="🟢" side="right" />
     </footer>
   )

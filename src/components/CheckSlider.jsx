@@ -8,6 +8,7 @@ export const CheckSlider = ({
   className = null,
   checked   = false,
   action    = () => {},
+  title     = "",
   vertical  = false
  }) => {
 
@@ -19,7 +20,10 @@ export const CheckSlider = ({
 
 
   return (
-    <label className="checkSlider">
+    <label
+      className="checkSlider"
+      title={title}
+    >
       <input
         type="checkbox"
         name={name}

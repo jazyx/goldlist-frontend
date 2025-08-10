@@ -18,9 +18,10 @@ import { useState } from 'react'
 
 export const ThreeWaySlider = ({
   name,
+  check,    // "on" | "mix" (default) | "off" 
+  action,
   vertical,
-  check,
-  action
+  title
 }) => {
   const [ checked, setChecked ] = useState(check)
   
@@ -39,7 +40,10 @@ export const ThreeWaySlider = ({
     : `three-way ${name}`
 
   return (
-    <div className={className}>
+    <div
+      className={className}
+      title={title}
+    >
       <label>
         <input 
           type="radio" 

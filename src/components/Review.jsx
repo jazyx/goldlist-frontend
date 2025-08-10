@@ -3,7 +3,7 @@
  *
  * A Review can be displayed in multiple different states:
  *
- * - limitState can be "on", "mix" or "off"
+ * - user.limitState can be "on", "mix" or "off"
  * - db.retained can be true or false
  * - retained can be true or false
  * - limit can be true or false
@@ -34,14 +34,16 @@ export const Review = ({
 }) => {
 
   const {
+    user,
     editPhrase,
     toggleRedo,
     tabNextOnEnter,
     scrollIntoView,
-    limitState, // "on" (limit=>true), "mix", "off" (limit=>false)
     getPathAndIndex
   } = useContext(UserContext)
 
+  const { limitState } = user
+  // "on" (limit=>true), "mix", "off" (limit=>false)
   let wrong = false // set to true if there is a typing error
 
 
@@ -80,7 +82,7 @@ export const Review = ({
   const limitOpen = limitState === "off"
   // Is the Limit checkSlider forced shut?
   const limitShut = limitState === "on"
-  
+
 
 
   ////////////////////////// RESET TEXT //////////////////////////
@@ -209,7 +211,7 @@ export const Review = ({
   // * OR if the phrase has been retained (locked), but the user
   //   wants to display it anyway (!retained)
   // const limitedClass = (limitState !== "mix")
-  //   ? "back disabled open" 
+  //   ? "back disabled open"
   //   : (!locked || retained)
   //     ? "back"
   //     : "back disabled"
@@ -218,6 +220,11 @@ export const Review = ({
     + ((limitOpen) ? " open" : "")
     + ((limitShut) ? " shut" : "")
     + ((limitOff)  ? " disabled" : "")
+
+
+  const hideHintTitle = (showType)
+    ? "Hide preview while typing"
+    : "Hide hint"
 
 
   /////////////////////////// USEEFFECT ///////////////////////////
@@ -230,12 +237,15 @@ export const Review = ({
     <div
       className="review"
     >
-      <div className="control front">
+      <div
+        className="control front"
+      >
         <CheckSlider
           name="retained"
           className={retainClass}
           checked={retainOn}
           action={toggle}
+          title="Commit to remembering this expression"
         />
       </div>
       <div className="desk">
@@ -265,6 +275,7 @@ export const Review = ({
             className={limitClass}
             checked={limitOn}
             action={toggle}
+            title={hideHintTitle}
           />
         }
       </div>

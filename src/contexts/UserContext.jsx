@@ -47,7 +47,6 @@ export const UserProvider = ({ children }) => {
   const [ loaded, setLoaded ] = useState(false)
   const [ lists, setLists ] = useState([])
   const [ redos, setRedos ] = useState([])
-  const [ limitState, setLimitState ] = useState("mix")
   const [ reviewState, setReviewState ] = useState("untreated")
   const [ redosDone, setRedosDone ] = useState(0)
   const [ dayList, setDayList ] = useState(0)
@@ -300,8 +299,10 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  const toggleOpenState = (state) => {
-    setLimitState(state)
+  const toggleLimitState = (limitState) => {
+    submitPreferences({ limitState })
+    // Update locally pre-emptively
+    setUser({ ...user, limitState })
   }
 
 
@@ -506,6 +507,34 @@ export const UserProvider = ({ children }) => {
   }
 
 
+  ////////////////////////// PREFERENCES //////////////////////////
+
+
+  const submitPreferences = (preferences) => {
+    const { _id } = user
+    const url = `${origin}/setPreferences`
+    const headers = { 'Content-Type': 'application/json' }
+    const body = JSON.stringify({ _id, preferences })
+
+    fetch(url, {
+      method: 'POST',
+      headers,
+      body,
+    })
+      .then(incoming => incoming.json())
+      .then(json => treatPreferences(json))
+      .catch(treatDataError)
+  }
+
+
+  const treatPreferences = json => {
+    // json will be { key: value } for preferences that were set
+    delete json._id // No need to reset _id to itself
+
+    // values in json should already have been set
+    setUser({ ...user, ...json })
+  }
+
   ///////// UTILITIES FOR TABBING BETWEEN phrases/reviews /////////
 
 
@@ -602,7 +631,6 @@ export const UserProvider = ({ children }) => {
         lists,
         redos,
         failed,
-        limitState,
         dayDone,
         redosDone,
         reviewState,
@@ -619,7 +647,7 @@ export const UserProvider = ({ children }) => {
         submitReview,
         tabNextOnEnter,
         scrollIntoView,
-        toggleOpenState,
+        toggleLimitState,
         setDayDone,
         getPathAndIndex
       }}
