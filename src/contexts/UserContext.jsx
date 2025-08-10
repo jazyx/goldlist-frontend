@@ -48,6 +48,7 @@ export const UserProvider = ({ children }) => {
   const [ lists, setLists ] = useState([])
   const [ redos, setRedos ] = useState([])
   const [ limitState, setLimitState ] = useState("mix")
+  const [ reviewState, setReviewState ] = useState("untreated")
   const [ redosDone, setRedosDone ] = useState(0)
   const [ dayList, setDayList ] = useState(0)
   const [ dayDone, setDayDone ] = useState(0)
@@ -406,6 +407,26 @@ export const UserProvider = ({ children }) => {
   }
 
 
+  /**
+   * ReviewsFooter has checked that all phrases have been tagged
+   * to be retain or have been correctly typed, and the user has
+   * clicked on the enabled Submit Review button 
+   */
+  const confirmReview = () => {
+    setReviewState("ready")
+  }
+
+
+  const cancelReview = (reason) => {
+    // event object  if sent by ConfirmReview
+    // "untreated"   if sent by ReviewsFooter
+    if (typeof reason !== "string") {
+      reason = "cancelled"
+    }
+    setReviewState(reason)
+  }
+
+
   const submitReview = () => {
     const { _id } = getActive()
     const phrases = getPhrases()
@@ -456,56 +477,14 @@ export const UserProvider = ({ children }) => {
 
 
   const treatReview = json => {
-    const { reviewed } = json
-    const { _id, reviews, remain } = json.list
-    const list = redos.find( list => list._id === _id )
-    if (!list) {
+    // json will be details of the list whose review was submitted
+    const { _id } = json
+    const listIndex = redos.findIndex( list => list._id === _id )
+    if (listIndex < 0) {
       return console.log("Unable to find list with id:", list_id)
     }
 
-    // This redo list is about to be deleted, but it will remain
-    // visible behind the Dismiss Review dialog, so the `retain`
-    // lifebuoys should be replaced with locks.
-    const { phrases } = list
-
-    reviewed.forEach( data => {
-      const phrase = phrases.find(phrase => (
-        phrase._id === data._id
-      ))
-
-      if (phrase) {
-        const { retained, limit } = phrase
-
-        // retained may be undefined or a Date. The database should
-        // never have a value of false for retained.
-        if (retained) {
-          phrase.retained = true
-          phrase.db.retained = true
-        }
-
-        // limit will always be boolean
-        phrase.limit = limit
-        phrase.db.limit = limit
-
-      } else {
-        console.log("Can't find phrase matching:", data)
-      }
-    })
-
-    // Update the list properties, and flag it as reviewed
-    list.remain = remain
-    list.reviews = reviews
-    list.reviewed = true
-
-    setRedos([ ...redos ])
-  }
-
-
-  const dismissReview = () => {
-    // Remove reviewed list from redos
-    const done = getActive()
-    const index = redos.findIndex( list => list === done )
-    redos.splice(index, 1)
+    redos.splice(listIndex, 1)
 
     setRedos([ ...redos ])
     setRedosDone(redosDone + 1)
@@ -513,7 +492,7 @@ export const UserProvider = ({ children }) => {
     // Check if there are older lists to review. If so navigate
     // to the next list. If not, go to `/add/X` which should always
     // be available
-    const next = redos[index] // moved up a place?
+    const next = redos[listIndex] // moved up a place?
     const to = (next)
       ? `/rev/${next.index}`
       : `/add/${lists[0].index}`
@@ -626,6 +605,7 @@ export const UserProvider = ({ children }) => {
         limitState,
         dayDone,
         redosDone,
+        reviewState,
         connectUser,
         getPhrases,
         getActive,
@@ -634,8 +614,9 @@ export const UserProvider = ({ children }) => {
         addList,
         submitList,
         toggleRedo,
+        confirmReview,
+        cancelReview,
         submitReview,
-        dismissReview,
         tabNextOnEnter,
         scrollIntoView,
         toggleOpenState,

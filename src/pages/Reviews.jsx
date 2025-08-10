@@ -1,30 +1,24 @@
 /**
- * frontend/src/pages/Rev.jsx
+ * frontend/src/pages/Reviews.jsx
  */
 
-
-import { useContext, useEffect } from 'react'
-import { useParams } from 'react-router'
+import { useContext } from 'react'
 import { UserContext } from '../contexts'
 import { Tabs } from '../components/Tabs'
 import { Review } from '../components/Review'
+import { ConfirmReview } from '../components/ConfirmReview'
 import { ReviewsFooter } from '../components/ReviewsFooter'
 import { DaysWorkDone } from '../components/DaysWorkDone'
 
 
 
-export const Reviews = (props) => {
-  const params = useParams()
-  const { index } = params
-
-  const {
-    getActive,
-    dismissReview
-  } = useContext(UserContext)
+export const Reviews = () => {
+  const { getActive, reviewState } = useContext(UserContext)
+  // reviewState = "untreated" | "cancelled" | "ready"
 
 
   const list = getActive()
-  const { phrases = [], reviewed } = list
+  const { phrases = [] } = list
 
 
   const phraseList = phrases.map(phrase => {
@@ -34,39 +28,8 @@ export const Reviews = (props) => {
   })
 
 
-  const createMask = () => {
-    const reviewed = phrases.filter( phrase => {
-      return phrase.retained === true
-    }).map( phrase => (
-      <li
-        key={phrase._id}
-      >
-        {phrase.db.text}
-      </li>
-    ))
-
-    const reviewedCount = reviewed.length
-    const header = (reviewedCount === 1)
-      ? "You have decided to remember this phrase:"
-      : `You have decided to remember these ${reviewedCount} phrases:`
-
-    return <div className="mask">
-      <div className="dialog">
-        <h2>{header}</h2>
-        <ul>
-          {reviewed}
-        </ul>
-        <button 
-          className="primary"
-          onClick={dismissReview}
-        >Continue</button>
-      </div>
-    </div>
-  }
-
-
-  const [ className, mask ] = (reviewed)
-    ? [ "mask", createMask() ]
+  const [ className, confirmMask ] = (reviewState === "ready")
+    ? [ "confirm mask", <ConfirmReview phrases={phrases} /> ]
     : [ null, undefined ]
 
 
@@ -80,7 +43,7 @@ export const Reviews = (props) => {
         <div className="reviews">
           {phraseList}
         </div>
-        {mask}
+        {confirmMask}
         <DaysWorkDone />
       </div>
       <div className="spacer"></div>

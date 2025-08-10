@@ -202,6 +202,132 @@ label.checkSlider {
   }
 }
 
+div.three-way {
+  --long:  60vmin;                    /* long side */
+  --cross: calc(var(--size) * 0.5);   /* ratio of short side */
+  --twice: calc(var(--size) - var(--cross));
+  --once:  calc(var(--twice)* 0.5);
+  --icon:  calc(var(--cross) * 0.85); /* font-size for icon */
+  --edge:  calc(var(--size) * 0.02);  /* border width */
+  --side:  #fff;                    /* border color */
+  /* backgroundColor of dots in various states */
+  --off:   #900;
+  --mix:   #a50;
+  --on:    #060;
+  /* backgroundColor of slider in various states */
+  --bgoff: #333;
+  --bgmix: #666;
+  --bgon:  #999;
+  /* icons for various states */
+  --ioff:  "☁️";
+  --imix:  "🌤️";
+  --ion:   "☀️";
+
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--long);
+  height: var(--cross);
+  background-color: var(--bgoff);
+  border: var(--edge) solid var(--side);
+  border-radius: 100vmax;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  /* Make labels fill one-third each, shrunk to fit by flex */
+  label {
+    width: 100%;
+    height: 100%;
+
+    /* UNCOMMENT THE RULES BELOW TO SHOW LABEL WIDTHS */
+    /* background-color: var(--bgoff);
+
+    &:has(.mix) {
+      background-color: var(--bgmix);
+    }
+
+    &:has(.on) {
+      background-color: var(--bgon);
+    } */
+    /* UNCOMMENT THE RULES ABOVE TO SHOW LABEL WIDTHS */
+
+    /* Hide the radio buttons, but labels keep them active */
+    input {
+      display: none;
+    }
+  }
+
+  &::before,
+  &::after {
+    /* Specific for off state */
+    content: var(--ioff);
+    background-color: var(--light);
+    /* Generic for all states */
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Center the icon */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--icon);
+    /* Round button */
+    width: var(--cross);
+    height: var(--cross);
+    border-radius: 100vmax;
+    overflow: hidden; /* allows click above edge */
+
+    transition: all 250ms;
+  }
+
+  /* Specific settings for mix and on states */
+  &:has(.mix:checked) {
+    background-color: var(--bgmix);
+
+    &::before,
+    &::after {
+      content: var(--imix);
+      left: var(--once);
+      background-color: var(--light);
+    }
+  }
+
+  &:has(.on:checked) {
+    background-color: var(--bgon);
+
+    &::before,
+    &::after {
+      content: var(--ion);
+      left: var(--twice);
+      background-color: var(--on);
+    }
+  }
+
+  /* Custom settings for a vertical three-way slider */
+  &.vertical {
+    flex-direction: column;
+    width: var(--cross);
+    height: var(--long);
+
+    &:has(.mix:checked) {
+      &::before,
+      &::after {
+        left: 0;
+        top: var(--once);
+      }
+    }
+
+    &:has(.on:checked){
+      &::before,
+      &::after {
+        left: 0;
+        top: var(--twice);
+      }
+    }
+  }
+}
+
 ul#tabs {
   display: flex;
   list-style-type: none;
@@ -521,7 +647,7 @@ footer {
   background-color: var(--dark);
   font-size: var(--tab-font);
 
-  div.counter {
+  & div.counter {
     position: relative;
     height: var(--size);
     width: var(--size);
@@ -529,7 +655,7 @@ footer {
     justify-content: center;
     align-items: center;
 
-    span.counter { /* Counter */
+    & span.counter {
       display: flex;
       flex-basis: var(--size);
       flex-shrink: 0;
@@ -538,35 +664,61 @@ footer {
       height: var(--size);
       border-radius: 100vmax;
     }
-    span.icon {
+
+    & span.icon {
       position: absolute;
       bottom: var(--drop);
       left: 0;
     }
-  }
-  div.counter.right span {
-    left: auto;
-    right: 0;
+
+    &.right span.icon {
+      left: auto;
+      right: 0;
+    }
   }
 
-  button {
+  & button {
     flex: 1;
     height: 100%;
   }
 
-  /* Specific controls for CheckSlider in ReviewFooter */
-  /* label.checkSlider input.open-state {
-    ~ span::after {
-      content: "📗";
-      background-color: var(--off);
-   }
+  /* Custom settings for three-way slider */
+  & div.three-way.limit {
+    --long:  var(--size);
+    /* backgroundColor of dots in various states */
+    --off:   var(--light);
+    --mix:   var(--grey);
+    --on:    #888; /* can't use var(--off) from root */
+    /* backgroundColor of slider in various states */
+    --bgoff: #888;
+    --bgmix: #888; /* can't use var(--off) from root */
+    --bgon:  #888;
+    /* icons for various states */
+    --ioff:  "👓";
+    --imix:  "🌤️";
+    --ion:   "🕶️";
+    border: none;
 
-    &:checked ~ span::after {
-      content: "📖";
-      background-color: var(--on);
+    &::before,
+    &::after {
+      border: var(--edge) solid var(--border);
+      box-sizing: border-box;
     }
-  } */
-  /* 📗📖 🥢🪭 🛟*/
+
+    /* Specific settings for mix state, with split emoji */
+    &:has(.mix:checked) {
+      /* Show full size off icon, underneath... */
+      &::before {
+        content: var(--ioff);
+      }
+      /* ...half an ::after on icon */
+      &::after {
+        content: var(--ion);
+        clip-path: rect(0 100% 100% 50%);
+        background-color: var(--bgmix);
+      }
+    }
+  }
 }
 
 #reviews {
@@ -591,22 +743,16 @@ footer {
     overflow: hidden;
     transition: all var(--duration);
 
-    div.control {
+    & div.control {
       display: flex;
       justify-content: center;
       align-items: center;
       width: var(--size);
       background-color: var(--bg);
-
-      div.circle {
-        height: var(--half);
-        width: var(--half);
-        border-radius: 100vmax;
-        background-color: var(--primary);
-      }
+      font-size: var(--half);
     }
 
-    div.desk {
+    & div.desk {
       position: relative;
       display: flex;
       flex-direction: column;
@@ -673,7 +819,7 @@ footer {
     }
 
     /* Specific controls for CheckSlider in Review */
-    label.checkSlider input {
+    & label.checkSlider input {
       &.front {
         ~ span::after {
           left: var(--half);
@@ -808,7 +954,7 @@ div.mask {
   /* Allow the div.review behind the mask to scroll */
   pointer-events: none;
 
-  & .dialog {
+  & div.dialog {
     display: flex;
     flex-direction: column;
     max-height: 100%;
@@ -833,172 +979,8 @@ div.mask {
       text-align: left;
     }
 
-    button {
-      align-self: flex-end
-    }
-  }
-}
-
-div.three-way {
-  --long:  60vmin;                    /* long side */
-  --cross: calc(var(--size) * 0.5);   /* ratio of short side */
-  --twice: calc(var(--size) - var(--cross));
-  --once:  calc(var(--twice)* 0.5);
-  --icon:  calc(var(--cross) * 0.85); /* font-size for icon */
-  --edge:  calc(var(--size) * 0.02);  /* border width */
-  --side:  #fff;                    /* border color */
-  /* backgroundColor of dots in various states */
-  --off:   #900;
-  --mix:   #a50;
-  --on:    #060;
-  /* backgroundColor of slider in various states */
-  --bgoff: #333;
-  --bgmix: #666;
-  --bgon:  #999;
-  /* icons for various states */
-  --ioff:  "☁️";
-  --imix:  "🌤️";
-  --ion:   "☀️";
-
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: var(--long);
-  height: var(--cross);
-  background-color: var(--bgoff);
-  border: var(--edge) solid var(--side);
-  border-radius: 100vmax;
-  box-sizing: border-box;
-  overflow: hidden;
-
-  /* Make labels fill one-third each, shrunk to fit by flex */
-  label {
-    width: 100%;
-    height: 100%;
-
-    /* UNCOMMENT THE RULES BELOW TO SHOW LABEL WIDTHS */
-    /* background-color: var(--bgoff);
-
-    &:has(.mix) {
-      background-color: var(--bgmix);
-    }
-
-    &:has(.on) {
-      background-color: var(--bgon);
-    } */
-    /* UNCOMMENT THE RULES ABOVE TO SHOW LABEL WIDTHS */
-
-    /* Hide the radio buttons, but labels keep them active */
-    input {
-      display: none;
-    }
-  }
-
-  &::before,
-  &::after {
-    /* Specific for off state */
-    content: var(--ioff);
-    background-color: var(--light);
-    /* Generic for all states */
-    position: absolute;
-    top: 0;
-    left: 0;
-    /* Center the icon */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: var(--icon);
-    /* Round button */
-    width: var(--cross);
-    height: var(--cross);
-    border-radius: 100vmax;
-    overflow: hidden; /* allows click above edge */
-
-    transition: all 250ms;
-  }
-
-  /* Specific settings for mix and on states */
-  &:has(.mix:checked) {
-    background-color: var(--bgmix);
-
-    &::before,
-    &::after {
-      content: var(--imix);
-      left: var(--once);
-      background-color: var(--light);
-    }
-  }
-
-  &:has(.on:checked) {
-    background-color: var(--bgon);
-
-    &::before,
-    &::after {
-      content: var(--ion);
-      left: var(--twice);
-      background-color: var(--on);
-    }
-  }
-
-  /* Custom settings for a vertical three-way slider */
-  &.vertical {
-    flex-direction: column;
-    width: var(--cross);
-    height: var(--long);
-
-    &:has(.mix:checked) {
-      &::before,
-      &::after {
-        left: 0;
-        top: var(--once);
-      }
-    }
-
-    &:has(.on:checked){
-      &::before,
-      &::after {
-        left: 0;
-        top: var(--twice);
-      }
-    }
-  }
-
-  /* Custom settings for named three-way sliders */
-  &.limit {
-    --long:  var(--size);
-    /* backgroundColor of dots in various states */
-    --off:   var(--light);
-    --mix:   var(--grey);
-    --on:    #888; /* can't use var(--off) from root */
-    /* backgroundColor of slider in various states */
-    --bgoff: #888;
-    --bgmix: #888; /* can't use var(--off) from root */
-    --bgon:  #888;
-    /* icons for various states */
-    --ioff:  "👓";
-    --imix:  "🌤️";
-    --ion:   "🕶️";
-    border: none;
-
-    &::before,
-    &::after {
-      border: var(--edge) solid var(--border);
-      box-sizing: border-box;
-    }
-
-    /* Specific settings for mix state, with split emoji */
-    &:has(.mix:checked) {
-      /* Show full size off icon, underneath... */
-      &::before {
-        content: var(--ioff);
-      }
-      /* ...half an ::after on icon */
-      &::after {
-        content: var(--ion);
-        clip-path: rect(0 100% 100% 50%);
-        background-color: var(--bgmix);
-      }
+    div.buttons {
+      display: flex
     }
   }
 }

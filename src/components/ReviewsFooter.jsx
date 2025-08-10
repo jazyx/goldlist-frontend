@@ -2,7 +2,7 @@
  * frontend/src/components/ReviewsFooter.jsx
  */
 
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { UserContext } from "../contexts"
 import { SubmitReview } from "./SubmitReview"
 import { Counter } from "./Counter"
@@ -12,7 +12,8 @@ export const ReviewsFooter = () => {
   const {
     getPhrases,
     limitState,
-    toggleOpenState
+    toggleOpenState,
+    cancelReview
   } = useContext(UserContext)
   const phrases = getPhrases("redo")
 
@@ -43,12 +44,29 @@ export const ReviewsFooter = () => {
   const disabled = retained.count < retained.target
     || (retained.count + reviewed.count) !== retained.total
 
+
   const open = {
     name: "limitState",
     className: "open-state",
     check: limitState,
     action: toggleOpenState
   }
+
+
+  const updateReviewState = () => {
+    // If not enough phrases are treated, ensure that UserContext's
+    // `submit` state is not "ready". Otherwise, leave it as it is.
+    // It might have been set to "cancelled", in which case another
+    // click on the Submit Review button will be necessary in order
+    // to set it to "ready" again.
+    if (disabled) {
+      cancelReview("untreated")
+    }
+  }
+
+
+  useEffect(updateReviewState)
+
 
   return (
     <footer>
