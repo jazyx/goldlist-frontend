@@ -223,8 +223,12 @@ export const Review = ({
 
 
   const hideHintTitle = (showType)
-    ? "Hide preview while typing"
-    : "Hide hint"
+    ? (showClue)
+      ? "Preview shown while typing"
+      : "Preview hidden while typing"
+    : (showClue)
+      ? "Hint shown"
+      : "Hint hidden"
 
 
   /////////////////////////// USEEFFECT ///////////////////////////

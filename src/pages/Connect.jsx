@@ -5,6 +5,7 @@
 
 import { useContext, useState } from 'react'
 import { APIContext, UserContext } from '../contexts'
+import { IconBar } from '../components/IconBar'
 import { Guest } from '../components/Guest'
 
 
@@ -78,88 +79,94 @@ export const Connect = () => {
 
   return (
     <div id="connect">
-      <div className="connect">
-        <label
-          className={loginClass}
-        >
-          <input
-            type="radio"
-            name="mode"
-            id="log-in"
-            checked={!register}
-            onChange={toggleMode}
-          />
-          <span>Log In</span>
-        </label>
-        <label
-          className={registerClass}
-        >
-          <input
-            type="radio"
-            name="mode"
-            id="register"
-            checked={register}
-            onChange={toggleMode}
-          />
-          <span>Register</span>
-        </label>
-      </div>
-      <div className="inputs">
-        <label>
-          <span>Username:</span>
-          <input
-            type="text"
-            id="user_name"
-            name="user_name"
-            value={details.user_name}
-            onKeyDown={treatEnterKey}
-            onChange={update}
-          />
-        </label>
-        {/* <label>
-          <span>Email (optional):</span>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={details.email}
-            onKeyDown={treatEnterKey}
-            onChange={update}
-          />
-        </label> */}
-        <label className="password">
-          <span>Password:</span>
-          <input
-            type={type}
-            id="password"
-            name="password"
-            value={details.password}
-            onKeyDown={treatEnterKey}
-            onChange={update}
+      <IconBar icons={[ "about" ]}/>
+      <div className="spacer"></div>
+
+      <div className="dialog">
+        <div className="connect">
+          <label
+            className={loginClass}
+          >
+            <input
+              type="radio"
+              name="mode"
+              id="log-in"
+              checked={!register}
+              onChange={toggleMode}
             />
-            <button
-              onClick={toggleShow}
-            >
-            <img src={src} alt={alt} />
-          </button>
-        </label>
-      </div>
-      <p
-        className="failed"
-      >
-        {failed}
-      </p>
-      <div className="buttons">
-        <button
-          name={name}
-          className="primary"
-          onClick={connect}
-          disabled={disabled}
+            <span>Log In</span>
+          </label>
+          <label
+            className={registerClass}
+          >
+            <input
+              type="radio"
+              name="mode"
+              id="register"
+              checked={register}
+              onChange={toggleMode}
+            />
+            <span>Register</span>
+          </label>
+        </div>
+        <div className="inputs">
+          <label>
+            <span>Username:</span>
+            <input
+              type="text"
+              id="user_name"
+              name="user_name"
+              value={details.user_name}
+              onKeyDown={treatEnterKey}
+              onChange={update}
+            />
+          </label>
+          {/* <label>
+            <span>Email (optional):</span>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={details.email}
+              onKeyDown={treatEnterKey}
+              onChange={update}
+            />
+          </label> */}
+          <label className="password">
+            <span>Password:</span>
+            <input
+              type={type}
+              id="password"
+              name="password"
+              value={details.password}
+              onKeyDown={treatEnterKey}
+              onChange={update}
+              />
+              <button
+                onClick={toggleShow}
+              >
+              <img src={src} alt={alt} />
+            </button>
+          </label>
+        </div>
+        <p
+          className="failed"
         >
-          {buttonName}
-        </button>
-        <Guest {...{cookies}} />
+          {failed}
+        </p>
+        <div className="buttons">
+          <button
+            name={name}
+            className="primary"
+            onClick={connect}
+            disabled={disabled}
+          >
+            {buttonName}
+          </button>
+          <Guest {...{cookies}} />
+        </div>
       </div>
+      <div className="spacer"></div>
     </div>
   )
 }

@@ -82,12 +82,12 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 main {
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
 }
 
 h1 {
@@ -339,7 +339,10 @@ ul#tabs {
 
   button {
     width: 100%;
-    height: var(--tab)
+    height: var(--tab);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-style: inset;
   }
 
   li {
@@ -348,6 +351,7 @@ ul#tabs {
 
     &.active button{
       background-color: transparent;
+      border-bottom: none;
     }
 
     a {
@@ -356,52 +360,116 @@ ul#tabs {
   }
 }
 
-#connect {
-  position: relative;
-  border: 1px inset var(--grey);
-  border-radius: var(--gap);
-  overflow: hidden;
+#icon-bar {
+  display: flex;
+  justify-content: space-around;
+  width: 100vw;
+  max-width: var(--full);
+  height: var(--size);
+
+  a {
+    height: var(--size);
+    width: var(--size);
+    border-radius: var(--size);
+    padding: 0;
+
+    img {
+      width: 100%;
+    }
+  }
+}
+
+div#about {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   font-size: 1.5rem;
 
-  & div.connect {
-    display: flex;
-    align-items: stretch;
-    width: calc(100% + 2px);
-    margin: -1px;
+  & h1,
+  & h2 {
+    text-align: center;
+  }
+  & h1 {
+    font-size: 2em;
+  }
 
-    & label {
-      flex: 1;
-      height: 100%;
+  & div.info {
+    margin: 0 auto;
+    padding: 1em;
+    box-sizing: border-box;
+    max-width: 800px;
+    overflow-y: scroll;
+
+    & figure {
+      width: 100%;
+      text-align: center;
+      font-size: 0.75em;
       margin: 0;
-      border-style: inset;
-      background-color: var(--shade);
-      border-color: var(--shade);
-      border-width: 1px;
-      border-top-right-radius: var(--gap);
-      border-top-left-radius: var(--gap);
-      color: var(--dim);
+      padding: 0;
 
-      &.selected {
-        border-bottom: none;
-        background-color: var(--dark);
-        color: var(--light);
+      & img {
+        padding: 0;
+        max-width: calc(100% - 2em);
       }
+    }
+  }
+}
 
-      &:not(.selected):hover {
-        background-color: var(--shady);
-        color: var(--white);
-        cursor: pointer;
-      }
+div#connect {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;;
 
-      & input {
-        display: none;
-      }
+  & div.dialog {
+    width: fit-content;
+    flex-shrink: 0;
+    border: 1px inset var(--grey);
+    border-radius: var(--gap);
+    overflow: hidden;
+    font-size: 1.5rem;
 
-      & span {
-        display: inline-block;
-        width: 100%;
-        padding: var(--gap) 0 var(--slim);
-        text-align: center;
+    & div.connect {
+      display: flex;
+      align-items: stretch;
+      width: calc(100% + 2px);
+      margin: -1px;
+
+      & label {
+        flex: 1;
+        height: 100%;
+        margin: 0;
+        border-style: inset;
+        background-color: var(--shade);
+        border-color: var(--shade);
+        border-width: 1px;
+        border-top-right-radius: var(--gap);
+        border-top-left-radius: var(--gap);
+        color: var(--dim);
+
+        &.selected {
+          border-bottom: none;
+          background-color: var(--dark);
+          color: var(--light);
+        }
+
+        &:not(.selected):hover {
+          background-color: var(--shady);
+          color: var(--white);
+          cursor: pointer;
+        }
+
+        & input {
+          display: none;
+        }
+
+        & span {
+          display: inline-block;
+          width: 100%;
+          padding: var(--side) 0 var(--gap);
+          text-align: center;
+        }
       }
     }
   }
@@ -490,20 +558,21 @@ ul#tabs {
   }
 
   & div.warning {
+    /* Centre in viewport */
     position: fixed;
-    width: min(100vw, 30rem);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+
+    width: min(100vw, 40rem);
     height: fit-content;
     padding: var(--gap);
     border: 1px inset var(--warning-border);
     border-radius: var(--gap);
     background-color: var(--warning);
     text-align: left; /* Counters the right align of the buttons */
-    /* Centre in viewport */
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
 
     & h2 {
       text-align: center;
@@ -521,6 +590,25 @@ ul#tabs {
     }
   }
 }
+
+div#i18n {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  & h1,
+  & h2 {
+    text-align: center;
+  }
+
+  & div.info {
+    margin: 0 auto;
+    padding: 1em;
+    max-width: 800px;
+    overflow-y: scroll;
+  }
+}
+
 
 div#phrases {
   counter-set: number;
@@ -636,88 +724,6 @@ div#phrases {
       & textarea {
         pointer-events: none;
       }
-  }
-}
-
-footer {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: var(--size);
-  background-color: var(--dark);
-  font-size: var(--tab-font);
-
-  & div.counter {
-    position: relative;
-    height: var(--size);
-    width: var(--size);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    & span.counter {
-      display: flex;
-      flex-basis: var(--size);
-      flex-shrink: 0;
-      justify-content: center;
-      align-items: center;
-      height: var(--size);
-      border-radius: 100vmax;
-    }
-
-    & span.icon {
-      position: absolute;
-      bottom: var(--drop);
-      left: 0;
-    }
-
-    &.right span.icon {
-      left: auto;
-      right: 0;
-    }
-  }
-
-  & button {
-    flex: 1;
-    height: 100%;
-  }
-
-  /* Custom settings for three-way slider */
-  & div.three-way.limit {
-    --long:  var(--size);
-    /* backgroundColor of dots in various states */
-    --off:   var(--light);
-    --mix:   var(--grey);
-    --on:    #888; /* can't use var(--off) from root */
-    /* backgroundColor of slider in various states */
-    --bgoff: #888;
-    --bgmix: #888; /* can't use var(--off) from root */
-    --bgon:  #888;
-    /* icons for various states */
-    --ioff:  "👓";
-    --imix:  "🌤️";
-    --ion:   "🕶️";
-    border: none;
-
-    &::before,
-    &::after {
-      border: var(--edge) solid var(--border);
-      box-sizing: border-box;
-    }
-
-    /* Specific settings for mix state, with split emoji */
-    &:has(.mix:checked) {
-      /* Show full size off icon, underneath... */
-      &::before {
-        content: var(--ioff);
-      }
-      /* ...half an ::after on icon */
-      &::after {
-        content: var(--ion);
-        clip-path: rect(0 100% 100% 50%);
-        background-color: var(--bgmix);
-      }
-    }
   }
 }
 
@@ -937,6 +943,88 @@ footer {
   }
 }
 
+footer {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: var(--size);
+  background-color: var(--dark);
+  font-size: var(--tab-font);
+
+  & div.counter {
+    position: relative;
+    height: var(--size);
+    width: var(--size);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    & span.counter {
+      display: flex;
+      flex-basis: var(--size);
+      flex-shrink: 0;
+      justify-content: center;
+      align-items: center;
+      height: var(--size);
+      border-radius: 100vmax;
+    }
+
+    & span.icon {
+      position: absolute;
+      bottom: var(--drop);
+      left: 0;
+    }
+
+    &.right span.icon {
+      left: auto;
+      right: 0;
+    }
+  }
+
+  & button {
+    flex: 1;
+    height: 100%;
+  }
+
+  /* Custom settings for three-way slider */
+  & div.three-way.limit {
+    --long:  var(--size);
+    /* backgroundColor of dots in various states */
+    --off:   var(--light);
+    --mix:   var(--grey);
+    --on:    #888; /* can't use var(--off) from root */
+    /* backgroundColor of slider in various states */
+    --bgoff: #888;
+    --bgmix: #888; /* can't use var(--off) from root */
+    --bgon:  #888;
+    /* icons for various states */
+    --ioff:  "👓";
+    --imix:  "🌤️";
+    --ion:   "🕶️";
+    border: none;
+
+    &::before,
+    &::after {
+      border: var(--edge) solid var(--border);
+      box-sizing: border-box;
+    }
+
+    /* Specific settings for mix state, with split emoji */
+    &:has(.mix:checked) {
+      /* Show full size off icon, underneath... */
+      &::before {
+        content: var(--ioff);
+      }
+      /* ...half an ::after on icon */
+      &::after {
+        content: var(--ion);
+        clip-path: rect(0 100% 100% 50%);
+        background-color: var(--bgmix);
+      }
+    }
+  }
+}
+
 .spacer {
   flex-grow: 1;
 }
@@ -991,5 +1079,11 @@ div.mask {
 @media (max-width: 842px) {
   :root {
     font-size: 1.9vw;
+  }
+}
+
+@media (max-height: 540px) {
+  :root {
+    font-size: 2.8vh;
   }
 }

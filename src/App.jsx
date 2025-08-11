@@ -8,8 +8,9 @@ import {
   Route
 } from 'react-router-dom'
 import './App.css'
-import { Home } from './pages/Home'
+import { About } from './pages/About'
 import { Connect } from './pages/Connect'
+import { I18N } from './pages/I18N'
 import { Phrases } from './pages/Phrases'
 import { Reviews } from './pages/Reviews'
 import { NotFound } from './pages/NotFound'
@@ -22,6 +23,8 @@ function App() {
       <Provider>
         <Routes>
           <Route index element={<Connect />} />
+          <Route path="about" element={<About />} />
+          <Route path="i18n" element={<I18N />} />
           <Route path="add">
               <Route
                 path=":index/"
