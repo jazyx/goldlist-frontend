@@ -13,6 +13,7 @@ export const TextArea = ({
   onKeyDown,
   onChange,
   onFocus,
+  onScroll,
   placeholder
 }) => {
 
@@ -27,9 +28,11 @@ export const TextArea = ({
     <textarea
       name={name}
       className={className}
+      spellCheck="false"
       onKeyDown={onKeyDown}
       onChange={onChange}
       onFocus={onFocus}
+      onScroll={onScroll}
       value={text}
       placeholder={placeholder}
     />

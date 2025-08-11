@@ -54,15 +54,18 @@
   /* Input slider and Review */
   --full:   min(100vw, 60rem);
   --fill:   calc(var(--full) - var(--scroll));
+  --space:  4.5rem;
+  --room:   calc(var(--space) * 2);
   --size:   6rem;
   --half:   calc(var(--size) * 0.5);
   --count:  calc(var(--size) * 0.333);
-  --text:   "Courier New", monospace;
+  --text:   'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* Allow 2 lines of text to be visible before scrolling starts */
   --font:   1.5rem;
-  --line:   1.5rem;
+  --line:   1.8rem;
   --border: #333;
   --right:  #090;
-  --wrong:  #900;
+  --wrong:  #f008;
   --bg:     #666;
   --on:     #fff;
   --off:    #888;
@@ -74,6 +77,7 @@ body {
   min-height: 100vh;
   color: var(--light);
   background-color: var(--dark);
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
 }
 
 body,
@@ -609,6 +613,21 @@ div#i18n {
   }
 }
 
+p,
+textarea {
+  height: var(--space);
+  width: 100%;
+  margin: 0;
+  padding: var(--slim);
+  font-size: var(--font);
+  line-height: var(--line);
+  overflow: hidden;
+  font-family: var(--text);
+  white-space: pre-wrap;
+  border: var(--slim) solid transparent;
+  box-sizing: border-box;
+  transition: all var(--duration);
+}
 
 div#phrases {
   counter-set: number;
@@ -663,13 +682,9 @@ div#phrases {
     }
 
     textArea {
-      display: block;
-      width: 100%;
-      height: var(--half);
-      padding: var(--slim) var(--gap);
-      box-sizing: border-box;
-      font-family: var(--text);
-      font-size: var(--font);
+      border-color: black;
+      border-width: 1px;
+      overflow-y: auto;
 
       &.altered {
         background-color: var(--altered);
@@ -737,60 +752,43 @@ div#phrases {
     height: 100%;
     overflow-y: auto;
     width: var(--full);
-  }
 
-  .review {
-    display: flex;
-    width: var(--fill);
-    height: var(--size);
-    background-color: var(--bg);
-    margin-bottom: var(--gap);
-    border-radius: 100vmax;
-    overflow: hidden;
-    transition: all var(--duration);
-
-    & div.control {
+    .review {
       display: flex;
-      justify-content: center;
       align-items: center;
-      width: var(--size);
+      width: var(--fill);
+      height: var(--room);
       background-color: var(--bg);
-      font-size: var(--half);
-    }
+      margin-bottom: var(--gap);
+      border-radius: 100vmax;
+      overflow: hidden;
+      transition: all var(--duration);
 
-    & div.desk {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      flex-grow: 1;
+      & div.control {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: var(--size);
+        background-color: var(--bg);
+        font-size: var(--half);
+      }
 
-      p {
-        height: var(--half);
-        padding: var(--slim);
-        box-sizing: border-box;
-        margin: 0;
-        font-size: var(--font);
-        line-height: var(--line);
-        transition: all var(--duration);
+      & div.desk {
+        position: relative;
+        flex-grow: 1;
 
-        &.feedback {
-          font-family: var(--text);
-          color: var(--black);
+        & p.feedback{
+          border-color: var(--white);
           background-color: var(--white);
-          padding: 0 var(--slim) ;
-          border: var(--slim) solid var(--white);
 
           & b {
             color: var(--wrong);
           }
-
           & u {
             /* Overwrite u from underline to grey */
             color: var(--grey);
             text-decoration: none;
           }
-
           &.right {
             border-color: var(--right);
           }
@@ -803,128 +801,119 @@ div#phrases {
             background-color: var(--light);
           }
         }
-      }
 
-      textarea {
-        position: absolute;
-        top: 0;
-        height: var(--half);
-        width: 100%;
-        margin: 0;
-        border: none;
-        padding: var(--slim) var(--gap);
-        box-sizing: border-box;
-        font-family: var(--text);
-        font-size: var(--font);
-        line-height: var(--line);
-        color: var(--black);
-        opacity: 0.75;
-        background-color: transparent;
-        transition: all var(--duration);
-      }
-    }
-
-    /* Specific controls for CheckSlider in Review */
-    & label.checkSlider input {
-      &.front {
-        ~ span::after {
-          left: var(--half);
-        }
-
-        /* Increment phraseCounter only if phrase is neither
-          * retained nor flagged to be retained
-          */
-        &:not(.locked) {
-            &:not(:checked) {
-            ~ span::after {
-              counter-increment: phraseCounter 1;
-              content: counter(phraseCounter);
-            }
-          }
-
-          &:checked ~ span::after {
-            content: "✅";
-            left: 0;
-          }
-        }
-
-        &.locked {
-          & ~ span::after {
-            content: "🔓";
-          }
-
-          &.disabled ~ span::after {
-            background-color: var(--off);
-            border-color: var(--disabled);
-          }
-
-          &:checked ~ span::after {
-            content: "🔒";
-            left: 0;
-          }
-        }
-      }
-
-      &.back {
-        &:not(:checked) ~ span::after {
-          content: "👓";
-        }
-
-        &:checked ~ span::after {
-          content:  "🕶️";
-        }
-
-        &.disabled {
-          & ~ span::before {
-            content:  "";
-            background-color: var(--bg);
-            border-color: var(--disabled);
-            cursor: default;
-          }
-          & ~ span::after {
-            background-color: var(--bg);
-            border-color: var(--disabled);
-            opacity: 0.5;
-          }
-          &.shut {
-            & ~ span::after {
-              content: "🕶️";
-            }
-          }
-        }
-      }
-    }
-
-    /* Specific controls for collapsing CheckSlider in Review */
-    &:has(input.front:checked:not(.open)) {
-      height: var(--half);
-
-      & div.control {
-        background-color: var(--bg);
-      }
-
-      & p.feedback,
-      & textarea {
-        height: 0;
-        padding: 0 var(--slim);
-        border-top-width: 0;
-        border-bottom-width: 0;
-        overflow: hidden;
-      }
-
-      &:has(input.back:checked) {
-        background-color: transparent;
-
-        div.control {
+        textarea {
+          position: absolute;
+          top: 0;
+          left: 0;
+          opacity: 0.75;
           background-color: transparent;
+          border-color: transparent;
+        }
+      }
+
+      /* Specific controls for CheckSlider in Review */
+      & label.checkSlider input {
+        &.front {
+          ~ span::after {
+            left: var(--half);
+          }
+
+          /* Increment phraseCounter only if phrase is neither
+            * retained nor flagged to be retained
+            */
+          &:not(.locked) {
+              &:not(:checked) {
+              ~ span::after {
+                counter-increment: phraseCounter 1;
+                content: counter(phraseCounter);
+              }
+            }
+
+            &:checked ~ span::after {
+              content: "✅";
+              left: 0;
+            }
+          }
+
+          &.locked {
+            & ~ span::after {
+              content: "🔓";
+            }
+
+            &.disabled ~ span::after {
+              background-color: var(--off);
+              border-color: var(--disabled);
+            }
+
+            &:checked ~ span::after {
+              content: "🔒";
+              left: 0;
+            }
+          }
         }
 
-        div.desk {
-          p.hint {
-            height: 0;
-            overflow: hidden;
-            border: var(--edge) solid var(--off);
-            padding: 0;
+        &.back {
+          &:not(:checked) ~ span::after {
+            content: "👓";
+          }
+
+          &:checked ~ span::after {
+            content:  "🕶️";
+          }
+
+          &.disabled {
+            & ~ span::before {
+              content:  "";
+              background-color: var(--bg);
+              border-color: var(--disabled);
+              cursor: default;
+            }
+            & ~ span::after {
+              background-color: var(--bg);
+              border-color: var(--disabled);
+              opacity: 0.5;
+            }
+            &.shut {
+              & ~ span::after {
+                content: "🕶️";
+              }
+            }
+          }
+        }
+      }
+
+      /* Specific controls for collapsing CheckSlider in Review */
+      &:has(input.front:checked:not(.open)) {
+        height: var(--half);
+
+        & div.control {
+          background-color: var(--bg);
+        }
+
+        & p.feedback,
+        & textarea {
+          height: 0;
+          padding: 0 var(--slim);
+          border-top-width: 0;
+          border-bottom-width: 0;
+          overflow: hidden;
+        }
+
+        &:has(input.back:checked) {
+          background-color: transparent;
+
+          div.control {
+            background-color: transparent;
+          }
+
+          div.desk {
+            p.hint {
+              height: 0;
+              overflow: hidden;
+              border: var(--edge) solid var(--off);
+              padding: 0;
+            }
           }
         }
       }

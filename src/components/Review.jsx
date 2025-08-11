@@ -12,7 +12,7 @@
  */
 
 
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { UserContext } from '../contexts'
 import { Feedback } from './Feedback'
 import { TextArea } from './TextArea'
@@ -42,9 +42,11 @@ export const Review = ({
     getPathAndIndex
   } = useContext(UserContext)
 
+  const feedbackRef = useRef()
   const { limitState } = user
   // "on" (limit=>true), "mix", "off" (limit=>false)
   let wrong = false // set to true if there is a typing error
+
 
 
   //////////////////////////// STATES ////////////////////////////
@@ -52,7 +54,7 @@ export const Review = ({
   // Is the textarea available for typing?
   const showType =  !(retained || !!db.retained)
   // Does the whole word show while typing?
-  const showClue =  limitState === "off" 
+  const showClue =  limitState === "off"
                 || (limitState === "mix" && !limit)
   // Is the Retain checkSlider disabled?
   const retainOff = limitState === "off" && db.retained
@@ -118,10 +120,31 @@ export const Review = ({
   }
 
 
+  /**
+   * Force the feedback paragraph to scroll with the textarea.
+   *
+   * If users scroll with a wheel, then they can pull the text
+   * beyond the textarea limits. Preventing this means intercepting
+   * wheel events with onWheel and calling preventDefault() on
+   * them. However React uses { passive: true } for such events by
+   * default, so fixing this means using useRef() to get the
+   * textarea element, and adding a "wheel" event listener
+   * directly to that, bypassing React.
+   *
+   * Task left for later.
+   */
+  function onScroll(event) {
+    const { target } = event
+    const { scrollTop } = target
+
+    feedbackRef.current.scrollTop = scrollTop
+  }
+
+
   /////////////////////// TEXT FOR FEEDBACK ///////////////////////
 
-  // Compare text to best
-  const best = db.text
+  // Compare text to best (ignoring Russian stress marks)
+  const best = showType ? db.text.replaceAll('́', "") : db.text
   const last = text.length - 1
   const chunks = text.split("").reduce(( data, char, index ) =>{
     const { chunks, chunk, match } = data
@@ -241,6 +264,7 @@ export const Review = ({
   return (
     <div
       className="review"
+      name={_id}
     >
       <div
         className="control front"
@@ -257,6 +281,7 @@ export const Review = ({
         <Feedback
           feedback={feedback}
           className={feedbackClass}
+          ref={feedbackRef}
         />
         {showType && <TextArea
             name="text"
@@ -265,6 +290,7 @@ export const Review = ({
             text={text}
             onKeyDown={tabNextOnEnter}
             onChange={onChange}
+            onScroll={onScroll}
             onFocus={scrollIntoView}
           />
         }

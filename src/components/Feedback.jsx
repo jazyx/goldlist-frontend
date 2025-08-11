@@ -6,15 +6,17 @@
  * text is expected.
  */
 
+import { forwardRef } from "react"
 
-export const Feedback = ({ feedback, className }) => {
-
-
-  return (
-    <p
-      className={className}
-    >
-      {feedback}
-    </p>
-  )
-}
+export const Feedback = forwardRef(
+  ({ feedback, className }, ref ) => {
+    return (
+      <p
+        className={className}
+        ref={ref}
+      >
+        {feedback}
+      </p>
+    )
+  }
+)

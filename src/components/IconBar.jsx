@@ -41,7 +41,6 @@ export const IconBar = ({ icons }) => {
 
 
   const buttons = icons.map( iconName => getButton[iconName]())
-  console.log("buttons:", buttons)
 
 
   return (

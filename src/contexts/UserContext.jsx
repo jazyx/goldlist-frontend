@@ -226,7 +226,7 @@ export const UserProvider = ({ children }) => {
     const phrase = getPhrase(_id)
     phrase[name] = value
 
-    const right =  (db && value === db.text)
+    const right =  (db && value === db.text.replaceAll('́', ""))
     phrase.right = right
 
     setLists([...lists])
