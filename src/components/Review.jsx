@@ -52,7 +52,8 @@ export const Review = ({
   // Is the textarea available for typing?
   const showType =  !(retained || !!db.retained)
   // Does the whole word show while typing?
-  const showClue =  !limit && limitState !== "on"
+  const showClue =  limitState === "off" 
+                || (limitState === "mix" && !limit)
   // Is the Retain checkSlider disabled?
   const retainOff = limitState === "off" && db.retained
   // Is the Retain checkSlider in the `checked` state?

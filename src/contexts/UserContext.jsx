@@ -411,7 +411,7 @@ export const UserProvider = ({ children }) => {
   /**
    * ReviewsFooter has checked that all phrases have been tagged
    * to be retain or have been correctly typed, and the user has
-   * clicked on the enabled Submit Review button 
+   * clicked on the enabled Submit Review button
    */
   const confirmReview = () => {
     setReviewState("ready")
@@ -541,24 +541,39 @@ export const UserProvider = ({ children }) => {
   function tabNextOnEnter(event) {
     if (event.key === "Enter") {
       event.preventDefault()
-      tabToNextItem(event.target)
+      tabToNextOpenItem(event.target)
     }
   }
 
 
   /**
+   *
+   * @param {textarea} element is an element that received an Enter
+   *                   keyDown event
    * Fails if the next review is locked
    * Focuses on collapsed textarea if next review is to be retained
-  */
-  function tabToNextItem(activeItem) {
-    const next = activeItem.nextElementSibling
-    const target = (next?.tagName === "TEXTAREA" ? next : null)
-         // hint?
-      || activeItem.closest(".phrase, .review")
-         .nextElementSibling?.querySelector("textarea")
-         // text in next phrase?
-      || activeItem.closest("#phrases, #reviews")
-         .querySelector("textarea") // recycle to first entry
+
+   */
+  function tabToNextOpenItem(element) {
+    // Check if element is a `text` item followed by an editable
+    // `hint` item
+    let next = element.nextElementSibling
+    let target = (next?.tagName === "TEXTAREA" ? next : null)
+
+    if (!target) {
+      // Check with each younger sibling of element's parent if
+      // there is a visible textarea
+      let parent = element.closest(".phrase, .review")
+      while (parent && !target) {
+        parent = parent.nextElementSibling
+        target = parent?.querySelector("textarea")
+      }
+    }
+    if (!target) {
+      // No more parents to check. Recycle from first entry.
+      target = element.closest("#phrases, #reviews")
+                      .querySelector("textarea")
+    }
 
     if (target) {
       scrollIntoView({ target })
