@@ -105,14 +105,15 @@ export const UserProvider = ({ children }) => {
     // If the server sends a fail message, it should be logged to
     // the console, and nothing else should happen.
     if (fail) {
+      console.log("fail", JSON.stringify(fail, null, '  '));
       return setFailed(fail.reason)
     }
 
     lists.sort(byIndex)
     redos.sort(byIndex)
 
-    lists.forEach(preparePhrases) // should only be one
-    redos.forEach(preparePhrases) // should only be one
+    lists.forEach(preparePhrases)
+    redos.forEach(preparePhrases)
 
     // const replacer =(key, value) => {
     //   if (key === "phrases") {

@@ -4,9 +4,12 @@
 
 
 import { Link } from 'react-router-dom'
+import { Trans, useTranslation } from 'react-i18next';
 
 
-export const TabButton = ({ edit, index, reviews }) => {
+export const TabButton = ({ check, index, reviews }) => {
+  const { t } = useTranslation()
+
   const label = (() => {
     if (!reviews) { return }
 
@@ -36,16 +39,34 @@ export const TabButton = ({ edit, index, reviews }) => {
   })()
 
 
+  const texts = {
+    newText:    t("tabs.new.text"),
+    newTitle:   t("tabs.new.title"),
+    checkTitle: t("tabs.check.title"),
+    listTitle:  t("tabs.list.title"),
+  }
+
+
   const name = (index < 0) 
     ? `R${-index}` // This is a recycled list of knotty words
     : index
 
 
   const [text, title] = (reviews)
-    ? [`List ${name}`, `Review list ${name} (${label})`]
-    : (edit)
-      ? [`Edit ${name}`, "Edit recent phrases"]
-      : ["Add", "Add new phrases"]
+    ? [<Trans
+          i18nKey="tabs.list.text"
+          values={{ name }}
+        />
+      , `${texts.listTitle} ${name} (${label})`
+      ]
+    : (check)
+      ? [ <Trans
+            i18nKey="tabs.check.text"
+            values={{ name }}
+          />,
+          `${texts.checkTitle} ${name}`
+        ]
+      : [texts.newText, texts.newTitle]
 
   const to = (reviews)
     ? `/rev/${index}`

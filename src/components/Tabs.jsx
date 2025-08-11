@@ -12,9 +12,9 @@ export const Tabs = () => {
   const { lists, redos } = useContext(UserContext)
 
 
-  const editTabs = lists.map(( list, index ) => {
+  const checkTabs = lists.map(( list, index ) => {
     const { _id } = list
-    return <TabButton { ...list } key={_id} edit={index}/>
+    return <TabButton { ...list } key={_id} check={index}/>
   })
 
 
@@ -27,7 +27,7 @@ export const Tabs = () => {
     <ul
       id="tabs"
     >
-      {editTabs}
+      {checkTabs}
       {redoTabs}
     </ul>
   )

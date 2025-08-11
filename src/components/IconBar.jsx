@@ -32,7 +32,7 @@ export const IconBar = ({ icons }) => {
         <Link
           name="118n"
           key="i18n"
-          to="i18n"
+          to="/i18n"
         >
           <img src="/flags/en-GB.png" alt="UK English" />
         </Link>

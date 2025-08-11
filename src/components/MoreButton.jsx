@@ -3,18 +3,11 @@
  */
 
 
-import { useContext } from 'react'
-import { UserContext } from '../contexts'
+import { useTranslation } from 'react-i18next'
 
 
 export const MoreButton = ({disabled, addList}) => {
-  // const { getActive, lists, addList } = useContext(UserContext)
-  // const list = getActive("list")
-
-
-  // const disabled = list !== lists[0]
-  //   ? true
-  //   : !lists[0] || list?.length < 21
+  const { t } = useTranslation()
 
   return (
     <button
@@ -22,7 +15,7 @@ export const MoreButton = ({disabled, addList}) => {
       disabled={disabled}
       onClick={addList}
     >
-      Add More
+      {t("more")}
     </button>
   )
 }

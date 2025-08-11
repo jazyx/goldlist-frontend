@@ -1,0 +1,139 @@
+{
+  "__endonym__": "Français",
+  "error": {
+    "404": "404 Introuvable",
+    "": "Une erreur est survenue"
+  },
+  "cancel": "Annuler",
+  "continue": "Continuer",
+  "sign": {
+    "up": "S'enregistrer",
+    "in": "Se connecter",
+    "out": "Se déconnecter",
+    "connect": "Connexion",
+    "sign": "Connexion",
+    "username": "Nom d'utilisateur",
+    "email": "Courriel",
+    "password": "Mot de passe",
+    "user_id": "Courriel ou Nom d'utilisateur",
+    "show-password": "Montrer le mot de passe",
+    "hide-password": "Cacher le mot de passe",
+    "guest": {
+      "name": "Rester anonyme",
+      "session": {
+        "head": "xxx",
+        "01": "xxx",
+        "02": "xxx"
+      },
+      "cookie": {
+        "head": "xxx",
+        "01": "xxx",
+        "02": "xxx",
+        "03": "xxx"
+      }
+    },
+    "remember-me": "Connecter automatiquement pendant 90 jours",
+    "unauthorized": "Nom d'utilisateur ou mot de passe invalid",
+    "duplicate": "{{key}} \"{{value}}\" existe déjà. Vouliez-vous <span><button>vous connecter</button> ?</span>",
+    "login": "Annuler",
+    "register": "Annuler",
+    "_username": "Le nom d'utilisateur",
+    "_email": "L'addresse courriel"
+  },
+  "tabs": {
+    "new": {
+      "text": "Nouveaux",
+      "title": "Ajouter de nouvelles expressions"
+    },
+    "check": {
+      "text": "Vérifier {{name}}",
+      "title": "Vérifier la liste"
+    },
+    "list": {
+      "text": "Liste {{name}}",
+      "title": "Élaguer la liste"
+    }
+  },
+  "more": "Créer une nouvelle list",
+  "submit_list": "Soumettre la liste",
+  "submit_review": "Soumettre la liste traitée",
+  "remember": "xxx",
+  "remember1": "xxx",
+  "congratulations": {
+    "title": "Félicitations",
+    "completed": "xxx",
+    "completed1": "xxx",
+    "reviewed": "xxx",
+    "reviewed1": "xxx",
+    "welldone": "xxx"
+  },
+  "about": {
+    "title": "xxx",
+    "h0_intro": {
+      "subtitle": "xxx",
+      "lede": "xxx",
+      "01": "xxx",
+      "02": "xxx",
+      "03": "xxx",
+      "03_caption": "xxx"
+    },
+    "h1_daily": {
+      "subtitle": "xxx",
+      "01": "xxx",
+      "01_caption": "xxx",
+      "02": "xxx",
+      "02_caption": "xxx",
+      "03": "xxx",
+      "03_caption": "xxx",
+      "04": "xxx"
+    },
+    "h2_reviews": {
+      "subtitle": "xxx",
+      "01": "xxx",
+      "01_caption": "xxx",
+      "02": "xxx",
+      "02_caption": "xxx",
+      "03": "xxx",
+      "03_caption": "xxx",
+      "04": "xxx",
+      "05": "xxx",
+      "05_caption": "xxx"
+    },
+    "h3_submit_review": {
+      "subtitle": "xxx",
+      "01": "xxx",
+      "02": "xxx",
+      "03": "xxx",
+      "03_caption": "xxx"
+    },
+    "h4_days_work": {
+      "subtitle": "xxx",
+      "01": "xxx",
+      "02": "xxx",
+      "03": "xxx",
+      "04": "xxx",
+      "04_caption": "xxx"
+    },
+    "h5_expectations": {
+      "subtitle": "xxx",
+      "01": "xxx"
+    },
+    "h6_tips": {
+      "subtitle": "xxx",
+      "01": "xxx",
+      "02": "xxx",
+      "02_caption": "xxx"
+    },
+    "h7_preferences": {
+      "subtitle": "xxx",
+      "01": "xxx",
+      "02": "xxx",
+      "03": "xxx",
+      "03_caption": "xxx",
+      "04": "xxx",
+      "04_caption": "xxx",
+      "05": "xxx"
+    }
+  },
+  "xxx": "xxx"
+}

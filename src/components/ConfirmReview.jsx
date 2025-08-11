@@ -4,11 +4,13 @@
 
 
 import { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import { UserContext } from '../contexts'
 
 
 
 export const ConfirmReview = ({phrases}) => {
+  const { t } = useTranslation()
   const {
     cancelReview,
     submitReview
@@ -28,8 +30,8 @@ export const ConfirmReview = ({phrases}) => {
 
   const reviewedCount = reviewed.length
   const header = (reviewedCount === 1)
-    ? "You have decided to remember this phrase:"
-    : `You have decided to remember these ${reviewedCount} phrases:`
+    ? t("remember1")
+    : t("remember").replace("{{count}}", reviewedCount)
 
 
   return <div className="mask">
@@ -42,13 +44,13 @@ export const ConfirmReview = ({phrases}) => {
         <button
           onClick={cancelReview}
         >
-          Cancel
+          {t("cancel")}
         </button>
         <button
           className="primary"
           onClick={submitReview}
         >
-          Continue
+          {t("continue")}
         </button>
       </div>
     </div>

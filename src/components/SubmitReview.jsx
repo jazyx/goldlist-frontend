@@ -14,10 +14,12 @@
 
 
 import { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import { UserContext } from '../contexts'
 
 
 export const SubmitReview = ({ disabled }) => {
+  const { t } = useTranslation()
   const { confirmReview } = useContext(UserContext)
 
 
@@ -27,7 +29,7 @@ export const SubmitReview = ({ disabled }) => {
       disabled={disabled}
       onClick={confirmReview}
     >
-      Submit Review
+      {t("submit_review")}
     </button>
   )
 }

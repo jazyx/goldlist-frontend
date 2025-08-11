@@ -1,0 +1,139 @@
+{
+  "__endonym__": "Русский",
+  "error": {
+    "404": "404 Не найдено",
+    "": "Что-то не так"
+  },
+  "cancel": "Отменить",
+  "continue": "Продолжать",
+  "sign": {
+    "up": "Регистрация",
+    "in": "Вход",
+    "out": "Выход",
+    "connect": "Регистрация | Вход",
+    "sign": "Регистрация | Вход",
+    "username": "Имя",
+    "email": "Адрес электронной почты",
+    "password": "Пароль",
+    "user_id": "Имя пользователя или адрес электронной почты",
+    "show-password": "Показать пароль",
+    "hide-password": "Скрыть пароль",
+    "guest": {
+      "name": "Войти как гость",
+      "session": {
+        "head": "xxx",
+        "01": "xxx",
+        "02": "xxx"
+      },
+      "cookie": {
+        "head": "Войти как гость",
+        "01": "xxx",
+        "02": "xxx",
+        "03": "xxx"
+      }
+    },
+    "remember-me": "Запомнить меня на этом устройстве",
+    "unauthorized": "Неверные логин или пароль",
+    "duplicate": "Учетная запись с {{key}} «{{value}}» уже существует. Вы хотели <span><button>войти</button></span> в систему?",
+    "login": "Отменить",
+    "register": "Отменить",
+    "_username": "именем пользователя",
+    "_email": "адресом"
+  },
+  "tabs": {
+    "new": {
+      "text": "Новые",
+      "title": "Новые"
+    },
+    "check": {
+      "text": "Поверить {{name}}",
+      "title": "Поверить"
+    },
+    "list": {
+      "text": "Список {{name}}",
+      "title": "xxx"
+    }
+  },
+  "more": "Создать новый список",
+  "submit_list": "Отправить список",
+  "submit_review": "Отправить проверенный список",
+  "remember": "xxx",
+  "remember1": "xxx",
+  "congratulations": {
+    "title": "xxx",
+    "completed": "xxx",
+    "completed1": "xxx",
+    "reviewed": "xxx",
+    "reviewed1": "xxx",
+    "welldone": "xxx"
+  },
+  "about": {
+    "title": "xxx",
+    "h0_intro": {
+      "subtitle": "RU: A strategy for improving your vocabulary",
+      "lede": "RU: lede",
+      "01": "xxx",
+      "02": "xxx",
+      "03": "xxx",
+      "03_caption": "xxx"
+    },
+    "h1_daily": {
+      "subtitle": "xxx",
+      "01": "xxx",
+      "01_caption": "xxx",
+      "02": "xxx",
+      "02_caption": "xxx",
+      "03": "xxx",
+      "03_caption": "xxx",
+      "04": "xxx"
+    },
+    "h2_reviews": {
+      "subtitle": "xxx",
+      "01": "xxx",
+      "01_caption": "xxx",
+      "02": "xxx",
+      "02_caption": "xxx",
+      "03": "xxx",
+      "03_caption": "xxx",
+      "04": "xxx",
+      "05": "xxx",
+      "05_caption": "xxx"
+    },
+    "h3_submit_review": {
+      "subtitle": "xxx",
+      "01": "xxx",
+      "02": "xxx",
+      "03": "xxx",
+      "03_caption": "xxx"
+    },
+    "h4_days_work": {
+      "subtitle": "xxx",
+      "01": "xxx",
+      "02": "xxx",
+      "03": "xxx",
+      "04": "xxx",
+      "04_caption": "xxx"
+    },
+    "h5_expectations": {
+      "subtitle": "xxx",
+      "01": "xxx"
+    },
+    "h6_tips": {
+      "subtitle": "xxx",
+      "01": "xxx",
+      "02": "xxx",
+      "02_caption": "xxx"
+    },
+    "h7_preferences": {
+      "subtitle": "xxx",
+      "01": "xxx",
+      "02": "xxx",
+      "03": "xxx",
+      "03_caption": "xxx",
+      "04": "xxx",
+      "04_caption": "xxx",
+      "05": "xxx"
+    }
+  },
+  "xxx": "xxx"
+}

@@ -4,12 +4,22 @@
 
 
 import { useState, useContext } from 'react'
+import { Trans, useTranslation } from 'react-i18next';
 import { UserContext } from '../contexts'
 
 
 export const Guest = ({ cookies }) => {
+  const { t } = useTranslation()
   const { connectUser } = useContext(UserContext)
   const [ show, setShow ] = useState(false)
+
+  const texts = {
+    guest:       t("sign.guest.name"),
+    sessionHead: t("sign.guest.session.head"),
+    sessionBody: t("sign.guest.session.01"),
+    cookieHead:  t("sign.guest.cookie.head"),
+    cookieBody:  t("sign.guest.cookie.01")
+  }
 
 
   const enterAsGuest = () => {
@@ -25,9 +35,14 @@ export const Guest = ({ cookies }) => {
   const sessionWarning = () => {
     return (
       <div className="warning">
-        <h2>Permanent Cookie Required</h2>
-        <p>To explore this app as an anonymous guest, one permanent cookie will be set, to enable the server to record your progress. It will not be used for any other reason.</p>
-        <p>If your browser deletes all cookies when it closes, your progress will be lost. To avoid this, either ensure that cookies for {location.origin} are maintained permanently, or register a username and password.</p>
+        <h2>{texts.sessionHead}</h2>
+        <p>{texts.sessionBody}</p>
+        <p>
+          <Trans
+            i18nKey="sign.guest.session.02"
+            values={{ origin: location.origin}}
+          />
+        </p>
         <button
           onClick={showWarning}
         >
@@ -41,9 +56,17 @@ export const Guest = ({ cookies }) => {
   const cookieWarning = () => {
     return (
       <div className="warning">
-        <h2>Cookies Are Disabled</h2>
-        <p>To explore this app as an anonymous guest, one permanent cookie will be set, to enable the server to record your progress. It will not be used for any other reason.</p>
-        <p>If you want to use the <b>Continue as Guest</b> option, please <b>ensure that cookies</b> for {location.origin} <b>are maintained permanently</b>.</p><p><b>Alternatively, you can register a username and password.</b></p>
+        <h2>{texts.cookieHead}</h2>
+        <p>{texts.cookieBody}</p>
+        <p><Trans
+          i18nKey="sign.guest.cookie.02"
+          values={{ origin: location.origin}}
+          components={{ b: <b /> }}
+        /></p>
+        <p><Trans
+          i18nKey="sign.guest.cookie.03"
+          components={{ b: <b /> }}
+        /></p>
         <button
           onClick={showWarning}
         >
@@ -67,7 +90,7 @@ export const Guest = ({ cookies }) => {
         onClick={enterAsGuest}
         disabled={!cookies}
       >
-        Continue as Guest
+        {texts.guest}
       </button>
       <button
         className="warning"

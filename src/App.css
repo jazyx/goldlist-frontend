@@ -613,7 +613,7 @@ div#i18n {
   }
 }
 
-p,
+p.feedback,
 textarea {
   height: var(--space);
   width: 100%;

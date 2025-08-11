@@ -4,6 +4,8 @@
 
 
 import { useContext, useState } from 'react'
+import { useTranslation } from 'react-i18next';
+
 import { APIContext, UserContext } from '../contexts'
 import { IconBar } from '../components/IconBar'
 import { Guest } from '../components/Guest'
@@ -12,11 +14,13 @@ import { Guest } from '../components/Guest'
 export const Connect = () => {
   const { cookies } = useContext(APIContext)
   const { user } = useContext(UserContext)
-  // const cookies = true
+  const { t } = useTranslation()
+
   const {
     connectUser,
     failed
   } = useContext(UserContext)
+  
   const [ register, setRegister ] = useState(false)
   const [ details, setDetails ] = useState({
     user_name: user?.user_name || "",
@@ -24,7 +28,25 @@ export const Connect = () => {
     email: "",
     password: ""
   })
-  const [ show, setShow ] = useState(false)
+  const [ showPassword, setShowPassword ] = useState(false)
+
+
+  const texts = {
+    signUp:     t("sign.up"),
+    signIn:     t("sign.in"),
+    username:   t("sign.username"),
+    email:      t("sign.email"),
+    password:   t("sign.password"),
+    user_id:    t("sign.user_id"),
+    passTitle: showPassword
+            ?   t("sign.hide-password")
+            :   t("sign.show-password"),
+    auto_login: t("sign.remember-me"),
+    invalid:    t("sign.unauthorized")
+  }
+
+  console.log("texts", JSON.stringify(texts, null, '  '));
+  
 
 
   const connect = ({ target }) => {
@@ -40,7 +62,7 @@ export const Connect = () => {
 
 
   const toggleShow = () => {
-    setShow(!show)
+    setShowPassword(!showPassword)
   }
 
 
@@ -62,15 +84,61 @@ export const Connect = () => {
   }
 
 
+  // function showFailMessage() {
+  //   return (
+  //     <p className="fail-message">
+  //       {t(`sign.${logInstead}`)}
+  //     </p>
+  //   )
+  // }
+
+
+  // const signUpFeedback = (() => {
+  //   switch (typeof logInstead) {
+  //     case "string":
+  //       return showFailMessage()
+  //     case "object":
+  //       return showDuplicate()
+  //     default:
+  //       return
+  //   }
+  // })()
+
+
+  // function showDuplicate() {
+  //   const [ key, value ] = logInstead
+
+  //   const button = (
+  //     <button
+  //       type="button"
+  //       onClick={showSignIn}
+  //     />
+  //   )
+
+  //   const span = <span />
+
+  //   return (
+  //     <p className="logInstead">
+  //       <Trans
+  //         i18nKey="sign.duplicate"
+  //         values={{ key: t(`sign._${[key]}`), value }}
+  //         defaults="The {{key}} '{{value}}' exists. <span><button>Log in</button></span>"
+  //         components={{ button, span }}
+  //       />
+  //     </p>
+  //   )
+  // }
+
+
   const [ name, buttonName ] = (register)
-    ? [ "register", "Register"]
-    : [ "login", "Log In"]
+    ? [ "register", texts.signUp]
+    : [ "login", texts.signIn]
 
   const [ registerClass, loginClass ] = (register)
     ? [ "selected", null ]
     : [ null, "selected" ]
 
-  const [ type, src, alt ] = (show)
+  const [ type, src, alt ] = (showPassword)
     ? [ "text", "/open.svg", "open" ]
     : [ "password", "/shut.svg", "shut" ]
 
@@ -79,7 +147,7 @@ export const Connect = () => {
 
   return (
     <div id="connect">
-      <IconBar icons={[ "about" ]}/>
+      <IconBar icons={[ "about", "i18n" ]}/>
       <div className="spacer"></div>
 
       <div className="dialog">
@@ -94,7 +162,7 @@ export const Connect = () => {
               checked={!register}
               onChange={toggleMode}
             />
-            <span>Log In</span>
+            <span>{texts.signIn}</span>
           </label>
           <label
             className={registerClass}
@@ -106,12 +174,12 @@ export const Connect = () => {
               checked={register}
               onChange={toggleMode}
             />
-            <span>Register</span>
+            <span>{texts.signUp}</span>
           </label>
         </div>
         <div className="inputs">
           <label>
-            <span>Username:</span>
+            <span>{texts.username}:</span>
             <input
               type="text"
               id="user_name"
@@ -133,7 +201,7 @@ export const Connect = () => {
             />
           </label> */}
           <label className="password">
-            <span>Password:</span>
+            <span>{texts.password}:</span>
             <input
               type={type}
               id="password"
@@ -154,6 +222,7 @@ export const Connect = () => {
         >
           {failed}
         </p>
+        {/* {signUpFeedback} */}
         <div className="buttons">
           <button
             name={name}

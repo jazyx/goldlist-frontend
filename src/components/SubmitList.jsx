@@ -4,10 +4,12 @@
 
 
 import { useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import { UserContext } from '../contexts'
 
 
 export const SubmitList = ({ _id }) => {
+  const { t } = useTranslation()
   const { submitList } = useContext(UserContext)
 
 
@@ -22,7 +24,7 @@ export const SubmitList = ({ _id }) => {
       className={className}
       onClick={() => submitList(_id)}
     >
-      Submit List
+      {t("submit_list")}
     </button>
   )
 }
