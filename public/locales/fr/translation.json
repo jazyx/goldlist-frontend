@@ -1,6 +1,7 @@
 {
   "__endonym__": "Français",
   "choose-language": "Choisissez votre langue",
+  "use-method": "Utiliser la méthode « Gold List »",
   "error": {
     "404": "404 Introuvable",
     "": "Une erreur est survenue"
@@ -21,6 +22,7 @@
     "hide-password": "Cacher le mot de passe",
     "guest": {
       "name": "Rester anonyme",
+      "user_name": "Invité",
       "session": {
         "head": "Un cookie permanent est requis",
         "01": "Pour explorer cette application en tant qu'invité anonyme, un cookie permanent sera installé afin de permettre au serveur d'enregistrer votre progression. Il ne sera utilisé à aucune autre fin.",
@@ -36,6 +38,7 @@
     "remember-me": "Connecter automatiquement pendant 90 jours",
     "unauthorized": "Nom d'utilisateur ou mot de passe invalid",
     "duplicate": "{{key}} \"{{value}}\" existe déjà. Vouliez-vous <span><button>vous connecter</button> ?</span>",
+    "logout": "Déconnexion",
     "login": "Annuler",
     "register": "Annuler",
     "_username": "Le nom d'utilisateur",

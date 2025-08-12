@@ -35,7 +35,7 @@
 */
 
 import { createContext, useState, useEffect } from 'react'
-import i18n from './I18n'
+import i18n from '../I18n'
 
 const URL = `/locales/languages.json`
 

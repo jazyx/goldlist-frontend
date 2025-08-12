@@ -1,11 +1,13 @@
 /**
- * Notes/Tabs.jsx
+ * frontend/src/components/Tabs.jsx
  */
+
 
 
 import { useContext } from 'react'
 import { UserContext } from '../contexts'
 import { TabButton } from './TabButton'
+import { Menu } from './Menu'
 
 
 export const Tabs = () => {
@@ -38,6 +40,7 @@ export const Tabs = () => {
     <ul
       id="tabs"
     >
+      <Menu />
       {checkTabs}
       {redoTabs}
     </ul>

@@ -17,8 +17,6 @@ export const TabButton = ({ check, index, reviews }) => {
   // refers to the number of the _next_ review, so it starts at
   // 1 for a list that has never been reviewed yet.
 
-  console.log("reviews:", reviews)
-
   const isNew   = check === 0;
   const isCheck = !!check; // true if check is 1 or more
   const isRedo  = !isNew && !isCheck

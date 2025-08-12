@@ -15,6 +15,7 @@ export const Connect = () => {
   const { cookies } = useContext(APIContext)
   const { user } = useContext(UserContext)
   const { t } = useTranslation()
+  
 
   const {
     connectUser,
@@ -23,8 +24,7 @@ export const Connect = () => {
   
   const [ register, setRegister ] = useState(false)
   const [ details, setDetails ] = useState({
-    user_name: user?.user_name || "",
-    // user_name: "",
+    user_name: user.user_name || user.host_name,
     email: "",
     password: ""
   })

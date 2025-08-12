@@ -10,9 +10,9 @@ import {
   useContext,
   useState,
   useEffect,
-  useRef
 } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from "react-i18next"
 import { APIContext } from "./APIContext"
 import storage from "../tools/storage"
 import {
@@ -27,10 +27,6 @@ const LIST_LENGTH = 21
 // Initialize storage if it is empty
 const INITIALIZED = (Object.entries(storage.settings).length)
 
-if (!INITIALIZED) {
-  storage.set({ user_name: "Guest" })
-}
-
 set__scroll()
 
 
@@ -39,10 +35,19 @@ export const UserContext = createContext()
 
 export const UserProvider = ({ children }) => {
   const navigate = useNavigate()
+  const { t } = useTranslation()
+
+  if (!INITIALIZED) {
+    const user_name = t("sign.guest.user_name")
+    storage.set({ user_name })
+  }
+
   const { origin } = useContext(APIContext)
 
   // Read initial value of userData from LocalStorage
   const [ user, setUser ] = useState(() => storage.get())
+  const [ initialized, setInitialized ] = useState(INITIALIZED)
+
   const [ failed, setFailed ] = useState("")
   const [ loaded, setLoaded ] = useState(false)
   const [ lists, setLists ] = useState([])
@@ -51,6 +56,8 @@ export const UserProvider = ({ children }) => {
   const [ redosDone, setRedosDone ] = useState(0)
   const [ dayList, setDayList ] = useState(0)
   const [ dayDone, setDayDone ] = useState(0)
+  const [ from, setFrom ] = useState("/add")
+
 
 
   /////////////// REGISTRATION, LOG IN and GUESTS ///////////////
@@ -126,7 +133,13 @@ export const UserProvider = ({ children }) => {
 
     // Update the user_name in LocalStorage, after removing uuid
     const { user_name } = user
-    storage.placeItems({ user_name  })
+    if (user_name) {
+      storage.placeItems({ user_name  })
+    } else {
+      // May be undefined if user logged in as Guest. Allow
+      // current host to log in again easily later.
+      user.host_name = storage.getItem("user_name")
+    }
 
     setUser(user)
     setLists(lists)
@@ -606,15 +619,12 @@ export const UserProvider = ({ children }) => {
   /////////////////////////// USEFFECTS ///////////////////////////
 
 
-  const autoLoad = () => {
-    if (INITIALIZED) {
-      // guest()
-    }
-  }
-
   // TODO: Stay on current rev page if that's where we are
   const goAdd = () => {
-    if (loaded) {
+    if (!initialized) {
+      setInitialized(true)
+      navigate("/about")
+    } else if (loaded) {
       return
     } else if (lists[0]?.phrases) {
       setLoaded(true  )
@@ -635,7 +645,15 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  useEffect(autoLoad, [])
+  const useMethod = () => {
+    if (!loaded) {
+      navigate("/")
+    } else {
+      navigate(from)
+    }
+  }
+
+
   useEffect(goAdd, [lists])
   useEffect(checkIfDone, [ dayList, redos.length ])
 
@@ -644,8 +662,10 @@ export const UserProvider = ({ children }) => {
     <UserContext.Provider
       value ={{
         user,
+        from,
         lists,
         redos,
+        loaded,
         failed,
         dayDone,
         redosDone,
@@ -665,7 +685,10 @@ export const UserProvider = ({ children }) => {
         scrollIntoView,
         toggleLimitState,
         setDayDone,
-        getPathAndIndex
+        getPathAndIndex,
+        useMethod,
+        setLoaded,
+        setFrom
       }}
     >
       {children}
