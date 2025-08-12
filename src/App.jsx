@@ -2,6 +2,7 @@
  * frontend/src/App.jsx
  */
  
+import { Suspense } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -43,4 +44,11 @@ function App() {
   )
 }
 
-export default App
+
+export default function WrappedApp() {
+  return (
+    <Suspense fallback="...loading translations">
+      <App />
+    </Suspense>
+  );
+}

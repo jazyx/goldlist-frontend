@@ -3,11 +3,35 @@
  */
 
 
+import { useContext } from "react"
 import { Link } from "react-router-dom"
+import { useTranslation } from "react-i18next"
+import { I18nContext } from "../contexts"
 
 
 export const IconBar = ({ icons }) => {
+  const { t } = useTranslation()
   // 2 items from [ "login", "about", "i18n" ]
+
+  const {
+    languages,
+    language,
+  } = useContext(I18nContext)
+
+  const flagSrc = languages[language]?.flag
+  const others = Object.values(languages)
+    .map(({ flag }) => {
+      return flag
+    })
+    .filter( flag => flag !== flagSrc )
+    .map( src => (
+      <img
+        key={src}
+        src={src}
+        alt={src}
+      />
+    ))
+  
 
   const getButton = {
     login: () => (
@@ -15,6 +39,7 @@ export const IconBar = ({ icons }) => {
           name="login"
           key="login"
           to="/"
+          title={t("sign.connect")}
         >
           <img src="/login.svg" alt="Login" />
         </Link>
@@ -24,6 +49,7 @@ export const IconBar = ({ icons }) => {
           name="about"
           key="about"
           to="/about"
+          title={t("about.title")}
         >
           <img src="/about.svg" alt="About" />
         </Link>
@@ -33,8 +59,10 @@ export const IconBar = ({ icons }) => {
           name="118n"
           key="i18n"
           to="/i18n"
+          title={t("choose-language")}
         >
-          <img src="/flags/en-GB.png" alt="UK English" />
+          <span>{others}</span>
+          <img src={flagSrc} alt={language} />
         </Link>
       )
   }
@@ -44,7 +72,6 @@ export const IconBar = ({ icons }) => {
 
 
   return (
-    // {buttons}
     <div id="icon-bar">
       {buttons}
     </div>

@@ -43,10 +43,7 @@ export const Connect = () => {
             :   t("sign.show-password"),
     auto_login: t("sign.remember-me"),
     invalid:    t("sign.unauthorized")
-  }
-
-  console.log("texts", JSON.stringify(texts, null, '  '));
-  
+  }  
 
 
   const connect = ({ target }) => {

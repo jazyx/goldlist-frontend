@@ -14,21 +14,18 @@ export const TextArea = ({
   onChange,
   onFocus,
   onScroll,
-  placeholder
+  placeholder,
+  spellCheck
 }) => {
 
-  text = text || ""
-  placeholder = placeholder
-    ? String(placeholder)
-    : (name === "text")
-      ? "Enter a phrase that you want to remember"
-      : "Enter a hint about meaning of the phrase"
+  text = typeof text === "string" ? text : ""
+  placeholder = typeof placeholder === "string" ? placeholder: ""
 
   return (
     <textarea
       name={name}
       className={className}
-      spellCheck="false"
+      spellCheck={spellCheck}
       onKeyDown={onKeyDown}
       onChange={onChange}
       onFocus={onFocus}

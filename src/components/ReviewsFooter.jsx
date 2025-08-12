@@ -3,12 +3,14 @@
  */
 
 import { useContext, useEffect } from "react"
+import { useTranslation } from "react-i18next";
 import { UserContext } from "../contexts"
 import { SubmitReview } from "./SubmitReview"
 import { Counter } from "./Counter"
 import { ThreeWaySlider } from "./ThreeWaySlider"
 
 export const ReviewsFooter = () => {
+  const { t } = useTranslation();
   const {
     user,
     getPhrases,
@@ -53,7 +55,7 @@ export const ReviewsFooter = () => {
     check: limitState,
     action: toggleLimitState,
     vertical: true,
-    title: "Set preview preference"
+    title: t("hint.preference")
   }
 
 

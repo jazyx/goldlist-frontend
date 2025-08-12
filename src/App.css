@@ -372,13 +372,29 @@ ul#tabs {
   height: var(--size);
 
   a {
+    position: relative;
     height: var(--size);
     width: var(--size);
     border-radius: var(--size);
     padding: 0;
 
-    img {
+    & > img {
+      position: absolute;
       width: 100%;
+    }
+
+    span {
+      position: absolute;
+      display: flex;
+      justify-content: space-between;
+      width: 120%;
+      bottom: 0;
+      left: -10%;
+
+      img {
+        width: 40%;
+        opacity: 0.5;
+      }
     }
   }
 }
@@ -390,7 +406,8 @@ div#about {
   font-size: 1.5rem;
 
   & h1,
-  & h2 {
+  & h2,
+  & h3 {
     text-align: center;
   }
   & h1 {
@@ -414,6 +431,11 @@ div#about {
       & img {
         padding: 0;
         max-width: calc(100% - 2em);
+      }
+
+      & figcaption {
+        width: min(520px, calc(100% - 2em));
+        margin: 0 auto 1em;
       }
     }
   }

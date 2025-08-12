@@ -46,7 +46,7 @@ export const I18nContext = createContext({})
 export const I18nProvider = ({ children }) => {
   const [ languages, setLanguages ] = useState([])
   const [ language, setLanguage ] = useState(
-    "ru" // navigator.language
+    navigator.language
   )
 
 

@@ -4,6 +4,9 @@
 
 
 import { useContext } from 'react'
+import { useTranslation } from "react-i18next"
+
+
 import { I18nContext } from '../contexts'
 import { IconBar } from "../components/IconBar"
 
@@ -21,6 +24,8 @@ const checkboxStyle = {
 
 
 export const Languages = () => {
+  const { t } = useTranslation()
+
   const {
     languages,
     language,
@@ -85,12 +90,15 @@ export const Languages = () => {
   })
 
   return (
-    <div
-      className="language-flags"
-      onChange={chooseLanguage}
-      style={divStyle}
-    >
-      {radioButtons}
+    <div>
+      <h1>{t("choose-language")}</h1>
+      <div
+        className="language-flags"
+        onChange={chooseLanguage}
+        style={divStyle}
+      >
+        {radioButtons}
+      </div>
     </div>
   )
 }

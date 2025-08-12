@@ -3,11 +3,13 @@
  */
 
 import { useContext } from 'react'
+import { useTranslation } from "react-i18next";
 import { UserContext } from '../contexts'
 import { TextArea } from './TextArea'
 
 
 export const Phrase = ({ _id, text, hint, db, saving }) => {
+  const { t } = useTranslation();
   const {
     editPhrase,
     updatePhrase,
@@ -66,6 +68,20 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
           : ""      // empty text
 
 
+  const sharedProps = {
+    onChange,
+    onKeyDown: tabNextOnEnter,
+    onFocus: scrollIntoView,
+    spellCheck: false
+  }
+
+
+  const placeholder = {
+    text: t("placeholder.text"),
+    hint: t("placeholder.hint")
+  }
+
+
   return (
     <div
       className="phrase"
@@ -79,17 +95,15 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
           name="text"
           text={text}
           className={textClass}
-          onKeyDown={tabNextOnEnter}
-          onChange={onChange}
-          onFocus={scrollIntoView}
+          placeholder={placeholder.text}
+          { ...sharedProps }
         />
         <TextArea
           name="hint"
           text={hint}
           className={hintClass}
-          onKeyDown={tabNextOnEnter}
-          onChange={onChange}
-          onFocus={scrollIntoView}
+          placeholder={placeholder.hint}
+          { ...sharedProps }
         />
       </div>
       <div

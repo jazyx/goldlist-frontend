@@ -14,12 +14,23 @@ export const Tabs = () => {
 
   const checkTabs = lists.map(( list, index ) => {
     const { _id } = list
-    return <TabButton { ...list } key={_id} check={index}/>
+    return (
+      <TabButton
+        key={_id}
+        check={index}
+        { ...list } // for index and reviews
+      />
+    )
   })
 
 
-  const redoTabs = redos?.map( list => {
-    return <TabButton { ...list } key={list._id}/>
+  const redoTabs = redos?.map(list => {
+    return (
+      <TabButton
+        key={list._id}
+        { ...list } // for index and reviews
+      />
+    )
   })
 
 

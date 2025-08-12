@@ -13,6 +13,7 @@
 
 
 import { useContext, useEffect, useRef } from 'react'
+import { useTranslation } from "react-i18next"
 import { UserContext } from '../contexts'
 import { Feedback } from './Feedback'
 import { TextArea } from './TextArea'
@@ -32,6 +33,8 @@ export const Review = ({
             // = show full text prompt when not retained
             // = show hint after retained is checked
 }) => {
+
+  const { t } = useTranslation();
 
   const {
     user,
@@ -248,11 +251,11 @@ export const Review = ({
 
   const hideHintTitle = (showType)
     ? (showClue)
-      ? "Preview shown while typing"
-      : "Preview hidden while typing"
+      ? t("hint.hide-preview")
+      : t("hint.show-preview")
     : (showClue)
-      ? "Hint shown"
-      : "Hint hidden"
+      ? t("hint.hide")
+      : t("hint.show")
 
 
   /////////////////////////// USEEFFECT ///////////////////////////
@@ -274,7 +277,7 @@ export const Review = ({
           className={retainClass}
           checked={retainOn}
           action={toggle}
-          title="Commit to remembering this expression"
+          title={t("commit")}
         />
       </div>
       <div className="desk">

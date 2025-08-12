@@ -592,7 +592,7 @@ export const UserProvider = ({ children }) => {
     // The div.desk element contains both text and hint
     const desk = target.closest(".desk")
 
-    const { x: up, bottom: down } = parent.getBoundingClientRect();
+    const { y: up, bottom: down } = parent.getBoundingClientRect();
     const { top, bottom } = desk.getBoundingClientRect();
 
     if (top < up) {

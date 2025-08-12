@@ -67,7 +67,7 @@ export const About = (props) => {
     h7_03:    t("about.h7_preferences.03"),
     h7_03_i:  t("about.h7_preferences.03_caption"),
     h7_04:    t("about.h7_preferences.04"),
-    h7_04_i:  t("about.h7_preferences.03_caption"),
+    h7_04_i:  t("about.h7_preferences.04_caption"),
     h7_05:    t("about.h7_preferences.05"),
 
   }
@@ -206,7 +206,7 @@ export const About = (props) => {
 
         <figure>
           <img src="/about/collapsed.webp" alt="collapsed" />
-          <figcaption>{texts.h7_03_i}</figcaption>
+          <figcaption>{texts.h7_04_i}</figcaption>
         </figure>
         <p>{texts.h7_05}</p>
       </div>
