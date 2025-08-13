@@ -5,9 +5,8 @@
 
 import { useContext } from 'react'
 import { useTranslation } from "react-i18next"
-import { I18nContext, UserContext } from '../contexts'
+import { I18nContext } from '../contexts'
 import { IconBar } from "../components/IconBar"
-import { Menu } from '../components/Menu'
 import { UseMethod } from '../components/UseMethod'
 
 
@@ -107,16 +106,9 @@ export const Languages = () => {
 
 
 export const I18N = () => {
-  const { loaded } = useContext(UserContext)
-
-  const bar = (loaded)
-    ? <Menu />
-    : <IconBar icons={[ "login", "about" ]} />
-
-
   return (
     <div id="i18n">
-      {bar}
+      <IconBar icons={[ "login", "about" ]} />
       <div className="spacer"></div>
       <Languages />
       <div className="spacer"></div>

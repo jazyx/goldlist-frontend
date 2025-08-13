@@ -3,11 +3,8 @@
  */
 
 
-import { useContext } from 'react';
 import { Trans, useTranslation } from 'react-i18next'
-import { UserContext } from '../contexts';
 import { IconBar } from "../components/IconBar"
-import { Menu } from '../components/Menu';
 import { UseMethod } from "../components/UseMethod"
 
 export const About = (props) => {
@@ -75,17 +72,9 @@ export const About = (props) => {
     h7_05:    t("about.h7_preferences.05")
   }
 
-
-  const { loaded } = useContext(UserContext)
-
-  const bar = (loaded)
-    ? <Menu />
-    : <IconBar icons={[ "login", "i18n" ]} />
-
-
   return (
     <div id="about">
-      {bar}
+      <IconBar icons={[ "login", "i18n" ]} />
       <div className="info">
         <h1 id="improved">
           {texts.title}

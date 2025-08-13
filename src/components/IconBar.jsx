@@ -6,7 +6,8 @@
 import { useContext } from "react"
 import { Link } from "react-router-dom"
 import { useTranslation } from "react-i18next"
-import { I18nContext } from "../contexts"
+import { I18nContext, UserContext } from "../contexts"
+import { Menu } from './Menu'
 
 
 export const IconBar = ({ icons }) => {
@@ -17,6 +18,8 @@ export const IconBar = ({ icons }) => {
     languages,
     language,
   } = useContext(I18nContext)
+
+  const { loaded } = useContext(UserContext)
 
   const flagSrc = languages[language]?.flag
   const others = Object.values(languages)
@@ -69,6 +72,9 @@ export const IconBar = ({ icons }) => {
 
 
   const buttons = icons.map( iconName => getButton[iconName]())
+  if (loaded) {
+    buttons.splice(0, 1, <Menu key="menu"/>)
+  }
 
 
   return (
