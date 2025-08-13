@@ -74,8 +74,9 @@ export const Connect = () => {
     const { key, target } = event
     if (key === "Enter") {
       event.preventDefault()
-      if (details.user_name && details.email && details.password) {
-        connectUser()
+      const action = (register) ? "register" : "login"
+      if (details.user_name && details.password) {
+        connectUser({ ...details, action })
       }
     }
   }

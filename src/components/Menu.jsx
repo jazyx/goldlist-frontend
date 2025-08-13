@@ -33,7 +33,6 @@ export const Menu = () => {
 
 
   const { path } = getPathAndIndex()
-  console.log("path:", path)
 
   
   const toggleOpen = state => {
@@ -62,7 +61,9 @@ export const Menu = () => {
 
   const setDestination = ({ target }) => {
     target = target.closest("li")
+
     const { dataset } = target
+
     switch (dataset.name) {
       case "back":
         return setTo(from)

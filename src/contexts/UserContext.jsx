@@ -112,8 +112,10 @@ export const UserProvider = ({ children }) => {
     // If the server sends a fail message, it should be logged to
     // the console, and nothing else should happen.
     if (fail) {
-      console.log("fail", JSON.stringify(fail, null, '  '));
+      // console.log("fail", JSON.stringify(fail, null, '  '));
       return setFailed(fail.reason)
+    } else {
+      setFailed("")
     }
 
     lists.sort(byIndex)
