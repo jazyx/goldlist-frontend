@@ -2,6 +2,12 @@
   "__endonym__": "Français",
   "choose-language": "Choisissez votre langue",
   "use-method": "Utiliser la méthode « Gold List »",
+  "profile": "Profile",
+  "prefs": {
+    "for": "Preferences pour {{user_name}}",
+    "delay": "Nombre de jours entre les élagages",
+    "count": "Nombre d'expressions à ajouter chaque jour"
+  },
   "error": {
     "404": "404 Introuvable",
     "": "Une erreur est survenue"

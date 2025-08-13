@@ -79,9 +79,9 @@ export const About = (props) => {
         <h1 id="improved">
           {texts.title}
         </h1>
-        <h2 id="improved">
+        <h3 id="improved">
           {texts.h0_title}
-        </h2>
+        </h3>
         <b>{texts.h0_lede}</b>
         <p><Trans
           i18nKey="about.h0_intro.01"

@@ -2,6 +2,12 @@
   "__endonym__": "English",
   "choose-language": "Choose your language",
   "use-method": "Use the Gold List Method",
+  "profile": "Profile",
+  "prefs": {
+    "for": "Preferences for {{user_name}}",
+    "delay": "Number of days before seeing a list again",
+    "count": "Number of expressions to add every day"
+  },
   "error": {
     "404": "404 Not Found",
     "": "Something went wrong"

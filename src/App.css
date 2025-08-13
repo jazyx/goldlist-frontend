@@ -58,6 +58,7 @@
   --fill:   calc(var(--full) - var(--scroll));
   --space:  4.5rem;
   --room:   calc(var(--space) * 2);
+  --step:   30rem;
   --size:   6rem;
   --half:   calc(var(--size) * 0.5);
   --count:  calc(var(--size) * 0.333);
@@ -88,8 +89,6 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 0;
-  padding: 0;
   overflow: hidden;
   /* overflow-x: hidden;
   overflow-y: auto; */
@@ -438,6 +437,7 @@ ul#tabs {
 
     & > img {
       position: absolute;
+      left: 0;
       width: 100%;
     }
 
@@ -457,7 +457,9 @@ ul#tabs {
   }
 }
 
-div#about {
+div#about,
+div#i18n,
+div#profile {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -469,6 +471,7 @@ div#about {
     text-align: center;
   }
   & h1 {
+    margin-top: 0;
     font-size: 2em;
   }
 
@@ -674,38 +677,24 @@ div#connect {
   }
 }
 
-div#i18n {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-
-  & h1,
-  & h2 {
-    text-align: center;
+/* General settings for all Phrase and Review text stuff */
+div.phrase,
+div.review {
+  p,
+  textarea {
+    height: var(--space);
+    width: 100%;
+    margin: 0;
+    padding: var(--slim);
+    font-size: var(--font);
+    line-height: var(--line);
+    overflow: hidden;
+    font-family: var(--text);
+    white-space: pre-wrap;
+    border: var(--slim) solid transparent;
+    box-sizing: border-box;
+    transition: all var(--duration);
   }
-
-  & div.info {
-    margin: 0 auto;
-    padding: 1em;
-    max-width: 800px;
-    overflow-y: scroll;
-  }
-}
-
-p.feedback,
-textarea {
-  height: var(--space);
-  width: 100%;
-  margin: 0;
-  padding: var(--slim);
-  font-size: var(--font);
-  line-height: var(--line);
-  overflow: hidden;
-  font-family: var(--text);
-  white-space: pre-wrap;
-  border: var(--slim) solid transparent;
-  box-sizing: border-box;
-  transition: all var(--duration);
 }
 
 div#phrases {
@@ -1008,6 +997,35 @@ div#phrases {
 
     & .review {
       pointer-events: none;
+    }
+  }
+}
+
+#profile {
+  text-align: center;
+
+  & label.step-slider {
+    width: var(--step);
+    margin: 0 auto 1em;
+    background-color: #600;
+
+    & div.range-value {
+      display: flex;
+      align-items: center;
+
+      & input {
+        flex: 1;
+      }
+
+      & span {
+        margin-left: var(--gap);
+      }
+    }
+  
+    & span.label {
+      display: inline-block;
+      text-align: left;
+      width: 100%;
     }
   }
 }

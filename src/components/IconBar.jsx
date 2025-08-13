@@ -71,10 +71,9 @@ export const IconBar = ({ icons }) => {
   }
 
 
-  const buttons = icons.map( iconName => getButton[iconName]())
-  if (loaded) {
-    buttons.splice(0, 1, <Menu key="menu"/>)
-  }
+  const buttons = (loaded)
+    ? [<Menu key="menu"/>]
+    : icons.map( iconName => getButton[iconName]())
 
 
   return (

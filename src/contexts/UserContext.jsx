@@ -57,7 +57,10 @@ export const UserProvider = ({ children }) => {
   const [ dayList, setDayList ] = useState(0)
   const [ dayDone, setDayDone ] = useState(0)
   const [ from, setFrom ] = useState("/add")
-
+  const [ preferences, setPreferences ] = useState({
+    delay: 10,
+    count: 15
+  })
 
 
   /////////////// REGISTRATION, LOG IN and GUESTS ///////////////
@@ -276,7 +279,7 @@ export const UserProvider = ({ children }) => {
         // Not wanted on voyage
         return undefined
       }
-      if (key === "text") {
+      if (key === "text" || key === "hint") {
         // Remove leading and trailing spaces
         return value.trim()
       }
@@ -629,7 +632,7 @@ export const UserProvider = ({ children }) => {
     } else if (loaded) {
       return
     } else if (lists[0]?.phrases) {
-      setLoaded(true  )
+      setLoaded(true)
       navigate("/add")
     } else {
       navigate("/")
@@ -672,6 +675,7 @@ export const UserProvider = ({ children }) => {
         dayDone,
         redosDone,
         reviewState,
+        preferences,
         connectUser,
         getPhrases,
         getActive,
@@ -690,7 +694,8 @@ export const UserProvider = ({ children }) => {
         getPathAndIndex,
         useMethod,
         setLoaded,
-        setFrom
+        setFrom,
+        setPreferences
       }}
     >
       {children}

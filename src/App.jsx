@@ -13,6 +13,7 @@ import { About } from './pages/About'
 import { Connect } from './pages/Connect'
 import { I18N } from './pages/I18N'
 import { Phrases } from './pages/Phrases'
+import { Profile } from './pages/Profile'
 import { Reviews } from './pages/Reviews'
 import { NotFound } from './pages/NotFound'
 import { Provider } from './contexts/'
@@ -36,6 +37,7 @@ function App() {
                 element={<Phrases />}
               />
             </Route>
+          <Route path="profile" element={<Profile />} />
           <Route path="rev/:index" element={<Reviews />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
