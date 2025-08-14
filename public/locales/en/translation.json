@@ -5,8 +5,22 @@
   "profile": "Profile",
   "prefs": {
     "for": "Preferences for {{user_name}}",
-    "delay": "Number of days before seeing a list again",
-    "count": "Number of expressions to add every day"
+    "delay": {
+      "title": "When to review a list",
+      "one": "after one day",
+      "two": "after two days",
+      "three": "after three days",
+      "five": "after five days",
+      "seven": "after one week",
+      "ten": "after ten days",
+      "fourteen": "after two weeks"
+    },
+    "count": {
+      "title": "Number of expressions to add every day",
+      "ten": "10 expressions a day",
+      "fifteen": "15 expressions a day",
+      "twenty-one": "21 expressions a day"
+    }
   },
   "error": {
     "404": "404 Not Found",

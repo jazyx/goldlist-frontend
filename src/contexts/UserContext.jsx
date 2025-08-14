@@ -58,8 +58,8 @@ export const UserProvider = ({ children }) => {
   const [ dayDone, setDayDone ] = useState(0)
   const [ from, setFrom ] = useState("/add")
   const [ preferences, setPreferences ] = useState({
-    delay: 10,
-    count: 15
+    delay: 14,
+    count: 21
   })
 
 

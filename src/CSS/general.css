@@ -1,6 +1,11 @@
 /**
- * src/App.css
+ * src/general.css
  */
+
+ @import './menu.css';
+ @import './checkSlider.css';
+ @import './threeWay.css';
+ @import './stepSlider.css';
 
 :root {
   --white: #fff;
@@ -58,7 +63,6 @@
   --fill:   calc(var(--full) - var(--scroll));
   --space:  4.5rem;
   --room:   calc(var(--space) * 2);
-  --step:   30rem;
   --size:   6rem;
   --half:   calc(var(--size) * 0.5);
   --count:  calc(var(--size) * 0.333);
@@ -90,8 +94,6 @@ main {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  /* overflow-x: hidden;
-  overflow-y: auto; */
 }
 
 main {
@@ -147,197 +149,6 @@ button,
   }
 }
 
-label.checkSlider {
-  display: block;
-  position: relative;
-
-  &:has(.disabled) {
-    pointer-events: none;
-  }
-
-  & input {
-    position: absolute;
-    left: -999vmax;
-
-    & ~ span {
-      &::before,
-      &::after {
-        display: flex;
-        height: var(--half);
-        border: var(--edge) solid var(--border);
-        box-sizing: border-box;
-        border-radius: 100vmax;
-        cursor: pointer;
-      }
-
-      &::before {
-        content: "";
-        width: var(--size);
-        height: var(--half);
-        background-color: var(--off);
-      }
-
-      &::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: var(--half);
-        justify-content: center;
-        align-items: center;
-        color: var(--dark);
-        background-color: var(--on);
-        font-size: var(--count);
-        transition: all var(--duration);
-      }
-    }
-
-    &:checked ~ span::after {
-      left: var(--half);
-      background-color: var(--off);
-    }
-
-    &.vertical {
-      & ~ span::before {
-        width: var(--half);
-        height: var(--size);
-      }
-
-      &:checked ~ span::after {
-        left: 0;
-        top: var(--half);
-        background-color: var(--off);
-      }
-    }
-  }
-}
-
-div.three-way {
-  --long:  60vmin;                    /* long side */
-  --cross: calc(var(--size) * 0.5);   /* ratio of short side */
-  --twice: calc(var(--size) - var(--cross));
-  --once:  calc(var(--twice)* 0.5);
-  --icon:  calc(var(--cross) * 0.85); /* font-size for icon */
-  --edge:  calc(var(--size) * 0.02);  /* border width */
-  --side:  #fff;                    /* border color */
-  /* backgroundColor of dots in various states */
-  --off:   #900;
-  --mix:   #a50;
-  --on:    #060;
-  /* backgroundColor of slider in various states */
-  --bgoff: #333;
-  --bgmix: #666;
-  --bgon:  #999;
-  /* icons for various states */
-  --ioff:  "☁️";
-  --imix:  "🌤️";
-  --ion:   "☀️";
-
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: var(--long);
-  height: var(--cross);
-  background-color: var(--bgoff);
-  border: var(--edge) solid var(--side);
-  border-radius: 100vmax;
-  box-sizing: border-box;
-  overflow: hidden;
-
-  /* Make labels fill one-third each, shrunk to fit by flex */
-  label {
-    width: 100%;
-    height: 100%;
-
-    /* UNCOMMENT THE RULES BELOW TO SHOW LABEL WIDTHS */
-    /* background-color: var(--bgoff);
-
-    &:has(.mix) {
-      background-color: var(--bgmix);
-    }
-
-    &:has(.on) {
-      background-color: var(--bgon);
-    } */
-    /* UNCOMMENT THE RULES ABOVE TO SHOW LABEL WIDTHS */
-
-    /* Hide the radio buttons, but labels keep them active */
-    input {
-      display: none;
-    }
-  }
-
-  &::before,
-  &::after {
-    /* Specific for off state */
-    content: var(--ioff);
-    background-color: var(--light);
-    /* Generic for all states */
-    position: absolute;
-    top: 0;
-    left: 0;
-    /* Center the icon */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: var(--icon);
-    /* Round button */
-    width: var(--cross);
-    height: var(--cross);
-    border-radius: 100vmax;
-    overflow: hidden; /* allows click above edge */
-
-    transition: all 250ms;
-  }
-
-  /* Specific settings for mix and on states */
-  &:has(.mix:checked) {
-    background-color: var(--bgmix);
-
-    &::before,
-    &::after {
-      content: var(--imix);
-      left: var(--once);
-      background-color: var(--light);
-    }
-  }
-
-  &:has(.on:checked) {
-    background-color: var(--bgon);
-
-    &::before,
-    &::after {
-      content: var(--ion);
-      left: var(--twice);
-      background-color: var(--on);
-    }
-  }
-
-  /* Custom settings for a vertical three-way slider */
-  &.vertical {
-    flex-direction: column;
-    width: var(--cross);
-    height: var(--long);
-
-    &:has(.mix:checked) {
-      &::before,
-      &::after {
-        left: 0;
-        top: var(--once);
-      }
-    }
-
-    &:has(.on:checked){
-      &::before,
-      &::after {
-        left: 0;
-        top: var(--twice);
-      }
-    }
-  }
-}
-
 button.use-method {
   width: 100%;
   max-width: 800px;
@@ -345,49 +156,6 @@ button.use-method {
   flex-shrink: 0;
   margin: 0 auto;
   font-size: var(--font);
-}
-
-div.menu {
-  --button: var(--gold);
-  --button-active: var(--old);
-  --button-border: var(--old);
-  width: var(--tab);
-  height: var(--tab);
-  font-size: 1.5rem;
-
-  button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: var(--tab);
-    height: var(--tab);
-
-    img {
-      width: 100%;
-    }
-  }
-
-  ul#menu-contents {
-    position: absolute;
-    z-index: 1;
-    background-color: var(--gold);
-    color: var(--dark);
-    list-style-type: inherit;
-    padding: inherit;
-    margin: 0;
-
-    & li {
-      display: flex;
-      align-items: center;
-      margin: var(--gap);
-      width: auto;
-
-      & img {
-        width: var(--tab);
-        margin-right: 1rem;
-      }
-    }
-  }
 }
 
 ul#tabs {
@@ -1004,28 +772,36 @@ div#phrases {
 #profile {
   text-align: center;
 
-  & label.step-slider {
-    width: var(--step);
-    margin: 0 auto 1em;
-    background-color: #600;
+  & article {
+    overflow-y: auto;
+    overflow-x: hidden;;
 
-    & div.range-value {
-      display: flex;
-      align-items: center;
-
-      & input {
-        flex: 1;
-      }
-
-      & span {
-        margin-left: var(--gap);
-      }
+    h3 {
+      text-decoration: underline;
     }
-  
-    & span.label {
-      display: inline-block;
-      text-align: left;
-      width: 100%;
+
+    & div.step-slider {
+      margin: 2em auto;
+      --older: #641;
+
+      --color-upper:    var(--older);
+      --color-lower:    var(--old);
+      --color-thumb:    var(--gold);
+      --color-min:      var(--older);
+    }
+
+    div#stepSlider-count {
+      /* height of div.labels must include labels at start _and_ end */
+      --total:   21;
+      --width:   12em; /* Wide enough to show labels on one side */
+      --spacing: 0.6667em; /* spacing between labels */
+    }
+
+    div#stepSlider-delay {
+      /* height of div.labels must include labels at start _and_ end */
+      --total:   14;
+      --width:   22em; /* Wide enough to show labels both sides */
+      /* --spacing: 1em; */ /* Use default spacing between labels */
     }
   }
 }

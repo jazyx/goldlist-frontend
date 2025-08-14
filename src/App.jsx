@@ -8,7 +8,7 @@ import {
   Routes,
   Route
 } from 'react-router-dom'
-import './App.css'
+import './CSS/general.css'
 import { About } from './pages/About'
 import { Connect } from './pages/Connect'
 import { I18N } from './pages/I18N'

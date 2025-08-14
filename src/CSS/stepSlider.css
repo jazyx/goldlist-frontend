@@ -1,0 +1,186 @@
+div.step-slider {
+  --total: 14;   /* `max` value of the range input  */
+  --width: 10em; /* Ensure there is enough room for the labels */
+
+  /* height of div.labels must include labels at start _and_ end */
+  --labels-height:  calc(var(--spacing) * (var(--total) + 1));
+
+  /* Fix size of thumb, so we can adjust according to its height */
+  --thumb-size:     1em; /* For cross-browser compatibility */
+  --thumb-up:       calc(var(--thumb-size) * -0.5);
+  /* Determine spacing between labels */
+  --spacing:        1em;
+  /* To align the center of the thumb at each end with the center
+   * of the label there, add the thumb size and subtract the 
+   * extra spacing added to labels-height
+   */
+  --track-height: calc(
+      var(--labels-height)
+    + var(--thumb-size)
+    - var(--spacing)
+  );
+  /* Shift up each span so that the center of its lowercase
+   * characters coincides with the corresponding position of the
+   * thumb
+   */
+  --span-tweak:     calc(-50% - 0.5ex);
+
+  --pad:   calc(var(--thumb-size) * 1.5);
+  --size:  calc(var(--width) * 0.5 - var(--thumb-size) * 0.75);
+  /* Custom properties for the input range */
+  --track-width:    0.4em;
+  --track-progress: 0.2em;
+   /* For webkit... */
+  --thumb-shift: calc(
+    (var(--track-width) - var(--thumb-size)) / 2
+  );
+  --color-upper:    #666;
+  --color-lower:    #090;
+  --color-thumb:    #9c9;
+  --color-min:      #464;
+
+  position: relative;
+  text-align: left;
+  width: var(--width);
+  height: var(--labels-height);
+
+
+  & input[type="range"] {
+    font-size: inherit;
+    height: var(--track-height);
+    /* Shift the input range up by half the height of its thum */
+    margin-top: var(--thumb-up);
+    /* Make it vertical with the low values at the bottom */
+    writing-mode: sideways-lr;
+    /* accent-color: var(--color-lower); */
+    background-color: transparent;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+
+    /***** Track Styles *****/
+    /***** Chrome, Safari, Opera, and Edge Chromium *****/
+    &::-webkit-slider-runnable-track {
+      background-color: var(--color-lower);
+      width: var(--track-width);
+      border-radius: var(--thumb-size);
+    }
+
+    /******** Firefox ********/
+    &::-moz-range-track {
+      background-color: var(--color-upper);
+      width: var(--track-progress);
+      border-radius: var(--track-width);
+    }
+
+    /* Firefox sets the progress part of the slider separately */
+    &::-moz-range-progress {
+      background: var(--color-lower);
+      width: var(--track-width);
+      border-bottom-left-radius: var(--track-width);
+      border-bottom-right-radius: var(--track-width);
+    }
+
+    /***** Thumb Styles *****/
+    /***** Chrome, Safari, Opera, and Edge Chromium *****/
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none; /* Override default look */
+      appearance: none;
+      height: var(--thumb-size);
+      width: var(--thumb-size);
+      margin-left: var(--thumb-shift);
+      background-color: var(--color-thumb);
+      border-radius: var(--thumb-size);
+    }
+    
+    /* Firefox */
+    &::-moz-range-thumb {
+      width: var(--thumb-size);
+      height: var(--thumb-size);
+      border-radius: var(--thumb-size);
+      background-color: var(--color-thumb);
+      border-color: var(--color-lower);
+    }
+  
+    /* All browsers... */
+    &.minimum {
+      cursor: default;
+      accent-color: var(--color-min);
+    }
+    /***** Chrome, Safari, Opera, and Edge Chromium *****/
+    &.minimum::-webkit-slider-thumb {
+      /* background-color: var(--color-min); */
+    }
+    &.minimum::-webkit-slider-runnable-track  {
+      background-color: var(--color-min);
+    }
+  
+    /* ... with an override for Firefox */
+    &.minimum::-moz-range-progress {
+      cursor: default;
+      width: var(--track-width);
+      background-color: var(--color-min);
+    }
+  }
+
+  div.labels {
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Show p elements in reverse order */
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: start;
+    height: var(--labels-height);
+    width: var(--width);
+    /* Allow mouse events through to the input range behind */
+    pointer-events: none;
+
+    & p {
+      display: block;
+      position: relative;
+      /* Take up no vertical space */
+      height: 0;
+      width: var(--width);
+      margin: 0;
+      margin-bottom: var(--spacing);
+      text-align: left;
+
+      &:not(:empty) {
+        /* Intercept mouse events on labels */
+        cursor: pointer;
+        pointer-events: all;
+      }
+
+      span {
+        display: inline-block;
+        height: 20px;
+        transform: translateY(var(--span-tweak));
+        padding-left: var(--pad);
+      }
+    }
+  }
+  
+  &.two-sided {
+    /* Center the range input */
+    text-align: center;
+
+    .labels {
+      align-items: end;
+
+      & p{
+        width: var(--size);
+        text-align: left;
+
+        &.left {
+          align-self: start;
+          text-align: right;
+        }
+
+        & span {
+          padding: 0;
+        }
+      }
+    }
+  }
+}

@@ -9,6 +9,11 @@
  * - [ ] Reset/Add email address
  * - [ ] Choose number of expressions to add each day
  * - [ ] Choose delay between reviews
+ * 
+ * Uses a package to create genitive of Russian names. Returns
+ * user_name unchanged if it is not a known name. Works with
+ * certain foreign names transliterated into Russian.
+ * https://www.npmjs.com/package/sklonenie
  */
 
 
@@ -42,16 +47,14 @@ export const Profile = () => {
 
 
   const texts = {
-    delay: t("prefs.delay"),
-    count: t("prefs.count"),
+    delay: t("prefs.delay.title"),
+    count: t("prefs.count.title"),
     settings: t("prefs.for", { user_name })
   }
 
   
   const treatValue = (name, value) => {
     setPreferences({ ...preferences, [name]: value })
-    
-    console.log("StepSlider clicked:", name, value)
   }
 
 
@@ -60,6 +63,15 @@ export const Profile = () => {
       name: "delay",
       label: texts.delay,
       values: [ 1, 2, 3, 5, 7, 10, 14 ],
+      labels: [
+        { label: t("prefs.delay.one")},
+        { label: t("prefs.delay.two"),     left: true  },
+        { label: t("prefs.delay.three") },
+        { label: t("prefs.delay.five"),    left: true },
+        { label: t("prefs.delay.seven") },
+        { label: t("prefs.delay.ten"),     left: true },
+        { label: t("prefs.delay.fourteen") }
+      ],
       value: delay,
       treatValue
     }
@@ -72,6 +84,11 @@ export const Profile = () => {
       name: "count",
       label: texts.count,
       values: [ 10, 15, 21 ],
+      labels: [  
+        { label: t("prefs.count.ten") },
+        { label: t("prefs.count.fifteen") },
+        { label: t("prefs.count.twenty-one") }
+      ],
       value: count,
       treatValue
     }
@@ -83,10 +100,16 @@ export const Profile = () => {
     <div id="profile">
       <IconBar icons={[ "login", "about" ]} />
       <div className="spacer"></div>
-      <h1>{texts.settings}</h1>
-      <div className="spacer"></div>
-      {countSlider}
-      {delaySlider}
+
+      <article>
+        <h1>{texts.settings}</h1>
+        <div className="spacer"></div>
+        <h3>{t("prefs.count.title")}</h3>
+        {countSlider}
+        <h3>{t("prefs.delay.title")}</h3>
+        {delaySlider}
+      </article>
+
       <div className="spacer"></div>
       <UseMethod />
     </div>

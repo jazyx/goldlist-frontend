@@ -5,8 +5,22 @@
   "profile": "Profile",
   "prefs": {
     "for": "Preferences pour {{user_name}}",
-    "delay": "Nombre de jours entre les élagages",
-    "count": "Nombre d'expressions à ajouter chaque jour"
+    "delay": {
+      "title": "Quand revoir une liste",
+      "one": "après une journée",
+      "two": "après deux jours",
+      "three": "après trois jours",
+      "five": "après cinq jours",
+      "seven": "après une semaine",
+      "ten": "après dix jours",
+      "fourteen": "après deux semaines"
+    },
+    "count": {
+      "title": "Nombre d'expressions à ajouter chaque jour",
+      "ten": "10 expressions par jour",
+      "fifteen": "15 expressions par jour",
+      "twenty-one": "21 expressions par jour"
+    }
   },
   "error": {
     "404": "404 Introuvable",

@@ -1,0 +1,44 @@
+
+
+div.menu {
+  --button: var(--gold);
+  --button-active: var(--old);
+  --button-border: var(--old);
+  width: var(--tab);
+  height: var(--tab);
+  font-size: 1.5rem;
+
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--tab);
+    height: var(--tab);
+
+    img {
+      width: 100%;
+    }
+  }
+
+  ul#menu-contents {
+    position: absolute;
+    z-index: 1;
+    background-color: var(--gold);
+    color: var(--dark);
+    list-style-type: inherit;
+    padding: inherit;
+    margin: 0;
+
+    & li {
+      display: flex;
+      align-items: center;
+      margin: var(--gap);
+      width: auto;
+
+      & img {
+        width: var(--tab);
+        margin-right: 1rem;
+      }
+    }
+  }
+}

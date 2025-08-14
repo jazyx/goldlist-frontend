@@ -1,0 +1,66 @@
+
+
+label.checkSlider {
+  display: block;
+  position: relative;
+
+  &:has(.disabled) {
+    pointer-events: none;
+  }
+
+  & input {
+    position: absolute;
+    left: -999vmax;
+
+    & ~ span {
+      &::before,
+      &::after {
+        display: flex;
+        height: var(--half);
+        border: var(--edge) solid var(--border);
+        box-sizing: border-box;
+        border-radius: 100vmax;
+        cursor: pointer;
+      }
+
+      &::before {
+        content: "";
+        width: var(--size);
+        height: var(--half);
+        background-color: var(--off);
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: var(--half);
+        justify-content: center;
+        align-items: center;
+        color: var(--dark);
+        background-color: var(--on);
+        font-size: var(--count);
+        transition: all var(--duration);
+      }
+    }
+
+    &:checked ~ span::after {
+      left: var(--half);
+      background-color: var(--off);
+    }
+
+    &.vertical {
+      & ~ span::before {
+        width: var(--half);
+        height: var(--size);
+      }
+
+      &:checked ~ span::after {
+        left: 0;
+        top: var(--half);
+        background-color: var(--off);
+      }
+    }
+  }
+}
