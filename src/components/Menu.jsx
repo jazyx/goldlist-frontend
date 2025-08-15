@@ -6,6 +6,7 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { I18nContext, UserContext } from "../contexts";
+import { useCase } from "../tools/useCase";
 
 export const Menu = () => {
   const navigate = useNavigate();
@@ -19,10 +20,14 @@ export const Menu = () => {
   const [open, setOpen] = useState(false);
   const [to, setTo] = useState();
 
-  const { user_name } = user;
+  // Make sure user_name is in genitive in Russian or "Guest"
+  const fallback = t("sign.guest.genitive") // Guest, ... гостя
+  const user_name = useCase(language, user.user_name, fallback)
+
 
   const flagSrc = languages[language]?.flag;
   const choose = t("choose-language");
+  const profile = t("profile", { user_name })
 
   const { path } = getPathAndIndex();
 
@@ -101,10 +106,10 @@ export const Menu = () => {
             <span>{t("about.title")}</span>
           </li>
         )}
-        {path !== "profile" && user_name && (
+        {path !== "profile" && (
           <li className="button" data-name="profile" onClick={setDestination}>
             <img src="/profile.svg" alt="profil" />
-            <span>{user_name}</span>
+            <span>{profile}</span>
           </li>
         )}
         {path !== "i18n" && (

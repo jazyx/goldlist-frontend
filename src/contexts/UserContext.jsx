@@ -58,8 +58,8 @@ export const UserProvider = ({ children }) => {
   const [ dayDone, setDayDone ] = useState(0)
   const [ from, setFrom ] = useState("/add")
   const [ preferences, setPreferences ] = useState({
-    delay: 14,
-    count: 21
+    daysDelay: 14,
+    phraseCount: 21
   })
 
 
@@ -146,9 +146,13 @@ export const UserProvider = ({ children }) => {
       user.host_name = storage.getItem("user_name")
     }
 
+    const { limitState, daysDelay, phraseCount } = user
+    const preferences = { limitState, daysDelay, phraseCount } 
+  
     setUser(user)
     setLists(lists)
     setRedos(redos)
+    setPreferences(preferences)
   }
 
 
@@ -319,9 +323,11 @@ export const UserProvider = ({ children }) => {
 
 
   const toggleLimitState = (limitState) => {
-    submitPreferences({ limitState })
-    // Update locally pre-emptively
-    setUser({ ...user, limitState })
+    // Pre-emptively update locally
+    preferences.limitState = limitState
+    setPreferences({ ...preferences })
+    // Update the database
+    submitPreferences()
   }
 
 
@@ -529,11 +535,21 @@ export const UserProvider = ({ children }) => {
   ////////////////////////// PREFERENCES //////////////////////////
 
 
-  const submitPreferences = (preferences) => {
+  const submitPreferences = () => {
     const { _id } = user
     const url = `${origin}/setPreferences`
     const headers = { 'Content-Type': 'application/json' }
-    const body = JSON.stringify({ _id, preferences })
+    const body = JSON.stringify({ _id, preferences }, trimSame)
+
+    function trimSame(key, value) {
+      if (key !== "_id" && user[key] === value) {
+        return
+      }
+
+      return value
+    }
+
+    console.log("body:", JSON.parse(body))
 
     fetch(url, {
       method: 'POST',
@@ -550,9 +566,11 @@ export const UserProvider = ({ children }) => {
     // json will be { key: value } for preferences that were set
     delete json._id // No need to reset _id to itself
 
-    // values in json should already have been set
+    // values in json may already have been set
     setUser({ ...user, ...json })
+    setPreferences({ ...preferences, ...json })
   }
+
 
   ///////// UTILITIES FOR TABBING BETWEEN phrases/reviews /////////
 
@@ -695,7 +713,8 @@ export const UserProvider = ({ children }) => {
         useMethod,
         setLoaded,
         setFrom,
-        setPreferences
+        setPreferences,
+        submitPreferences
       }}
     >
       {children}

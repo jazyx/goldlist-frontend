@@ -19,14 +19,11 @@
 
 import { useContext } from 'react'
 import { useTranslation } from "react-i18next"
-import sklonenie from 'sklonenie'
 import { I18nContext, UserContext } from '../contexts'
+import { useCase } from '../tools/useCase'
 import { IconBar } from "../components/IconBar"
 import { UseMethod } from '../components/UseMethod'
 import { StepSlider } from '../components/StepSlider'
-
-
-const CYRILLIC_REGEX = /[А-Яа-яЁё]/
 
 
 export const Profile = () => {
@@ -35,15 +32,13 @@ export const Profile = () => {
   const {
     user,
     preferences,
-    setPreferences
+    setPreferences,
+    submitPreferences
   } = useContext(UserContext)
 
-  let { user_name } = user
-  const { delay, count } = preferences
-
-  if (language === "ru" && CYRILLIC_REGEX.test(user_name)) {
-    user_name = sklonenie(user_name)[1][0] // genitive first name
-  }
+  const fallback = t("sign.guest.genitive") // Guest, ... гостя
+  const user_name = useCase(language, user.user_name, fallback)
+  const { daysDelay, phraseCount } = preferences
 
 
   const texts = {
@@ -60,7 +55,7 @@ export const Profile = () => {
 
   const delaySlider = (() => {
     const options = {
-      name: "delay",
+      name: "daysDelay",
       label: texts.delay,
       values: [ 1, 2, 3, 5, 7, 10, 14 ],
       labels: [
@@ -72,7 +67,7 @@ export const Profile = () => {
         { label: t("prefs.delay.ten"),     left: true },
         { label: t("prefs.delay.fourteen") }
       ],
-      value: delay,
+      value: daysDelay,
       treatValue
     }
     return <StepSlider { ...options }/>
@@ -81,7 +76,7 @@ export const Profile = () => {
 
   const countSlider = (() => {
     const options = {
-      name: "count",
+      name: "phraseCount",
       label: texts.count,
       values: [ 10, 15, 21 ],
       labels: [  
@@ -89,11 +84,21 @@ export const Profile = () => {
         { label: t("prefs.count.fifteen") },
         { label: t("prefs.count.twenty-one") }
       ],
-      value: count,
+      value: phraseCount,
       treatValue
     }
     return <StepSlider { ...options }/>
   })()
+
+
+  const prefs = Object.entries(preferences)
+  const disabled = prefs.reduce(( boolean, [ key, value ] ) => {
+    if (user[key] !== value) {
+      boolean = false
+    }
+
+    return boolean
+  }, true)
 
 
   return (
@@ -111,6 +116,13 @@ export const Profile = () => {
       </article>
 
       <div className="spacer"></div>
+      <button
+        className="save"
+        onClick={submitPreferences}
+        disabled={disabled}
+      >
+        💾
+      </button>
       <UseMethod />
     </div>
   )

@@ -151,7 +151,6 @@ button,
 
 button.use-method {
   width: 100%;
-  max-width: 800px;
   height: var(--tab);
   flex-shrink: 0;
   margin: 0 auto;
@@ -790,19 +789,32 @@ div#phrases {
       --color-min:      var(--older);
     }
 
-    div#stepSlider-count {
+    div#step-slider-phraseCount {
       /* height of div.labels must include labels at start _and_ end */
       --total:   21;
       --width:   12em; /* Wide enough to show labels on one side */
       --spacing: 0.6667em; /* spacing between labels */
     }
 
-    div#stepSlider-delay {
+    div#step-slider-daysDelay {
       /* height of div.labels must include labels at start _and_ end */
       --total:   14;
       --width:   22em; /* Wide enough to show labels both sides */
       /* --spacing: 1em; */ /* Use default spacing between labels */
     }
+  }
+
+  & button.save {
+    --button: var(--old);
+    --button-border: var(--gold);
+    --button-active: var(--gold);
+    position: fixed;
+    bottom: var(--tab);
+    right: calc(var(--scroll) * 1px);
+    width: var(--tab);
+    height: var(--tab);
+    padding: var(--gap);
+    font-size: 2em; /* Make the emoji fill the button */
   }
 }
 

@@ -105,7 +105,7 @@ export const StepSlider = (props) => {
 
   return (
     <div
-      id={`stepSlider-${name}`}
+      id={`step-slider-${name}`}
       className={labelClass}
     >
       <input

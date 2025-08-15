@@ -2,7 +2,7 @@
   "__endonym__": "Français",
   "choose-language": "Choisissez votre langue",
   "use-method": "Utiliser la méthode « Gold List »",
-  "profile": "Profile",
+  "profile": "Profile pour {{user_name}}",
   "prefs": {
     "for": "Preferences pour {{user_name}}",
     "delay": {
@@ -43,6 +43,7 @@
     "guest": {
       "name": "Rester anonyme",
       "user_name": "Invité",
+      "genitive": "Invité",
       "session": {
         "head": "Un cookie permanent est requis",
         "01": "Pour explorer cette application en tant qu'invité anonyme, un cookie permanent sera installé afin de permettre au serveur d'enregistrer votre progression. Il ne sera utilisé à aucune autre fin.",

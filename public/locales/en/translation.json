@@ -2,7 +2,7 @@
   "__endonym__": "English",
   "choose-language": "Choose your language",
   "use-method": "Use the Gold List Method",
-  "profile": "Profile",
+  "profile": "Profile for {{user_name}}",
   "prefs": {
     "for": "Preferences for {{user_name}}",
     "delay": {
@@ -43,6 +43,7 @@
     "guest": {
       "name": "Continue as Guest",
       "user_name": "Guest",
+      "genitive": "Guest",
       "session": {
         "head": "Permanent Cookie Required",
         "01": "To explore this app as an anonymous guest, one permanent cookie will be set, to enable the server to record your progress. It will not be used for any other reason.",
