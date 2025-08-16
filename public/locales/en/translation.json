@@ -115,13 +115,13 @@
       "subtitle": "A strategy for improving your vocabulary",
       "lede": "Becoming proficient in a foreign language means regular daily practice. This app is designed to encourage you to develop good habits by jogging your memory with words that you recently learned.",
       "01": "Every day, <strong>you should spend at least 15 minutes reading, listening, viewing or reviewing content in your target language</strong>. It's best to choose material where you learn something new about a topic you find interesting, with just the right amount of challenge.",
-      "02": "Continue until you have met at least 21 new words or expressions.",
+      "02": "Continue until you have met at least 10 new words or expressions. Ideally, you can learn around 21 new expressions every day. You can increase your target as you progress.",
       "03": "Add each new expression to your daily list in this app, together with a hint to remind you what it means. This hint could be a translation into your own language, or a sentence in your target language that uses the expression.",
       "03_caption": "Add a hint for each new expression"
     },
     "h1_daily": {
       "subtitle": "Completing your daily list",
-      "01": "The number of new expressions you have entered will be shown in the counter at the bottom right. When you have added 21 expressions to a list, this counter will turn green, and the Add More button will become active. Click on Add More to save the list so that you can review it later.",
+      "01": "The number of new expressions you have entered will be shown in the counter at the bottom right. When you have added your target number of expressions to a list, this counter will turn green, and the Add More button will become active. Click on Add More to save the list so that you can review it later.",
       "01_caption": "Click the Create New List button when the list is full",
       "02": "A new, empty list will appear, so you can continue to add new expressions if you want to.",
       "02_caption": "A new empty list with 21 entries",
@@ -151,14 +151,14 @@
     "h4_days_work": {
       "subtitle": "Completing your day's work",
       "01": "Every day you should:",
-      "02": "Complete at least one list of 21 new expressions (you can add more)",
+      "02": "Complete at least one list of new expressions (you can add more)",
       "03": "Review all the lists that you created in past weeks.",
       "04": "When you have done this, you should see a \"Congratulations!\" dialog. (You can continue to add more new expressions if you want to.)",
       "04_caption": "The app will congratulate you when your day's work is done"
     },
     "h5_expectations": {
       "subtitle": "Expectations",
-      "01": "Consistently listing 21 new expressions every day means that you will have met at least 7500 new expressions by the end of the year. An advanced speaker of a foreign language actively uses about 8000 base words. A base word is the main word in a word family. For example, the family of words \"do\", \"did\", \"done\", \"doing\" has \"do\" as the base word."
+      "01": "Consistently listing 21 new expressions every day means that you will have met at least 7500 new expressions by the end of the year. An advanced speaker of a foreign language actively uses about 8000 base words."
     },
     "h6_tips": {
       "subtitle": "Tips",
@@ -174,7 +174,9 @@
       "03_caption": "The Set Preview Preference button in the top position",
       "04": "If you set the \"Set preview preference\" button to its bottom position, the app will hide the hints for all the expressions that you previously committed to remembering. It will also hide previews of all expressions while you are typing.",
       "04_caption": "The Set Preview Preference button in the bottom position",
-      "05": "Your preference will be saved for future visits."
+      "05": "The pop-up menu at the top left allows you to visit your Profile page and choose the language for the app. At the Profile page, you can set your target for the number of expressions to add every day, and the length of the delay between reviews. As you progress, you should increase these values to their maximum: 21 new expressions a day, to be reviewed after two weeks. These are the settings that long-time users of the Gold List Method find optimal for learning.",
+      "05_caption": "The pop-up menu at the top left",
+      "06": "Your preferences will be saved for future visits."
     }
   }
 }
