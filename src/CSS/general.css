@@ -469,7 +469,13 @@ div#phrases {
   overflow-y: auto;
   position: relative;
 
-  div.phrases {
+  & div.dialog {
+    & button {
+      margin: 0 auto;
+    }
+  }
+
+  & div.phrases {
     position: relative;
     height: 100%;
     overflow-y: auto;

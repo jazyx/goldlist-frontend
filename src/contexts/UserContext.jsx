@@ -54,6 +54,7 @@ export const UserProvider = ({ children }) => {
   const [ reviewState, setReviewState ] = useState("untreated")
   const [ redosDone, setRedosDone ] = useState(0)
   const [ dayList, setDayList ] = useState(0)
+  const [ daysLists, setDaysLists ] = useState(0)
   const [ dayDone, setDayDone ] = useState(0)
   const [ from, setFrom ] = useState("/add")
   const [ preferences, setPreferences ] = useState({
@@ -350,7 +351,14 @@ export const UserProvider = ({ children }) => {
     // Place the new list at the beginning of the editable lists
     setUser({ ...user, lists: list.index }) // match DB value
     setLists([ list, ...lists ])
-    setDayList(+ getLocalTime(DAY_BREAK)) // milliseconds
+
+    const dayBreak = + getLocalTime(DAY_BREAK)
+    if (dayList !== dayBreak) {
+      setDaysLists(1)
+      setDayList(dayBreak) // milliseconds
+    } else {
+      setDaysLists( daysLists + 1 )
+    }
 
     navigate("/add")
   }
@@ -763,6 +771,7 @@ export const UserProvider = ({ children }) => {
         loaded,
         failed,
         dayDone,
+        daysLists,
         redosDone,
         reviewState,
         preferences,

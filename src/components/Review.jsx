@@ -196,7 +196,7 @@ export const Review = ({
 
   // Ensure that all items in feedback array have a unique key
   // to keep React happy
-  const feedback = (retainLock)
+  const feedback = (retainLock || retained)
     // Show the entire text if this phrase is retained
     ? [ <span key={`yes`}>{best}</span> ]
     // Prepare corrected text
@@ -209,7 +209,7 @@ export const Review = ({
         ))
 
 
-  if (showClue) {
+  if (showClue && !retained) {
     // Show the remainder of the phrase, if there is more
     const complete = best.substring(last + 1)
     if (complete) {
@@ -223,8 +223,8 @@ export const Review = ({
   ////////////////////////// CSS CLASSES //////////////////////////
 
   const feedbackClass = "feedback"
-    + ((right)             ? " right "   : "")
-    + ((wrong)             ? " wrong"    : "")
+    + ((right)              ? " right "   : "")
+    + ((wrong && !retained) ? " wrong"    : "")
     + ((retainLock) ? " locked"   : "")
 
 

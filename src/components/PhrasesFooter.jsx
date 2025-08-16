@@ -1,6 +1,6 @@
 /**
  * frontend/src/pages/PhrasesFooter.jsx
- * 
+ *
  * Reads `length` and `remain` from the active list and tells the
  * Counter component to display `length / remain` in the right
  * color.
@@ -16,9 +16,14 @@ import { SubmitList } from "./SubmitList"
 
 
 export const PhrasesFooter = ({ count }) => {
-  const { getActive, lists, addList } = useContext(UserContext)
+  const {
+    preferences,
+    getActive,
+    lists,
+    addList
+  } = useContext(UserContext)
   const list = getActive()
-  const target = 21
+  const target = preferences.phraseCount
   const total = list?.remain || target
 
 
@@ -34,7 +39,7 @@ export const PhrasesFooter = ({ count }) => {
 
   const icon = "🟢"
   const side = "right"
-  
+
 
   return (
     <footer>

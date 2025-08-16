@@ -69,9 +69,11 @@ export const About = (props) => {
     h7_03_i:  t("about.h7_preferences.03_caption"),
     h7_04:    t("about.h7_preferences.04"),
     h7_04_i:  t("about.h7_preferences.04_caption"),
-    h7_05:    t("about.h7_preferences.05"),
-    h7_05_i:  t("about.h7_preferences.05_caption"),
-    h7_06:    t("about.h7_preferences.06")
+
+    h8_title: t("about.h8_preferences.subtitle"),
+    h8_01:    t("about.h8_preferences.01"),
+    h8_01_i:  t("about.h8_preferences.01_caption"),
+    h8_02:    t("about.h8_preferences.02")
   }
 
   return (
@@ -210,11 +212,14 @@ export const About = (props) => {
           <figcaption>{texts.h7_04_i}</figcaption>
         </figure>
         <p>{texts.h7_05}</p>
+
+        <h3 id="other-preferences">{texts.h8_title}</h3>
+        <p>{texts.h8_01}</p>
         <figure>
           <img src="/about/menu.webp" alt="collapsed" />
-          <figcaption>{texts.h7_05_i}</figcaption>
+          <figcaption>{texts.h8_01_i}</figcaption>
         </figure>
-        <p>{texts.h7_06}</p>
+        <p>{texts.h8_02}</p>
       </div>
       <UseMethod />
     </div>

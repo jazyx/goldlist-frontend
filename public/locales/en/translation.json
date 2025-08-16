@@ -103,10 +103,10 @@
   "remember1": "You have decided to remember this expression:",
   "congratulations": {
     "title": "Congratulations!",
-    "completed": "You have completed {{count}} new phrase lists",
+    "completed": "You have completed {{count}} new lists",
     "completed1": "You have completed a new phrase list",
-    "reviewed": " and reviewed {{count}} older lists",
-    "reviewed1": " and reviewed an older list",
+    "reviewed": " and reviewed {{count}} older lists.",
+    "reviewed1": " and reviewed an older list.",
     "welldone": "Well Done!"
   },
   "about": {
@@ -131,15 +131,15 @@
     },
     "h2_reviews": {
       "subtitle": "Reviewing older lists",
-      "01": "After two weeks, the app will show you this list again. If you have been spending 15 minutes every day enjoying your target language, you will find that about 30% of these words are now stored in your long-term memory. For expressions that you already remember, click on the number to the left of expression, to show the ✅ icon. The expression itself will be hidden, but you will still see the hint.",
+      "01": "After three days, the app will show you this list again. If you have been spending 15 minutes every day enjoying your target language, you will find that about 30% of these words are now stored in your long-term memory. For expressions that you already remember, click on the number to the left of expression, to show the ✅ icon. The expression itself will be hidden, but you will still see the hint.",
       "01_caption": "Click on the number slider to show the ✅ icon",
       "02": "If there are any expressions that you do not remember well, type them out again and say them out loud. If your hint was a sentence in your target language, read out the whole sentence. This will help to refresh your memory.",
       "02_caption": "Retype all the words you think you might forget",
       "03": "If the button on the right shows a white dot, then a preview of the expression will appear as you are typing. If you want to test your memory, you can choose to hide the preview. When the expression is correctly typed, a green circle will appear on the right.",
       "03_caption": "Hide the preview while typing to test your short-term memory",
-      "04": "The expressions that you type out will be shown to you again after another two weeks. However, you must choose to hide at least 30% of the expressions. (At least 30% of the expressions should show the ✅ icon.) Hiding an expression means that you will <em>not</em> see it again in after two weeks. It means that you are telling your brain: \"I'm going to remember this expression. I don't need to be reminded of it.\"",
-      "05": "After you have been using the app for at least four weeks, you will also see lists of expressions that you have already reviewed. Expressions that you chose to remember will appear locked, with just the hint showing. As before, for each list, hide 30% of the expressions, to force your brain to remember them, and type out all the other phrases that you are not yet sure of remembering.",
-      "05_caption": "Expressions that you chose to remember weeks ago will appear locked"
+      "04": "The expressions that you type out will be shown to you again after another waiting period. However, you must choose to hide at least 30% of the expressions. (At least 30% of the expressions should show the ✅ icon.) Hiding an expression means that you will <em>not</em> see it again later. It means that you are telling your brain: \"I'm going to remember this expression. I don't need to be reminded of it.\"",
+      "05": "After you have been using the app for a while, you will also see lists of expressions that you have already reviewed. Expressions that you chose to remember will appear locked, with just the hint showing. As before, for each list, hide 30% of the expressions, to force your brain to remember them, and type out all the other phrases that you are not yet sure of remembering.",
+      "05_caption": "Expressions that you chose to remember some time ago will appear locked"
     },
     "h3_submit_review": {
       "subtitle": "Completing a review",
@@ -173,10 +173,13 @@
       "03": "If you set the \"Set preview preference\" button to its top position, the app will reveal all the expressions that you previously committed to remembering. It will also show previews of all expressions while you are typing.",
       "03_caption": "The Set Preview Preference button in the top position",
       "04": "If you set the \"Set preview preference\" button to its bottom position, the app will hide the hints for all the expressions that you previously committed to remembering. It will also hide previews of all expressions while you are typing.",
-      "04_caption": "The Set Preview Preference button in the bottom position",
-      "05": "The pop-up menu at the top left allows you to visit your Profile page and choose the language for the app. At the Profile page, you can set your target for the number of expressions to add every day, and the length of the delay between reviews. As you progress, you should increase these values to their maximum: 21 new expressions a day, to be reviewed after two weeks. These are the settings that long-time users of the Gold List Method find optimal for learning.",
-      "05_caption": "The pop-up menu at the top left",
-      "06": "Your preferences will be saved for future visits."
+      "04_caption": "The Set Preview Preference button in the bottom position"
+    },
+    "h8_preferences": {
+      "subtitle": "Other Preferences",
+      "01": "The pop-up menu at the top left allows you to visit your Profile page and choose the language for the app. At the Profile page, you can set your target for the number of expressions to add every day, and the length of the delay between reviews. As you progress, you should increase these values to their maximum: 21 new expressions a day, to be reviewed after two weeks. These are the settings that long-time users of the Gold List Method find optimal for learning.",
+      "01_caption": "The pop-up menu at the top left",
+      "02": "Your preferences will be saved for future visits."
     }
   }
 }

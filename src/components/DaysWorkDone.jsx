@@ -5,11 +5,16 @@
 
 import { useContext } from 'react'
 import { UserContext } from '../contexts'
+import { useTranslation } from "react-i18next";
 
 
-export const DaysWorkDone = (props) => {
+
+export const DaysWorkDone = () => {
+  const { t } = useTranslation();
+
   const {
     dayDone,
+    daysLists,
     redosDone,
     setDayDone
   } = useContext(UserContext)
@@ -17,12 +22,12 @@ export const DaysWorkDone = (props) => {
   if (!dayDone) { return }
 
 
-  const message = 
-    "You have completed a new phrase list" +
+  const message =
+    t("congratulations.completed", { count: daysLists }) +
     (redosDone
       ? (redosDone === 1)
-        ?` and reviewed 1 older list.`
-        :` and reviewed ${redosDone} older lists.`
+        ? t("congratulations.reviewed1")
+        : t("congratulations.reviewed", { count: redosDone })
      : "."
     )
 
@@ -36,7 +41,7 @@ export const DaysWorkDone = (props) => {
           className="primary"
           onClick={() => setDayDone(false)}
         >
-          Well Done!
+          {t("congratulations.welldone")}
         </button>
       </div>
     </div>
