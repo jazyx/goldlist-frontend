@@ -23,7 +23,6 @@ import {
 } from '../tools/utilities'
 
 const DAY_BREAK = { hour: 3 }
-const LIST_LENGTH = 21
 // Initialize storage if it is empty
 const INITIALIZED = (Object.entries(storage.settings).length)
 
@@ -86,19 +85,7 @@ export const UserProvider = ({ children }) => {
       credentials,
       body
     })
-      .then(incoming => {
-        return incoming.text()
-      })
-      .then(text => {
-         try {
-           const json = JSON.parse(text)
-           return json
-         } catch (error) {
-           console.log("error:", error)
-           console.log("text:", text)
-         }
-       })
-      // .then(incoming => incoming.json())
+      .then(incoming => incoming.json())
       .then(json => treatUserData(json))
       .catch(error => {
         treatDataError(error)
@@ -115,12 +102,12 @@ export const UserProvider = ({ children }) => {
     // If the server sends a fail message, it should be logged to
     // the console, and nothing else should happen.
     if (fail) {
-      // console.log("fail", JSON.stringify(fail, null, '  '));
       return setFailed(fail.reason)
     } else {
       setFailed("")
     }
 
+    // Should already be sorted by Mongoose
     lists.sort(byIndex)
     redos.sort(byIndex)
 
@@ -171,7 +158,8 @@ export const UserProvider = ({ children }) => {
     if (list.index < 0) {
       // Knotty phrases may be in lists shorter than 21 phrases
     } else {
-      while (phrases.length < LIST_LENGTH) {
+      const { total } = list
+      while (phrases.length < total) {
         phrases.push({
           _id: phrases.length,
           key: phrases.length,
@@ -355,17 +343,14 @@ export const UserProvider = ({ children }) => {
 
 
   const treatNewList = list => {
-    // Fill empty list.phrases with LIST_LENGTH empty phrase
+    // Fill empty list.phrases with `list.total` empty phrase
     // objects
-    console.log("treatNewList:", list)
     preparePhrases(list)
 
     // Place the new list at the beginning of the editable lists
     setUser({ ...user, lists: list.index }) // match DB value
     setLists([ list, ...lists ])
     setDayList(+ getLocalTime(DAY_BREAK)) // milliseconds
-
-    // console.log("dayList:", + getLocalTime(DAY_BREAK))
 
     navigate("/add")
   }
@@ -382,16 +367,6 @@ export const UserProvider = ({ children }) => {
       headers,
       body,
     })
-      // .then(incoming => incoming.text())
-      // .then(text => {
-      //    try {
-      //      const json = JSON.parse(text)
-      //      return json
-      //    } catch (error) {
-      //      console.log("error:", error)
-      //      console.log("text:", text)
-      //    }
-      //  })
       .then(incoming => incoming.json())
       .then(json => treatListSubmit(json))
       .catch(treatDataError)
@@ -549,8 +524,6 @@ export const UserProvider = ({ children }) => {
       return value
     }
 
-    console.log("body:", JSON.parse(body))
-
     fetch(url, {
       method: 'POST',
       headers,
@@ -563,12 +536,93 @@ export const UserProvider = ({ children }) => {
 
 
   const treatPreferences = json => {
-    // json will be { key: value } for preferences that were set
+    // json will be {
+    //   _id,
+    //   lists, // integer or array of list data
+    //   preferences: {
+    //     key: value // for each modified preference
+    //   }
+    // }
     delete json._id // No need to reset _id to itself
 
+    // If phraseCount was updated, json will alse contain { ...
+    //   index, // new value for user.lists
+    //   lists  // [ new_list?, modified_list ]
+    // }
+    const { lists } = json
+    if (Array.isArray(lists)) {
+      // phraseCount was updated and the current list has changed
+      json.lists = json.index // swap List.index for User.lists
+      delete json.index
+
+      mergeLists(lists) // [ array of lists ]
+    }
+
     // values in json may already have been set
+    setPreferences({ ...preferences, ...json.preferences })
+    // Unpack the preferences for the user
+    json = { ...json, ...json.preferences }
+    delete json.preferences
     setUser({ ...user, ...json })
-    setPreferences({ ...preferences, ...json })
+
+    navigate("/add")
+  }
+
+
+  const mergeLists = updatedLists => {
+    updatedLists.forEach( updatedList => {
+      const { _id, total, remain } = updatedList
+      const list = lists.find( list => (
+        list._id === _id
+      ))
+
+      if (list) {
+        // This is a list whose total and remain values were
+        // altered on the database. Perhaps the list is now full.
+        // Remove any empty phrases if total has decreased.
+        const { total: list_total } = list
+
+        // Update total and remain to reflect current status
+        list.total = total
+        list.remain = remain
+
+        if (total < list_total) {
+          removeEmptyPhrases(list, total)
+        } else if (total > list_total) {
+          preparePhrases(list)
+        }
+
+
+      } else {
+        // This is a new, empty list, as the current list is full
+        preparePhrases(updatedList) // add empty Phrase objects
+        lists.unshift(updatedList)
+      }
+    })
+
+    setLists([ ...lists ]) // may have a new first item
+  }
+
+
+  const removeEmptyPhrases = (list, total) => {
+    const { phrases } = list
+
+    let emptyIndex
+    // emptyIndex may be 0 in the while loop, but...
+    //   `, emptyIndex > -1`
+    // means that the loop breaks only if emptyIndex is less than
+    // 0, meaning no more empty phraseshave been found.
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Comma_operator
+    while (emptyIndex = phrases.findLastIndex( // remove from end
+      phrase => !phrase.text
+    ), emptyIndex > -1) { // let emptyIndex be 0 (it shouldn't be)
+      phrases.splice(emptyIndex, 1)
+
+      // Stop removing phrases when phrases is the expected length
+      if (phrases.length === total) {
+        break
+      }
+    }
   }
 
 
