@@ -544,18 +544,28 @@ export const UserProvider = ({ children }) => {
     //   }
     // }
     delete json._id // No need to reset _id to itself
+    let to = "" // where to go back to (stay here if setting limit)
 
     // If phraseCount was updated, json will alse contain { ...
     //   index, // new value for user.lists
     //   lists  // [ new_list?, modified_list ]
     // }
-    const { lists } = json
+    // If daysDelay was updated, json will also contain { ...
+    //   redos 
+    // }
+
+    const { lists, redos } = json
     if (Array.isArray(lists)) {
       // phraseCount was updated and the current list has changed
       json.lists = json.index // swap List.index for User.lists
       delete json.index
 
       mergeLists(lists) // [ array of lists ]
+      to = "/add"
+    }
+
+    if (Array.isArray(redos)) {
+      replaceRedos(redos)
     }
 
     // values in json may already have been set
@@ -565,7 +575,9 @@ export const UserProvider = ({ children }) => {
     delete json.preferences
     setUser({ ...user, ...json })
 
-    navigate("/add")
+    if (to) {
+      navigate(to)
+    }
   }
 
 
@@ -623,6 +635,12 @@ export const UserProvider = ({ children }) => {
         break
       }
     }
+  }
+
+
+  function replaceRedos(redos) {
+    redos.forEach(preparePhrases)
+    setRedos(redos)
   }
 
 
