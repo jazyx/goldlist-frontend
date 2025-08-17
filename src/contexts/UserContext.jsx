@@ -179,7 +179,7 @@ export const UserProvider = ({ children }) => {
 
 
   const getPathAndIndex = () => {
-    const match = /\/(\w+)(\/(\d+))?/.exec(location.pathname)
+    const match = /\/(\w+)(\/(-?\d+))?/.exec(location.pathname)
     if (!match) {
       return {}
     }
@@ -486,7 +486,9 @@ export const UserProvider = ({ children }) => {
 
 
   const treatReview = json => {
-    // json will be details of the list whose review was submitted
+    // json contain just the _id of the list whose review was
+    // submitted. Lists may simultaneously be being combined on
+    // the server, but the frontend is not told about this.
     const { _id } = json
     const listIndex = redos.findIndex( list => list._id === _id )
     if (listIndex < 0) {
