@@ -78,14 +78,14 @@ export const Review = ({
   // Is the locked Retain checkSlider forced open?
   const retainOpen = limitState === "off"
   // Is the Limit checkSlider disabled?
-  const limitOff =  limitState !== "mix"
+  const limitOff = limitState !== "mix"
   // Is the Retain checkSlider in the `checked` state?
-  const limitOn =   (limitState === "off")
-              ? false
-              : (limitState === "on")
-                ? true
-                // limitState === "mix"
-                : limit
+  const limitOn = (limitState === "off")
+                  ? false
+                  : (limitState === "on")
+                    ? true
+                    // limitState === "mix"
+                    : limit
   // Is the Limit checkSlider forced open?
   const limitOpen = limitState === "off"
   // Is the Limit checkSlider forced shut?
@@ -124,6 +124,7 @@ export const Review = ({
       setSneakPreview(false)
     }
   }
+
 
   const onChange = ({ target }) => {
     const { name, value } = target
@@ -313,13 +314,13 @@ export const Review = ({
             onFocus={scrollIntoView}
           />
         }
-        <Hint hint={hint} />
+        <Hint hint={(showClue || sneakPreview) && hint} />
       </div>
       <div
         className="control back"
       >
         { right
-          ? <GreenCircle />
+          ? <GreenCircle disabled={limitShut}/>
           : <CheckSlider
             name="limit"
             className={limitClass}

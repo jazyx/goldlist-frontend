@@ -6,9 +6,12 @@
 import React from 'react'
 
 
-export const GreenCircle = (props) => {
+export const GreenCircle = ({ disabled }) => {
+
+  const className = `circle${disabled ? " disabled" : ""}`
+
   return (
-    <div className="control">
+    <div className={className}>
       🟢
     </div>
   )

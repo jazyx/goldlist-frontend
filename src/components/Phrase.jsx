@@ -65,7 +65,7 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
       ? "altered"   // only if text exists and is altered
       : (text)
         ? "saved" // text is like db, but hint may be missing
-          : ""      // empty text
+        : ""      // empty text
 
 
   const sharedProps = {
@@ -80,6 +80,9 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
     text: t("placeholder.text"),
     hint: t("placeholder.hint")
   }
+
+
+  const buttonText = (buttonClass === "saved") ? "🟢" : ""
 
 
   return (
@@ -112,7 +115,9 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
         <button
           className={buttonClass}
           onClick={checkForUpdate}
-        ></button>
+        >
+          {buttonText}
+        </button>
       </div>
     </div>
   )

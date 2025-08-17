@@ -539,6 +539,10 @@ div#phrases {
 
     div.button {
       & button {
+        font-size: var(--half);
+        display: flex;
+        justify-content: center;
+        align-items: center;
         height: var(--half);
         width: var(--half);
         border-radius: 100vmax;
@@ -546,7 +550,8 @@ div#phrases {
         pointer-events: none;
 
         &.saved  {
-          background-color: var(--saved-button);
+          /* Will be showing green circle emoji; no bg needed */
+          /* background-color: var(--saved-button); */    
         }
 
         &.altered  {
@@ -742,11 +747,26 @@ div#phrases {
           overflow: hidden;
         }
 
-        &:has(input.back:checked) {
+        &:has(input.back:checked),
+        &:has(:not(input)) {  /* required for GreenCircle */
           background-color: transparent;
 
           div.control {
             background-color: transparent;
+
+            & .circle {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: var(--size);
+              height: var(--half);
+              background-color: var(--off);
+              border-radius: 100vmax;
+
+              &.disabled {
+                background-color: var(--bg);
+              }
+            }
           }
 
           div.desk {
