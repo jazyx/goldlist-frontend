@@ -748,7 +748,7 @@ div#phrases {
         }
 
         &:has(input.back:checked),
-        &:has(:not(input)) {  /* required for GreenCircle */
+        &:has(.circle.disabled) { /* required for GreenCircle */
           background-color: transparent;
 
           div.control {
@@ -760,12 +760,8 @@ div#phrases {
               align-items: center;
               width: var(--size);
               height: var(--half);
-              background-color: var(--off);
               border-radius: 100vmax;
-
-              &.disabled {
-                background-color: var(--bg);
-              }
+              background-color: var(--bg);
             }
           }
 
