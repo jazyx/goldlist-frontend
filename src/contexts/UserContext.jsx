@@ -135,8 +135,8 @@ export const UserProvider = ({ children }) => {
     }
 
     const { limitState, daysDelay, phraseCount } = user
-    const preferences = { limitState, daysDelay, phraseCount } 
-  
+    const preferences = { limitState, daysDelay, phraseCount }
+
     setUser(user)
     setLists(lists)
     setRedos(redos)
@@ -539,6 +539,17 @@ export const UserProvider = ({ children }) => {
       headers,
       body,
     })
+      // .then(incoming => incoming.text())
+      // .then(text => {
+      //   console.log("incoming:", text)
+      //   try {
+      //     const json = JSON.parse(text)
+      //     return json
+      //   } catch (error) {
+      //     console.log("error", JSON.stringify(error, null, '  '));
+
+      //   }
+      // })
       .then(incoming => incoming.json())
       .then(json => treatPreferences(json))
       .catch(treatDataError)
@@ -561,7 +572,7 @@ export const UserProvider = ({ children }) => {
     //   lists  // [ new_list?, modified_list ]
     // }
     // If daysDelay was updated, json will also contain { ...
-    //   redos 
+    //   redos
     // }
 
     const { lists, redos } = json
@@ -658,7 +669,7 @@ export const UserProvider = ({ children }) => {
 
 
   function tabNextOnEnter(event) {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" || event.key === "Tab") {
       event.preventDefault()
       tabToNextOpenItem(event.target)
     }

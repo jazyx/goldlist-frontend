@@ -12,7 +12,7 @@
  */
 
 
-import { useContext, useEffect, useRef } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { useTranslation } from "react-i18next"
 import { UserContext } from '../contexts'
 import { Feedback } from './Feedback'
@@ -44,6 +44,8 @@ export const Review = ({
     scrollIntoView,
     getPathAndIndex
   } = useContext(UserContext)
+  const [ sneakPreview, setSneakPreview ] = useState(false)
+  
 
   const feedbackRef = useRef()
   const { limitState } = user
@@ -108,6 +110,20 @@ export const Review = ({
 
 
   //////////////////////////// ACTIONS ////////////////////////////
+
+
+  const onKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === "Tab") {
+      return tabNextOnEnter(event)
+    }
+    else if (event.key === "Backspace" && !showClue) {
+      // Show preview for a moment, even when limitState = "on"
+      console.log("Backspace!")
+      setSneakPreview(true)
+    } else {
+      setSneakPreview(false)
+    }
+  }
 
   const onChange = ({ target }) => {
     const { name, value } = target
@@ -209,7 +225,7 @@ export const Review = ({
         ))
 
 
-  if (showClue && !retained) {
+  if (showClue && !retained || sneakPreview) {
     // Show the remainder of the phrase, if there is more
     const complete = best.substring(last + 1)
     if (complete) {
@@ -291,7 +307,7 @@ export const Review = ({
             className="text"
             placeholder={db.text}
             text={text}
-            onKeyDown={tabNextOnEnter}
+            onKeyDown={onKeyDown}
             onChange={onChange}
             onScroll={onScroll}
             onFocus={scrollIntoView}
