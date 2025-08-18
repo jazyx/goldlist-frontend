@@ -24,6 +24,17 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
   }
 
 
+  function onKeyDown(event) {
+    if (( event.key === "Enter" && !event.shiftKey)
+       || event.key === "Tab"
+       ) {
+        return tabNextOnEnter(event)
+        }
+
+    console.log("event.key:", event.key, ", event.shiftDown:", event.shiftDown)
+  }
+
+
   function saveOnBlur({ target, relatedTarget }) {
     const phrase = target.closest(".phrase")
     if (!phrase || phrase.contains(relatedTarget)) {
@@ -70,7 +81,6 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
 
   const sharedProps = {
     onChange,
-    onKeyDown: tabNextOnEnter,
     onFocus: scrollIntoView,
     spellCheck: false
   }
@@ -99,6 +109,7 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
           text={text}
           className={textClass}
           placeholder={placeholder.text}
+          onKeyDown={tabNextOnEnter}
           { ...sharedProps }
         />
         <TextArea
@@ -106,6 +117,7 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
           text={hint}
           className={hintClass}
           placeholder={placeholder.hint}
+          onKeyDown={onKeyDown}
           { ...sharedProps }
         />
       </div>
