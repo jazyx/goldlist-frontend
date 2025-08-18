@@ -1,15 +1,23 @@
-# React + Vite
+# GOLDLIST METHOD FRONTEND #
 
-A barebones React app created using Vite.
+Vite-powered React frontend for recording and reviewing new words and expressions in a foreign language, to be hosted by an Express backend [Repo](git@github.com:jazyx/goldlist-backend.git) 
 
-This app uses `react-router-dom` to create three placeholder pages. One of the pages performs a simple `fetch` request to an Express backend.
+[Overview of the paper-and-pen Goldlist method](https://www.open.edu/openlearn/languages/learning-languages/the-goldlist-method)
 
-The Express backend is found in the `backend/` sub-directory in the same parent directory. During development, it should be run separately, but for production, you can serve this frontend with the Express backend, as a single Web Service.
+The app allows you to enter new expressions that you have met in the language you are learning, together with a hint about their meaning. These expressions will be shown to you a few days later, and you will be encouraged to type out those that you are not yet ready to remember, and to select at least 30% of the words to retain in your long-term memory.
 
-1. Open a Terminal window in the parent directory of this `frontend/` sub-directory
-2. Run `npm run publish`
-3. Run `npm start`
+## Features ##
 
-This will run Vite's `build` process and copy all the files from `frontend/dist/` to `backend/public/`, then launch the Express backend.
-
-See `index.html` in the parent directory for a complete tutorial.
+1. All features are available as a Guest user
+2. You can register a username to use the app on different devices or allow different users to connect from the same device
+3. Twelve pre-defined lists of simple English vocabulary are provided to help understand how the method words
+4. When you have chosen to retain all but the last 33% of the expressions in a list, the remaining unretained words will be scheduled for recombination into a new list.
+5. You can choose:
+   1. One of three languages for the UI: English, French or Russian
+   2. How many words to add to complete each list
+   3. How many days will pass before you are asked to review a list
+   (The last two preferences are saved across devices.)
+6. You can show or hide the hints and typing preview for all expressions, or on an expression-by-expression basis
+7. If you choose to hide hints and typing preview, you can press Backspace while typing a review expression to show the full expression and its hint momentarily
+8. Optional characters used to indicate word stress are ignored when retyping expressions
+9. You can press Shift+Enter to create multiline hints

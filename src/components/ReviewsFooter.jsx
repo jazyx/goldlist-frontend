@@ -35,6 +35,8 @@ export const ReviewsFooter = () => {
     status.target = Math.round(status.total * 0.3)
     return status
   }, { total: 0, count: 0, target: 0 })
+  const { total } = retained
+  retained.total = retained.target
 
 
  const reviewed = phrases.reduce(( status, phrase ) => {
@@ -44,10 +46,14 @@ export const ReviewsFooter = () => {
     status.count += (right && consider) || 0   // avoid NaN
     return status
   }, { total: 0, count: 0, target: 0 })
+  reviewed.total = Math.min(
+    reviewed.total, total - retained.target
+  )
+  reviewed.target = Math.min(reviewed.target, reviewed.total)
 
 
   const disabled = retained.count < retained.target
-    || (retained.count + reviewed.count) !== retained.total
+    || (retained.count + reviewed.count) < retained.total
 
 
   const limitProps = {
