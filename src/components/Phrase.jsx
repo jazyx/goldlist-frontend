@@ -30,8 +30,6 @@ export const Phrase = ({ _id, text, hint, db, saving }) => {
        ) {
         return tabNextOnEnter(event)
         }
-
-    console.log("event.key:", event.key, ", event.shiftDown:", event.shiftDown)
   }
 
 
