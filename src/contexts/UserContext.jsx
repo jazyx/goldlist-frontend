@@ -25,6 +25,8 @@ import {
 const DAY_BREAK = { hour: 3 }
 // Initialize storage if it is empty
 const INITIALIZED = (Object.entries(storage.settings).length)
+// HARD-CODED routes and params from App.jsx
+const PATHS_REGEX = /^\/(add|rev|about|i18n|profile)(\/?([0-9-]+)?)$/
 
 set__scroll()
 
@@ -46,6 +48,7 @@ export const UserProvider = ({ children }) => {
   // Read initial value of userData from LocalStorage
   const [ user, setUser ] = useState(() => storage.get())
   const [ initialized, setInitialized ] = useState(INITIALIZED)
+  const [ loginData, setLoginData ] = useState({})
 
   const [ failed, setFailed ] = useState("")
   const [ loaded, setLoaded ] = useState(false)
@@ -66,8 +69,12 @@ export const UserProvider = ({ children }) => {
   /////////////// REGISTRATION, LOG IN and GUESTS ///////////////
 
 
-  const connectUser = (connect = {}) => {
-    const { action } = connect
+  const connectUser = (connect) => {
+    const { action } = (connect || {})
+    setLoginData(connect)
+    if (connect) {
+      storage.set(connect)
+    }
     // user_name, email, password, action
 
     const url = (action === "register")
@@ -78,7 +85,7 @@ export const UserProvider = ({ children }) => {
 
     const headers = { 'Content-Type': 'application/json' }
     const credentials = "include"
-    const body = JSON.stringify(connect)
+    const body = JSON.stringify(connect || {})
 
     fetch(url, {
       method: 'POST',
@@ -107,6 +114,8 @@ export const UserProvider = ({ children }) => {
     } else {
       setFailed("")
     }
+
+    console.log(storage.get())
 
     // Should already be sorted by Mongoose
     lists.sort(byIndex)
@@ -737,15 +746,37 @@ export const UserProvider = ({ children }) => {
 
   // TODO: Stay on current rev page if that's where we are
   const goAdd = () => {
+    const wasLoaded = (PATHS_REGEX.test(location.pathname))
+    console.log("goAdd location.pathname:", location.pathname)
     if (!initialized) {
       setInitialized(true)
+      console.log("go /about")
       navigate("/about")
+
+    } else if (!loaded && wasLoaded) {
+      let connect = storage.get()
+      if (!connect.password) {
+        connect = {}
+      }
+      console.log(`Reconnecting for user ${JSON.stringify(connect)}`)
+      setLoaded(true)
+
+      return connectUser(connect)
+
     } else if (loaded) {
+      console.log(`loaded: ${loaded}
+        not going anywhere`)
       return
+
     } else if (lists[0]?.phrases) {
+      console.log(`loaded: ${loaded}, phrases: ${lists[0]?.phrases.length}
+        setLoaded(true), go /add`)
+
       setLoaded(true)
       navigate("/add")
     } else {
+      console.log(`loaded: ${loaded}, no phrases
+        setLoaded(true), go /`)
       navigate("/")
     }
   }

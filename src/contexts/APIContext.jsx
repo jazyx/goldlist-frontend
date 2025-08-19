@@ -42,6 +42,7 @@ export const APIProvider = ({ children }) => {
       .then(incoming => incoming.text())
       .then(text => {
         try {
+          console.log("text:", text)
           const json = JSON.parse(text)
           return text
         } catch (error) {

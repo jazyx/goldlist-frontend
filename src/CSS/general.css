@@ -27,6 +27,9 @@
   --edge:     0.1rem;
   --width:    16rem;
   --scroll:   20px; /* can be tweaked for browser by JavaScript */
+  --bar:      calc(var(--gap));
+  /* --bar:      calc(var(--scroll) * 1px); */
+  --unbar:    calc(var(--bar) * -1);
 
   --button: #666;
   --button-border: #999;
@@ -153,8 +156,24 @@ button.use-method {
   width: 100%;
   height: var(--tab);
   flex-shrink: 0;
-  margin: 0 auto;
+  margin: 0 auto 0 var(--unbar);
   font-size: var(--font);
+  z-index: 1;
+}
+
+#frame {
+  display: flex;
+}
+
+#gold-bar {
+  position: relative;
+  width: var(--bar);
+  background-color: var(--gold);
+  height: 100vh;
+}
+
+#outlet {
+  margin-left: var(--unbar);
 }
 
 ul#tabs {
@@ -165,6 +184,7 @@ ul#tabs {
   font-size: var(--tab-font);
   padding: 0;
   margin: 0;
+  z-index: 1;
 
   button {
     width: 100%;
@@ -194,6 +214,7 @@ ul#tabs {
   justify-content: space-between;
   width: 100vw;
   height: var(--size);
+  z-index: 1;
 
   a {
     position: relative;
@@ -230,7 +251,7 @@ div#profile {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  font-size: var(--font);
+  font-size: var(--font);;
 
   & h1,
   & h2,
@@ -240,32 +261,6 @@ div#profile {
   & h1 {
     margin-top: 0;
     font-size: 2em;
-  }
-
-  & div.info {
-    margin: 0 auto;
-    padding: 1em;
-    box-sizing: border-box;
-    max-width: 800px;
-    overflow-y: scroll;
-
-    & figure {
-      width: 100%;
-      text-align: center;
-      font-size: 0.75em;
-      margin: 0;
-      padding: 0;
-
-      & img {
-        padding: 0;
-        max-width: calc(100% - 2em);
-      }
-
-      & figcaption {
-        width: min(520px, calc(100% - 2em));
-        margin: 0 auto 1em;
-      }
-    }
   }
 }
 
@@ -440,6 +435,34 @@ div#connect {
       top: 0;
       right: 0;
       font-size: var(--warn);
+    }
+  }
+}
+
+div#about {
+  & div.info {
+    margin: 0 auto 0 var(--bar);
+    padding: 1em;
+    box-sizing: border-box;
+    max-width: 800px;
+    overflow-y: scroll;
+
+    & figure {
+      width: 100%;
+      text-align: center;
+      font-size: 0.75em;
+      margin: 0;
+      padding: 0;
+
+      & img {
+        padding: 0;
+        max-width: calc(100% - 2em);
+      }
+
+      & figcaption {
+        width: min(520px, calc(100% - 2em));
+        margin: 0 auto 1em;
+      }
     }
   }
 }
@@ -837,6 +860,12 @@ div#phrases {
     height: var(--tab);
     padding: var(--gap);
     font-size: 2em; /* Make the emoji fill the button */
+  }
+}
+
+#i18n {
+  label {
+    z-index: 1
   }
 }
 

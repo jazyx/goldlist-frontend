@@ -11,7 +11,7 @@ import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
 
-const loadPath = `locales/{{lng}}/{{ns}}.json`
+const loadPath = `/locales/{{lng}}/{{ns}}.json`
 const options = {
   debug: false,
   fallbackLng: ["en"],
