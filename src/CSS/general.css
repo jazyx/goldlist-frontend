@@ -27,9 +27,7 @@
   --edge:     0.1rem;
   --width:    16rem;
   --scroll:   20px; /* can be tweaked for browser by JavaScript */
-  --bar:      calc(var(--gap));
-  /* --bar:      calc(var(--scroll) * 1px); */
-  --unbar:    calc(var(--bar) * -1);
+  --bar:      1px;
 
   --button: #666;
   --button-border: #999;
@@ -63,7 +61,7 @@
 
   /* Input slider and Review */
   --full:   min(100vw, 60rem);
-  --fill:   calc(var(--full) - var(--scroll));
+  --fill:   calc(var(--full) - var(--scroll) - var(--bar));
   --space:  4.5rem;
   --room:   calc(var(--space) * 2);
   --size:   6rem;
@@ -156,7 +154,7 @@ button.use-method {
   width: 100%;
   height: var(--tab);
   flex-shrink: 0;
-  margin: 0 auto 0 var(--unbar);
+  margin: 0 auto;
   font-size: var(--font);
   z-index: 1;
 }
@@ -170,10 +168,6 @@ button.use-method {
   width: var(--bar);
   background-color: var(--gold);
   height: 100vh;
-}
-
-#outlet {
-  margin-left: var(--unbar);
 }
 
 ul#tabs {
@@ -251,7 +245,7 @@ div#profile {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  font-size: var(--font);;
+  font-size: var(--font);
 
   & h1,
   & h2,
@@ -269,7 +263,7 @@ div#connect {
   flex-direction: column;
   align-items: center;
   width: 100vw;
-  height: 100vh;;
+  height: 100vh;
 
   & div.dialog {
     width: fit-content;
@@ -439,33 +433,32 @@ div#connect {
   }
 }
 
-div#about {
-  & div.info {
-    margin: 0 auto 0 var(--bar);
-    padding: 1em;
-    box-sizing: border-box;
-    max-width: 800px;
-    overflow-y: scroll;
+div#about div.info {
+  margin: 0 auto 0 var(--bar);
+  padding: 1em;
+  box-sizing: border-box;
+  max-width: 800px;
+  overflow-y: scroll;
 
-    & figure {
-      width: 100%;
-      text-align: center;
-      font-size: 0.75em;
-      margin: 0;
+  & figure {
+    width: 100%;
+    text-align: center;
+    font-size: 0.75em;
+    margin: 0;
+    padding: 0;
+
+    & img {
       padding: 0;
+      max-width: calc(100% - 2em);
+    }
 
-      & img {
-        padding: 0;
-        max-width: calc(100% - 2em);
-      }
-
-      & figcaption {
-        width: min(520px, calc(100% - 2em));
-        margin: 0 auto 1em;
-      }
+    & figcaption {
+      width: min(520px, calc(100% - 2em));
+      margin: 0 auto 1em;
     }
   }
 }
+
 
 /* General settings for all Phrase and Review text stuff */
 div.phrase,
@@ -818,7 +811,7 @@ div#phrases {
 
   & article {
     overflow-y: auto;
-    overflow-x: hidden;;
+    overflow-x: hidden;
 
     h3 {
       text-decoration: underline;
@@ -863,10 +856,8 @@ div#phrases {
   }
 }
 
-#i18n {
-  label {
-    z-index: 1
-  }
+#i18n label {
+  z-index: 1
 }
 
 footer {

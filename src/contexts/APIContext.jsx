@@ -39,18 +39,18 @@ export const APIProvider = ({ children }) => {
     }
 
     fetch(url, options)
-      .then(incoming => incoming.text())
-      .then(text => {
-        try {
-          console.log("text:", text)
-          const json = JSON.parse(text)
-          return text
-        } catch (error) {
-          console.log("catch(error):", error)
-          return Promise.reject(error)
-        }
-       })
-      // .then(incoming => incoming.json())
+      // .then(incoming => incoming.text())
+      // .then(text => {
+      //   try {
+      //     console.log("text:", text)
+      //     const json = JSON.parse(text)
+      //     return text
+      //   } catch (error) {
+      //     console.log("catch(error):", error)
+      //     return Promise.reject(error)
+      //   }
+      //  })
+      .then(incoming => incoming.json())
       .then(json => treatCheckResponse(json))
       .catch(error => {
         console.log("error:", error)

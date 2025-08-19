@@ -31,10 +31,16 @@ const PATHS_REGEX = /^\/(add|rev|about|i18n|profile)(\/?([0-9-]+)?)$/
 set__scroll()
 
 
+let renders = 0
+
+
 export const UserContext = createContext()
 
 
 export const UserProvider = ({ children }) => {
+  // console.log("renders:", ++renders, ", location.pathname:", location.pathname)
+
+
   const navigate = useNavigate()
   const { t } = useTranslation()
 
@@ -48,8 +54,6 @@ export const UserProvider = ({ children }) => {
   // Read initial value of userData from LocalStorage
   const [ user, setUser ] = useState(() => storage.get())
   const [ initialized, setInitialized ] = useState(INITIALIZED)
-  const [ loginData, setLoginData ] = useState({})
-
   const [ failed, setFailed ] = useState("")
   const [ loaded, setLoaded ] = useState(false)
   const [ lists, setLists ] = useState([])
@@ -71,11 +75,10 @@ export const UserProvider = ({ children }) => {
 
   const connectUser = (connect) => {
     const { action } = (connect || {})
-    setLoginData(connect)
     if (connect) {
       storage.set(connect)
     }
-    // user_name, email, password, action
+    // { user_name, email, password, action } || {}
 
     const url = (action === "register")
       ? `${origin}/register`
@@ -93,7 +96,27 @@ export const UserProvider = ({ children }) => {
       credentials,
       body
     })
-      .then(incoming => incoming.json())
+      .then(incoming => incoming.text())
+      .then(text => {
+        try {
+          const json = JSON.parse(text)
+          const swap = (key, value) => {
+            if (key === "user") {
+              return value.user_name
+            } else if (key === "lists" || key === "redos") {
+              return value.length
+            }
+            return value
+          }
+          // console.log("json", JSON.stringify(json, swap, '  '))
+          return json
+          
+        } catch (error) {
+          console.log("text:", text)
+          return {}
+        }
+      })
+      // .then(incoming => incoming.json())
       .then(json => treatUserData(json))
       .catch(error => {
         treatDataError(error)
@@ -114,8 +137,6 @@ export const UserProvider = ({ children }) => {
     } else {
       setFailed("")
     }
-
-    console.log(storage.get())
 
     // Should already be sorted by Mongoose
     lists.sort(byIndex)
@@ -747,36 +768,35 @@ export const UserProvider = ({ children }) => {
   // TODO: Stay on current rev page if that's where we are
   const goAdd = () => {
     const wasLoaded = (PATHS_REGEX.test(location.pathname))
-    console.log("goAdd location.pathname:", location.pathname)
+    // console.log("loaded:", loaded, "wasLoaded:", wasLoaded, location.pathname, ", PATHS_REGEX:", PATHS_REGEX, "href:", location.href)
+
     if (!initialized) {
+      // First visit on this device
       setInitialized(true)
-      console.log("go /about")
       navigate("/about")
 
     } else if (!loaded && wasLoaded) {
+      // A logged-in user refreshed the page
       let connect = storage.get()
       if (!connect.password) {
         connect = {}
       }
-      console.log(`Reconnecting for user ${JSON.stringify(connect)}`)
       setLoaded(true)
 
       return connectUser(connect)
 
     } else if (loaded) {
-      console.log(`loaded: ${loaded}
-        not going anywhere`)
+      // Internal navigation
       return
 
     } else if (lists[0]?.phrases) {
-      console.log(`loaded: ${loaded}, phrases: ${lists[0]?.phrases.length}
-        setLoaded(true), go /add`)
-
+      // A user just logged in
       setLoaded(true)
       navigate("/add")
+
     } else {
-      console.log(`loaded: ${loaded}, no phrases
-        setLoaded(true), go /`)
+      // Show the Sign Up/In page in all other
+      console.log("Return to / from", location.pathname)
       navigate("/")
     }
   }
