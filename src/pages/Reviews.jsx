@@ -11,9 +11,13 @@ import { ReviewsFooter } from '../components/ReviewsFooter'
 import { DaysWorkDone } from '../components/DaysWorkDone'
 
 
+// let renders = 0
 
 export const Reviews = () => {
-  const { getActive, reviewState } = useContext(UserContext)
+  const {
+    getActive,
+    reviewState
+  } = useContext(UserContext)
   // reviewState = "untreated" | "cancelled" | "ready"
 
 
@@ -31,6 +35,7 @@ export const Reviews = () => {
   const [ className, confirmMask ] = (reviewState === "ready")
     ? [ "confirm mask", <ConfirmReview phrases={phrases} /> ]
     : [ null, undefined ]
+
 
 
   return (

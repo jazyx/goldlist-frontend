@@ -10,6 +10,7 @@ import {
   useContext,
   useState,
   useEffect,
+  useRef
 } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from "react-i18next"
@@ -31,16 +32,10 @@ const PATHS_REGEX = /^\/(add|rev|about|i18n|profile)(\/?([0-9-]+)?)$/
 set__scroll()
 
 
-let renders = 0
-
-
 export const UserContext = createContext()
 
 
 export const UserProvider = ({ children }) => {
-  // console.log("renders:", ++renders, ", location.pathname:", location.pathname)
-
-
   const navigate = useNavigate()
   const { t } = useTranslation()
 
@@ -68,27 +63,47 @@ export const UserProvider = ({ children }) => {
     daysDelay: 14,
     phraseCount: 21
   })
+  // Tracking the Review with the current focus
+  const [ focus, setFocus ] = useState({})
+  // Create a Set to store which transitions are running to change
+  // the height of a Review component when limitState is changed
+  const runRef = useRef(new Set())
+  const running = runRef.current
+
 
 
   /////////////// REGISTRATION, LOG IN and GUESTS ///////////////
 
-
   const connectUser = (connect) => {
     const { action } = (connect || {})
-    if (connect) {
-      storage.set(connect)
-    }
-    // { user_name, email, password, action } || {}
+     // Guest connect = undefined, else action = "login"|"register"
 
-    const url = (action === "register")
-      ? `${origin}/register`
-      : (action === "login")
-        ? `${origin}/login`
-        : `${origin}/guest`
+    if (connect) {
+      // Strip any leading or trailing spaces from the connect
+      // entries, in case a mobile keyboard adds some for fun.
+      const entries = Object.entries(connect)
+      connect = entries.reduce(( details, [ key, value ] ) => {
+        if (key === "action") {
+          // not wanted on voyage
+        } else {
+          details[key] = value.trim()
+        }
+
+        return details
+      }, {})
+
+      storage.set(connect)
+
+    } else {
+      connect = {}
+    }
+    // { user_name, email, password } || {}
+
+    const url = `${origin}/${action || "guest"}`
 
     const headers = { 'Content-Type': 'application/json' }
     const credentials = "include"
-    const body = JSON.stringify(connect || {})
+    const body = JSON.stringify(connect)
 
     fetch(url, {
       method: 'POST',
@@ -96,27 +111,27 @@ export const UserProvider = ({ children }) => {
       credentials,
       body
     })
-      .then(incoming => incoming.text())
-      .then(text => {
-        try {
-          const json = JSON.parse(text)
-          const swap = (key, value) => {
-            if (key === "user") {
-              return value.user_name
-            } else if (key === "lists" || key === "redos") {
-              return value.length
-            }
-            return value
-          }
-          // console.log("json", JSON.stringify(json, swap, '  '))
-          return json
-          
-        } catch (error) {
-          console.log("text:", text)
-          return {}
-        }
-      })
-      // .then(incoming => incoming.json())
+      // .then(incoming => incoming.text())
+      // .then(text => {
+      //   try {
+      //     const json = JSON.parse(text)
+      //     const swap = (key, value) => {
+      //       if (key === "user") {
+      //         return value.user_name
+      //       } else if (key === "lists" || key === "redos") {
+      //         return value.length
+      //       }
+      //       return value
+      //     }
+      //     // console.log("json", JSON.stringify(json, swap, '  '))
+      //     return json
+
+      //   } catch (error) {
+      //     console.log("text:", text)
+      //     return {}
+      //   }
+      // })
+      .then(incoming => incoming.json())
       .then(json => treatUserData(json))
       .catch(error => {
         treatDataError(error)
@@ -233,21 +248,7 @@ export const UserProvider = ({ children }) => {
   const getPhrases = () => {
     const source = getActive(true)
 
-    const fallback = (() => {
-      if (source) { return }
-
-      const { path, index } = getPathAndIndex()
-      const type = path === "rev" ? redos : lists
-      return [{
-        text: `No phrases available for ${path}`,
-        hint: `index: ${index}
-        (available: ${type.map( list => list.index )})`,
-        db: { text: "", hint: "" },
-        _id: "random_id"
-      }]
-    })()
-
-    return source?.phrases || fallback
+    return source?.phrases || [] // fallback
   }
 
 
@@ -832,8 +833,10 @@ export const UserProvider = ({ children }) => {
         from,
         lists,
         redos,
+        focus,
         loaded,
         failed,
+        running,
         dayDone,
         daysLists,
         redosDone,
@@ -859,7 +862,8 @@ export const UserProvider = ({ children }) => {
         setLoaded,
         setFrom,
         setPreferences,
-        submitPreferences
+        submitPreferences,
+        setFocus
       }}
     >
       {children}

@@ -12,7 +12,12 @@
  */
 
 
-import { useContext, useEffect, useRef, useState } from 'react'
+import {
+  useContext,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import { useTranslation } from "react-i18next"
 import { UserContext } from '../contexts'
 import { Feedback } from './Feedback'
@@ -20,6 +25,7 @@ import { TextArea } from './TextArea'
 import { Hint } from './Hint'
 import { CheckSlider } from './CheckSlider'
 import { GreenCircle } from './GreenCircle'
+
 
 
 export const Review = ({
@@ -34,20 +40,26 @@ export const Review = ({
             // = show hint after retained is checked
 }) => {
 
+
   const { t } = useTranslation();
 
   const {
     user,
     editPhrase,
     toggleRedo,
+    focus,
+    setFocus,
+    running,
     tabNextOnEnter,
     scrollIntoView,
     getPathAndIndex
   } = useContext(UserContext)
-  const [ sneakPreview, setSneakPreview ] = useState(false)
-  
 
+  const [ sneakPreview, setSneakPreview ] = useState(false)
+
+  const reviewRef = useRef()
   const feedbackRef = useRef()
+
   const { limitState } = user
   // "on" (limit=>true), "mix", "off" (limit=>false)
   let wrong = false // set to true if there is a typing error
@@ -65,14 +77,14 @@ export const Review = ({
   const retainOff = limitState === "off" && db.retained
   // Is the Retain checkSlider in the `checked` state?
   const retainOn =  (limitState === "off")
-              // Yes, only if the user has just decided to retain
-              // No, if not retained, or previously retained
-              ? (!db.retained && retained)
-              : (limitState === "on")
-                // Yes, if was retained just now or in the past
-                ? db.retained || retained
-                // (limitState === "mix")
-                : retained
+               // Yes, only if the user has just decided to retain
+               // No, if not retained, or previously retained
+               ? (!db.retained && retained)
+               : (limitState === "on")
+                 // Yes, if was retained just now or in the past
+                 ? db.retained || retained
+                 // (limitState === "mix")
+                 : retained
   // Does the Retain checkSlider show a lock icon?
   const retainLock = !!db.retained
   // Is the locked Retain checkSlider forced open?
@@ -90,10 +102,12 @@ export const Review = ({
   const limitOpen = limitState === "off"
   // Is the Limit checkSlider forced shut?
   const limitShut = limitState === "on"
+  const autoCapitalize = db.text[0] === db.text[0]?.toLowerCase()
+                         ? "off"
+                         : null
 
 
-
-  ////////////////////////// RESET TEXT //////////////////////////
+  //////////////////////// INITIALIZATION ////////////////////////
 
   // HACK: Ensure that text is not set to "" by useEffect if
   // Reviews tries to show a Phrases page
@@ -109,7 +123,55 @@ export const Review = ({
   }
 
 
+  const addRunListener = () => {
+    const review = reviewRef.current
+    review.addEventListener("transitionrun", onTransitionRun)
+    return onTransitionRun
+  }
+
+
+  const removeRunListener = (review) => {
+    // const review = reviewRef.current
+    review.removeEventListener("transitionrun", onTransitionRun)
+  }
+
+
+  const manageTransitions = () => {
+    addRunListener()
+
+    // Ensure that the current review div is in scope when the
+    // component is cleaned up. onTransitionRun will be the same.
+    const review = reviewRef.current
+    return () => removeRunListener(review)
+  }
+
+
   //////////////////////////// ACTIONS ////////////////////////////
+
+  const onFocusChange = (event) => {
+    const { type, target } = event
+
+    console.log("focus!")
+
+    if (type === "focus") {
+      const { top } = target.getBoundingClientRect()
+      setFocus({ _id, top })
+      scrollIntoView(event)
+
+    } else {
+      const focusStealer = event.nativeEvent.explicitOriginalTarget
+      if (focusStealer.closest(".three-way.limit")) {
+        // If focus was stolen by the limit ThreeWaySlider then
+        // limitState is being changed. Restore the current focus
+        // now and be ready to restore it again if there are any
+        // layout changes. Setting the focus triggers
+        // onFocusChange() again, and resets the value of top.
+        return target.focus()
+      }
+
+      setFocus({})
+    }
+  }
 
 
   const onKeyDown = (event) => {
@@ -158,6 +220,64 @@ export const Review = ({
     const { scrollTop } = target
 
     feedbackRef.current.scrollTop = scrollTop
+  }
+
+
+  /**
+   * Capture all the transitions which will affect the height of
+   * the Review DIV component itself (ignore changes to properties
+   * like padding, or to the child elements of the Review DIV)
+   */
+  const onTransitionRun = ({ propertyName, target }) => {
+    // Ignore all transitions except a change of height on the
+    // named .review div. Remember that this Review component is
+    // having its height changed.
+    if ( !focus._id || propertyName !== "height") { return }
+    const name = target.dataset.name
+    if ( !name ) { return }
+
+    // If we get here, then one of the textareas has focus and
+    // limitState has just been changed locally. If any
+    // transitions will change the height of a Review component,
+    // then the position of the Review with the focus should be
+    // restored as well as possible.
+
+    running.add(name)
+  }
+
+
+  const onTransitionEnd = ({ propertyName, target }) => {
+    const { name } = target.dataset
+    if (name && propertyName === "height") {
+      if (running.has(name)) {
+        // name was added by onTransitionRun just after limitState
+        // was changed
+        running.delete(name)
+
+        if (!running.size) {
+          // The last height transition on a Review component has
+          // ended. Time to restore the position of the Review with
+          // focus.
+          restorePosition()
+        }
+      }
+    }
+  }
+
+
+  const restorePosition = () => {
+    const { _id, top } = focus
+    const selector = `._${_id}`
+    const focusReview = document.querySelector(selector)
+    const { y } = focusReview.getBoundingClientRect()
+    const parent = focusReview.closest(".reviews")
+
+    const delta = y - top
+    parent.scrollTo({
+      top: parent.scrollTop + delta,
+      left: 0,
+      behavior: "smooth",
+    })
   }
 
 
@@ -278,13 +398,16 @@ export const Review = ({
   /////////////////////////// USEEFFECT ///////////////////////////
 
   useEffect(resetText, []) // set text to "" when first displayed
+  useEffect(manageTransitions) // create and destroy, every render
 
 
 
   return (
     <div
-      className="review"
-      name={_id}
+      ref={reviewRef}
+      className={`review _${_id}`}
+      data-name={_id}
+      onTransitionEnd={onTransitionEnd}
     >
       <div
         className="control front"
@@ -308,10 +431,12 @@ export const Review = ({
             className="text"
             placeholder={db.text}
             text={text}
+            onFocus={onFocusChange}
+            onBlur={onFocusChange}
             onKeyDown={onKeyDown}
             onChange={onChange}
             onScroll={onScroll}
-            onFocus={scrollIntoView}
+            autoCapitalize={autoCapitalize}
           />
         }
         <Hint hint={(showClue || sneakPreview) && hint} />

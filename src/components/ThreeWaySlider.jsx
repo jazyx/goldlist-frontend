@@ -23,15 +23,13 @@ export const ThreeWaySlider = ({
   vertical,
   title
 }) => {
-  const [ checked, setChecked ] = useState(check)
   
   name = name || "name"
+  // action should update the value of check upstream; fallback
   action = typeof action === "function" ? action : ()=>{}
 
   const onChange = ({ target }) => {
     const check = target.id.replace(`three-way-${name}-`, "")
-    // Update default `checked` unless `action` is a function
-    setChecked(check)
     action(check)
   }
 
@@ -50,7 +48,7 @@ export const ThreeWaySlider = ({
           name={name}
           id={`three-way-${name}-off`}
           className="off"
-          checked={checked === "off" }
+          checked={check === "off" }
           onChange={onChange}
         />
       </label>
@@ -60,7 +58,7 @@ export const ThreeWaySlider = ({
           name={name}
           id={`three-way-${name}-mix`}
           className="mix"
-          checked={!checked || checked === "mix" }
+          checked={!check || check === "mix" }
           onChange={onChange}
         />
       </label>
@@ -70,7 +68,7 @@ export const ThreeWaySlider = ({
           name={name} 
           id={`three-way-${name}-on`}
           className="on"
-          checked={checked === "on" }
+          checked={check === "on" }
           onChange={onChange}
         />
       </label>

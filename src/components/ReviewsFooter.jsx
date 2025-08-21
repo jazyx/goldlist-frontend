@@ -9,6 +9,8 @@ import { SubmitReview } from "./SubmitReview"
 import { Counter } from "./Counter"
 import { ThreeWaySlider } from "./ThreeWaySlider"
 
+
+
 export const ReviewsFooter = () => {
   const { t } = useTranslation();
   const {

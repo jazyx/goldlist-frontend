@@ -3,16 +3,16 @@
  */
 
 
-import React from 'react'
-
 
 export const TextArea = ({
   name,
   text,
   className,
+  autoCapitalize,
   onKeyDown,
   onChange,
   onFocus,
+  onBlur,
   onScroll,
   placeholder,
   spellCheck
@@ -29,9 +29,11 @@ export const TextArea = ({
       onKeyDown={onKeyDown}
       onChange={onChange}
       onFocus={onFocus}
+      onBlur={onBlur}
       onScroll={onScroll}
       value={text}
       placeholder={placeholder}
+      autoCapitalize={autoCapitalize}
     />
   )
 }

@@ -151,7 +151,7 @@ button,
 }
 
 button.use-method {
-  width: 100%;
+  width: calc(100% - var(--bar));
   height: var(--tab);
   flex-shrink: 0;
   margin: 0 auto;
@@ -565,11 +565,6 @@ div#phrases {
         border: none;
         pointer-events: none;
 
-        &.saved  {
-          /* Will be showing green circle emoji; no bg needed */
-          /* background-color: var(--saved-button); */    
-        }
-
         &.altered  {
           background-color: var(--altered-button);
           border-color: var(--altered-border);
@@ -863,7 +858,7 @@ div#phrases {
 footer {
   display: flex;
   align-items: center;
-  width: 100%;
+  width: calc(100% - var(--bar));
   height: var(--size);
   background-color: var(--dark);
   font-size: var(--tab-font);
