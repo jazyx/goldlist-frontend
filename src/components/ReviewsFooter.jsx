@@ -31,9 +31,11 @@ export const ReviewsFooter = () => {
     // count is the number of phrases flagged to be retained
     // target should be (total - retained) * 0.3 = 30% of remainder
     // 21 - (6.3) -> 15 - (4.5) -> 10 - (3) -> 7
-    const { retained, db } = phrase
+    const { grasped, retained, db } = phrase
     status.total += (!db.retained)
-    status.count += (!!retained && !db.retained)
+    status.count += ( !!grasped && !db.grasped
+                   || !!retained && !db.retained
+                    )
     status.target = Math.round(status.total * 0.3)
     return status
   }, { total: 0, count: 0, target: 0 })
@@ -42,8 +44,11 @@ export const ReviewsFooter = () => {
 
 
  const reviewed = phrases.reduce(( status, phrase ) => {
-    const { retained, right, db } = phrase
-    const consider = !retained && !db.retained // boolean
+    const { grasped, retained, right, db } = phrase
+    // Don't count any that have been grasped or retaind
+    const consider = !( db.retained || retained
+                     || ( grasped && !db.grasped )
+                      )
     status.target = status.total += consider
     status.count += (right && consider) || 0   // avoid NaN
     return status
@@ -51,6 +56,7 @@ export const ReviewsFooter = () => {
   reviewed.total = Math.min(
     reviewed.total, total - retained.target
   )
+  // Keep the target to the number of ungrasped/unretained
   reviewed.target = Math.min(reviewed.target, reviewed.total)
 
 

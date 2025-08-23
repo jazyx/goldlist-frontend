@@ -192,9 +192,9 @@ export const UserProvider = ({ children }) => {
   const preparePhrases = list => {
     // Add a db field to hold the values on the database
     const phrases = list.phrases.map( phrase => {
-      const { text, hint, retained, limit } = phrase
-      const db = { text, hint, retained, limit }
-      return { ...phrase, db, retained, limit }
+      const { text, hint, grasped, retained, limit } = phrase
+      const db = { text, hint, grasped, retained, limit }
+      return { ...phrase, db, grasped, retained, limit }
     })
 
     // Ensure there are the right number of entries.
@@ -342,7 +342,7 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  const toggleLimitState = (limitState) => {
+  const toggleLimitState = (name, limitState) => {
     // Pre-emptively update locally
     preferences.limitState = limitState
     setPreferences({ ...preferences })
@@ -439,7 +439,7 @@ export const UserProvider = ({ children }) => {
   //////////////////////////// REVIEW ////////////////////////////
 
 
-  const toggleRedo = ({ _id, name, checked, db }) => {
+  const toggleRedo = ({ _id, name, checked }) => {
     const phrase = getPhrase(_id)
     phrase[name] = checked
 

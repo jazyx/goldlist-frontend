@@ -654,6 +654,7 @@ div#phrases {
           &.wrong {
             border-color: var(--wrong);
           }
+          &.grasped,
           &.locked {
             color: var(--black);
             border-color: var(--off);
@@ -674,27 +675,53 @@ div#phrases {
       /* Specific controls for CheckSlider in Review */
       & label.checkSlider input {
         &.front {
+          /* Invert the direction of the slider */
           ~ span::after {
             left: var(--half);
           }
 
-          /* Increment phraseCounter only if phrase is neither
-            * retained nor flagged to be retained
-            */
-          &:not(.locked) {
-              &:not(:checked) {
-              ~ span::after {
-                counter-increment: phraseCounter 1;
-                content: counter(phraseCounter);
-              }
+          &:checked ~ span::after {
+            left: 0;
+          }
+
+          /* Phrase that have not been retained yet */
+          &:not(.locked):not(.retained) {
+            ~ span::after {
+              counter-increment: phraseCounter 1;
+              content: counter(phraseCounter);
             }
 
-            &:checked ~ span::after {
-              content: "✅";
-              left: 0;
+            /* When a new phrase is checked, show it in green  */
+            &:not(.grasped):checked ~ span::after {
+              background-color: var(--primary-border);
+              color: var(--white);
+            }
+
+            /* Show unretained grasped phrases in gold...  */
+            &.grasped {
+              & ~ span::after {
+                background-color: var(--gold);
+              }
+
+              /* ... until they are retained, then make them green */
+              &:checked ~ span::after {
+                content: "✓";
+                color: var(--white);
+                background-color: var(--primary-border);
+              }
             }
           }
 
+          /* Phrases that have only just been retained */
+          &.retained {
+            & ~ span::after {
+              content: "✓";
+              color: var(--white);
+              background-color: var(--primary-border);
+            }
+          }
+
+          /* Phrases that were retained in a previous review */
           &.locked {
             & ~ span::after {
               content: "🔓";
@@ -707,7 +734,7 @@ div#phrases {
 
             &:checked ~ span::after {
               content: "🔒";
-              left: 0;
+              background-color: var(--off) !important;
             }
           }
         }
@@ -743,20 +770,34 @@ div#phrases {
       }
 
       /* Specific controls for collapsing CheckSlider in Review */
-      &:has(input.front:checked:not(.open)) {
+      &:has(input.front:checked) {
         height: var(--half);
 
-        & div.control {
-          background-color: var(--bg);
+        /* Hide the hint, show the text for new phrases */
+        &:not(:has(input.grasped, input.locked)) {
+          & p.hint, textarea {
+            height: 0;
+            overflow: hidden;
+            border: var(--edge) solid var(--off);
+            padding: 0;
+          }
+          & p.feedback {
+            color: var(--light);
+            background-color: var(--bg);
+            border-color: var(--bg);
+          }
         }
 
-        & p.feedback,
-        & textarea {
-          height: 0;
-          padding: 0 var(--slim);
-          border-top-width: 0;
-          border-bottom-width: 0;
-          overflow: hidden;
+        /* Show the hint, hide the text for retained phrases */
+        &:has(input.grasped, input.locked) {
+          & p.feedback,
+          & textarea {
+            height: 0;
+            padding: 0 var(--slim);
+            border-top-width: 0;
+            border-bottom-width: 0;
+            overflow: hidden;
+          }
         }
 
         &:has(input.back:checked),
@@ -778,7 +819,7 @@ div#phrases {
           }
 
           div.desk {
-            p.hint {
+            p.hint, p.feedback {
               height: 0;
               overflow: hidden;
               border: var(--edge) solid var(--off);

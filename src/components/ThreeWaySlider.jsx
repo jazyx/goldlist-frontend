@@ -13,15 +13,14 @@
  */
 
 
-import { useState } from 'react'
-
 
 export const ThreeWaySlider = ({
   name,
   check,    // "on" | "mix" (default) | "off" 
   action,
   vertical,
-  title
+  title,
+  disabled
 }) => {
   
   name = name || "name"
@@ -30,7 +29,7 @@ export const ThreeWaySlider = ({
 
   const onChange = ({ target }) => {
     const check = target.id.replace(`three-way-${name}-`, "")
-    action(check)
+    action(name, check)
   }
 
   const className = (vertical)
@@ -50,6 +49,7 @@ export const ThreeWaySlider = ({
           className="off"
           checked={check === "off" }
           onChange={onChange}
+          disabled={disabled === "off"}
         />
       </label>
       <label>
@@ -60,6 +60,7 @@ export const ThreeWaySlider = ({
           className="mix"
           checked={!check || check === "mix" }
           onChange={onChange}
+          disabled={disabled === "mix"}
         />
       </label>
       <label>
@@ -70,6 +71,7 @@ export const ThreeWaySlider = ({
           className="on"
           checked={check === "on" }
           onChange={onChange}
+          disabled={disabled === "on"}
         />
       </label>
     </div>

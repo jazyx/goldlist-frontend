@@ -4,10 +4,8 @@
  * A Review can be displayed in multiple different states:
  *
  * - user.limitState can be "on", "mix" or "off"
- * - db.retained can be truthy or undefined
+ * - db.retained can be true or false
  * - retained can be true or false
- * - db.grasped can be truthy or undefined
- * - grasped can be true or false
  * - limit can be true or false
  * - the text of the phrase can be empty, correct or mistaken
  *   (this is ignored or irrelevant if any `retained` is true)
@@ -36,16 +34,12 @@ export const Review = ({
   hint,
   db = {},  // may initially be undefined
   right,    // user correctly typed text
-  grasped,
   retained, // user checked left Retain CheckSlider
   limit     // user checked right Limit CheckSlider:
             // = show full text prompt when not retained
             // = show hint after retained is checked
 }) => {
 
-  // Convert dbRetained and dbGrasped to boolean
-  const dbGrasped = !!db.grasped
-  const dbRetained = !!db.retained
 
   const { t } = useTranslation();
 
@@ -74,33 +68,27 @@ export const Review = ({
 
   //////////////////////////// STATES ////////////////////////////
 
-  // Has this phrase been grosped in a previous review
-
-  const isGrasped  = grasped   && !dbGrasped
-  const wasGrasped = dbGrasped && !dbRetained
-  const isRetained = retained  && !dbRetained
-
   // Is the textarea available for typing?
-  const showType =  !(isGrasped || retained || dbRetained)
+  const showType =  !(retained || !!db.retained)
   // Does the whole word show while typing?
   const showClue =  limitState === "off"
                 || (limitState === "mix" && !limit)
-
   // Is the Retain checkSlider disabled?
-  const retainOff = limitState === "off" && dbRetained
+  const retainOff = limitState === "off" && db.retained
   // Is the Retain checkSlider in the `checked` state?
   const retainOn =  (limitState === "off")
                // Yes, only if the user has just decided to retain
                // No, if not retained, or previously retained
-               ? (!dbRetained && retained)
+               ? (!db.retained && retained)
                : (limitState === "on")
                  // Yes, if was retained just now or in the past
-                 ? dbRetained || retained
+                 ? db.retained || retained
                  // (limitState === "mix")
-                 : retained || isGrasped
+                 : retained
+  // Does the Retain checkSlider show a lock icon?
+  const retainLock = !!db.retained
   // Is the locked Retain checkSlider forced open?
   const retainOpen = limitState === "off"
-
   // Is the Limit checkSlider disabled?
   const limitOff = limitState !== "mix"
   // Is the Retain checkSlider in the `checked` state?
@@ -200,17 +188,13 @@ export const Review = ({
 
   const onChange = ({ target }) => {
     const { name, value } = target
+    const type = "redo"
     editPhrase({ _id, name, value, db })
   }
 
 
   const toggle = ({ target }) => {
-    let { name, checked } = target
-    // Distinguish between retaining a grasped phrase and
-    // grasping a new phrase
-    if (name === "retained" && !(wasGrasped || dbRetained)) {
-      name = "grasped"
-    }
+    const { name, checked } = target
 
     toggleRedo({ _id, name, checked, db })
   }
@@ -347,7 +331,7 @@ export const Review = ({
 
   // Ensure that all items in feedback array have a unique key
   // to keep React happy
-  const feedback = (dbRetained || retained)
+  const feedback = (retainLock || retained)
     // Show the entire text if this phrase is retained
     ? [ <span key={`yes`}>{best}</span> ]
     // Prepare corrected text
@@ -376,13 +360,11 @@ export const Review = ({
   const feedbackClass = "feedback"
     + ((right)              ? " right "   : "")
     + ((wrong && !retained) ? " wrong"    : "")
-    + ((dbRetained) ? " locked"   : "")
+    + ((retainLock) ? " locked"   : "")
 
 
-  const stateClass = "front"
-    + ((wasGrasped) ? " grasped"   : "")
-    + ((dbRetained) ? " locked"   : "")
-    + ((isRetained) ? " retained"  : "")
+  const retainClass = "front"
+    + ((retainLock) ? " locked"   : "")
     + ((retainOpen) ? " open"     : "")
     + ((retainOff)  ? " disabled" : "")
 
@@ -430,7 +412,7 @@ export const Review = ({
       >
         <CheckSlider
           name="retained"
-          className={stateClass}
+          className={retainClass}
           checked={retainOn}
           action={toggle}
           title={t("commit")}
@@ -442,7 +424,7 @@ export const Review = ({
           className={feedbackClass}
           ref={feedbackRef}
         />
-        { showType && <TextArea
+        {showType && <TextArea
             name="text"
             className="text"
             placeholder={db.text}
@@ -460,7 +442,7 @@ export const Review = ({
       <div
         className="control back"
       >
-        { right && !retainOn
+        { right
           ? <GreenCircle disabled={limitShut}/>
           : <CheckSlider
             name="limit"
