@@ -165,6 +165,7 @@ button.use-method {
 
 #gold-bar {
   position: relative;
+  flex-shrink: 0;
   width: var(--bar);
   background-color: var(--gold);
   height: 100vh;
@@ -434,7 +435,7 @@ div#connect {
 }
 
 div#about div.info {
-  margin: 0 auto 0 var(--bar);
+  margin: 0 auto;
   padding: 1em;
   box-sizing: border-box;
   max-width: 800px;

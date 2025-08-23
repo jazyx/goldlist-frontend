@@ -151,8 +151,6 @@ export const Review = ({
   const onFocusChange = (event) => {
     const { type, target } = event
 
-    console.log("focus!")
-
     if (type === "focus") {
       const { top } = target.getBoundingClientRect()
       setFocus({ _id, top })
