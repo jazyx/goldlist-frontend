@@ -174,7 +174,10 @@ export const Review = ({
 
     } else {
       const focusThief = event.nativeEvent.explicitOriginalTarget
-      if (focusThief && focusThief.closest(".three-way.limit")) {
+      if ( focusThief
+        && focusThief.closest
+        && focusThief.closest(".three-way.limit")
+         ) {
         // If focus was stolen by the limit ThreeWaySlider then
         // limitState is being changed. Restore the current focus
         // now and be ready to restore it again if there are any

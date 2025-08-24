@@ -18,7 +18,8 @@ export const ConfirmReview = ({phrases}) => {
 
 
   const reviewed = phrases.filter( phrase => {
-    return phrase.retained || phrase.grasped
+    return ( phrase.retained && !phrase.db.retained )
+        || ( phrase.grasped && !phrase.db.grasped )
   }).map( phrase => {
     const text = (phrase.retained)
       ? <b>{phrase.db.text}</b>
