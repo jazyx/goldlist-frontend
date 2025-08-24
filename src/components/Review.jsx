@@ -97,8 +97,8 @@ export const Review = ({
                 || right
                 || !!grasped
   // Does the whole word show while typing?
-  const showClue =  unlimited
-                || !grasped
+  const showClue = (unlimited || !grasped)
+                && !wasRetained
   // Does the whole word show while typing?
   const showPlaceholder = unlimited
                 || !grasped
