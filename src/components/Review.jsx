@@ -92,16 +92,14 @@ export const Review = ({
   const showType = !isGrasped
                 || retained
                 || dbRetained
+  // Does the preview show while typing?
+  const showClue = unlimited && !wasRetained
+  // Does the placeholder show before typing starts?
+  const showPlaceholder = unlimited || !grasped
   // Does the hint show?
-  const showHint = unlimited
-                || right
-                || !!grasped
-  // Does the whole word show while typing?
-  const showClue = (unlimited || !grasped)
-                && !wasRetained
-  // Does the whole word show while typing?
-  const showPlaceholder = unlimited
-                || !grasped
+  const showHint = unlimited // but...
+                || right     // after the phrase is correctly typed
+                || !!grasped // not for phrases which are grasped
 
   // Is the Retain checkSlider in the `checked` state?
   const retainOn = (wasRetained)
