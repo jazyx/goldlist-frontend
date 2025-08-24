@@ -89,9 +89,8 @@ export const Review = ({
                   || (limitState === "mix" && !limit)
 
   // Is the textarea available for typing?
-  const showType = !isGrasped
-                || retained
-                || dbRetained
+  const showType = !dbRetained
+                && !(isGrasped || retained)
   // Does the preview show while typing?
   const showClue = unlimited && !wasRetained
   // Does the placeholder show before typing starts?

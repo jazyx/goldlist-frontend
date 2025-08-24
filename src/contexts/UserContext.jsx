@@ -94,7 +94,7 @@ export const UserProvider = ({ children }) => {
         return details
       }, {})
 
-      storage.set(connect)
+      storage.set({...connect, action: "login"})
 
     } else {
       connect = {}
@@ -150,7 +150,10 @@ export const UserProvider = ({ children }) => {
     // If the server sends a fail message, it should be logged to
     // the console, and nothing else should happen.
     if (fail) {
-      return setFailed(fail.reason)
+      setFailed(fail.reason)
+      setLoaded(false)
+      return navigate("/")
+
     } else {
       setFailed("")
     }
@@ -188,6 +191,8 @@ export const UserProvider = ({ children }) => {
     setLists(lists)
     setRedos(redos)
     setPreferences(preferences)
+
+    // console.log("prepared lists", lists.length)
   }
 
 
@@ -224,7 +229,6 @@ export const UserProvider = ({ children }) => {
 
   ///////////////////////// SELECT items /////////////////////////
 
-
   const getPathAndIndex = () => {
     const match = /\/(\w+)(\/(-?\d+))?/.exec(location.pathname)
     if (!match) {
@@ -243,6 +247,7 @@ export const UserProvider = ({ children }) => {
       : lists
 
     const list = source.find( list => list.index == index )
+
     return list || ( forceNull ? null : {} )
   }
 

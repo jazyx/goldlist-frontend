@@ -1,16 +1,20 @@
 /**
  * frontend/src/pages/NotFound.jsx
+ *
+ * The only way to get here is to type an invalid address in the
+ * address bar. Simply return to the login page.
+ *
+ * This page must have an HTML element, or bad things happen.
  */
 
 
-import { Link } from 'react-router-dom'
-  
+import { useNavigate } from 'react-router-dom'
 
-export const NotFound = () => {  
-  return (
-    <>
-      <h1>Page not found</h1>
-      <Link to="/" draggable="false">Back to Page 1</Link>
-    </>
-  )
+
+export const NotFound = () => {
+  const navigate = useNavigate()
+
+  navigate("/")
+
+  return (<u></u>)
 }

@@ -672,6 +672,11 @@ div#phrases {
         }
       }
 
+      & p.hint {
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+
       /* Specific controls for CheckSlider in Review */
       & label.checkSlider input {
         &.front {
@@ -797,6 +802,10 @@ div#phrases {
             border-top-width: 0;
             border-bottom-width: 0;
             overflow: hidden;
+          }
+
+          & p.hint {
+            height: var(--half);
           }
         }
 
