@@ -44,13 +44,12 @@ export const Review = ({
 }) => {
 
   // Convert dbRetained and dbGrasped to boolean
-  const dbGrasped = !!db.grasped
+  const dbGrasped  = !!db.grasped
   const dbRetained = !!db.retained
 
   const { t } = useTranslation();
 
   const {
-    user,
     editPhrase,
     toggleRedo,
     focus,
@@ -58,7 +57,10 @@ export const Review = ({
     running,
     tabNextOnEnter,
     scrollIntoView,
-    getPathAndIndex
+    getPathAndIndex,
+    limitState,
+    switchLimit,
+    toggleLimitState
   } = useContext(UserContext)
 
   const [ sneakPreview, setSneakPreview ] = useState(false)
@@ -66,54 +68,52 @@ export const Review = ({
   const reviewRef = useRef()
   const feedbackRef = useRef()
 
-  const { limitState } = user
-  // "on" (limit=>true), "mix", "off" (limit=>false)
   let wrong = false // set to true if there is a typing error
 
 
 
   //////////////////////////// STATES ////////////////////////////
 
-  // Has this phrase been grosped in a previous review
-
-  const isGrasped  = grasped   && !dbGrasped
-  const wasGrasped = dbGrasped && !dbRetained
-  const isRetained = retained  && !dbRetained
+  // Has this phrase just been flagged to be grasped?
+  const isGrasped   = grasped   && !dbGrasped
+  // Was this phrase grasped in a previous review?
+  const wasGrasped  = dbGrasped && !dbRetained
+  // Has this phrase just been flagged to be retained?
+  const isRetained  = retained  && !dbRetained
+  // Was this phrase retained in a previous review (so now locked)?
+  const wasRetained = !!dbRetained
+  // Has the user "unlocked" a retained phrase?
+  const restrained  = retained  && !!dbRetained
+  // Is the Limit checkSlider in the `unchecked` state?
+  const unlimited   = limitState === "off"
+                  || (limitState === "mix" && !limit)
 
   // Is the textarea available for typing?
-  const showType =  !(isGrasped || retained || dbRetained)
+  const showType = !isGrasped
+                || retained
+                || dbRetained
+  // Does the hint show?
+  const showHint = unlimited
+                || right
+                || !!grasped
   // Does the whole word show while typing?
-  const showClue =  limitState === "off"
-                || (limitState === "mix" && !limit)
+  const showClue =  unlimited
+                || !grasped
+  // Does the whole word show while typing?
+  const showPlaceholder = unlimited
+                || !grasped
 
-  // Is the Retain checkSlider disabled?
-  const retainOff = limitState === "off" && dbRetained
   // Is the Retain checkSlider in the `checked` state?
-  const retainOn =  (limitState === "off")
-               // Yes, only if the user has just decided to retain
-               // No, if not retained, or previously retained
-               ? (!dbRetained && retained)
-               : (limitState === "on")
-                 // Yes, if was retained just now or in the past
-                 ? dbRetained || retained
-                 // (limitState === "mix")
-                 : retained || isGrasped
-  // Is the locked Retain checkSlider forced open?
-  const retainOpen = limitState === "off"
+  const retainOn = (wasRetained)
+                   ? restrained
+                   : (isGrasped || isRetained)
+  // Is the Limit checkSlider disabled? True only if the phrase
+  // has been retained, but is now shown unrestrained, because
+  // the Retain slider is unchecked (by switchLimit)
+  const limitOff = limitState !== "on"
+                && wasRetained
+                && !restrained
 
-  // Is the Limit checkSlider disabled?
-  const limitOff = limitState !== "mix"
-  // Is the Retain checkSlider in the `checked` state?
-  const limitOn = (limitState === "off")
-                  ? false
-                  : (limitState === "on")
-                    ? true
-                    // limitState === "mix"
-                    : limit
-  // Is the Limit checkSlider forced open?
-  const limitOpen = limitState === "off"
-  // Is the Limit checkSlider forced shut?
-  const limitShut = limitState === "on"
   const autoCapitalize = db.text[0] === db.text[0]?.toLowerCase()
                          ? "off"
                          : null
@@ -158,6 +158,13 @@ export const Review = ({
   }
 
 
+  const forceLimitState = () => {
+    if (switchLimit) {
+      toggleLimitState(_id, limitState)
+    }
+  }
+
+
   //////////////////////////// ACTIONS ////////////////////////////
 
   const onFocusChange = (event) => {
@@ -170,7 +177,7 @@ export const Review = ({
 
     } else {
       const focusStealer = event.nativeEvent.explicitOriginalTarget
-      if (focusStealer.closest(".three-way.limit")) {
+      if (focusStealer?.closest(".three-way.limit")) {
         // If focus was stolen by the limit ThreeWaySlider then
         // limitState is being changed. Restore the current focus
         // now and be ready to restore it again if there are any
@@ -180,6 +187,7 @@ export const Review = ({
       }
 
       setFocus({})
+      setSneakPreview(false)
     }
   }
 
@@ -190,7 +198,6 @@ export const Review = ({
     }
     else if (event.key === "Backspace" && !showClue) {
       // Show preview for a moment, even when limitState = "on"
-      console.log("Backspace!")
       setSneakPreview(true)
     } else {
       setSneakPreview(false)
@@ -206,13 +213,19 @@ export const Review = ({
 
   const toggle = ({ target }) => {
     let { name, checked } = target
+    // name may be "status" or "limit"
+
     // Distinguish between retaining a grasped phrase and
     // grasping a new phrase
-    if (name === "retained" && !(wasGrasped || dbRetained)) {
-      name = "grasped"
+    if (name === "status") {
+      if (!(wasGrasped || dbRetained)) {
+        name = "grasped"
+      } else {
+        name = "retained"
+      }
     }
 
-    toggleRedo({ _id, name, checked, db })
+    toggleRedo({ _id, name, checked })
   }
 
 
@@ -374,31 +387,21 @@ export const Review = ({
   ////////////////////////// CSS CLASSES //////////////////////////
 
   const feedbackClass = "feedback"
-    + ((right)              ? " right "   : "")
-    + ((wrong && !retained) ? " wrong"    : "")
-    + ((dbRetained) ? " locked"   : "")
+    + ((right)              ? " right " : "")
+    + ((wrong && !retained) ? " wrong"  : "")
+    + ((dbRetained)         ? " locked" : "")
 
 
   const stateClass = "front"
-    + ((wasGrasped) ? " grasped"   : "")
+    + ((wasGrasped) ? " grasped"  : "")
+    + ((isRetained) ? " retained" : "")
     + ((dbRetained) ? " locked"   : "")
-    + ((isRetained) ? " retained"  : "")
-    + ((retainOpen) ? " open"     : "")
-    + ((retainOff)  ? " disabled" : "")
 
   // Disable Limit CheckSlider if:
-  // * limitState !== "mix" (so you have no choice for limit)
-  // * OR if the phrase has been retained (locked), but the user
-  //   wants to display it anyway (!retained)
-  // const limitedClass = (limitState !== "mix")
-  //   ? "back disabled open"
-  //   : (!locked || retained)
-  //     ? "back"
-  //     : "back disabled"
-
+  // * limitState === "mix" (so you have a choice for limit)
+  //   BUT the phrase was retained and is currently unrestrained
+  //   in which case a choice is meaningless.
   const limitClass = "back"
-    + ((limitOpen) ? " open" : "")
-    + ((limitShut) ? " shut" : "")
     + ((limitOff)  ? " disabled" : "")
 
 
@@ -415,6 +418,7 @@ export const Review = ({
 
   useEffect(resetText, []) // set text to "" when first displayed
   useEffect(manageTransitions) // create and destroy, every render
+  useEffect(forceLimitState, [switchLimit])
 
 
 
@@ -429,7 +433,7 @@ export const Review = ({
         className="control front"
       >
         <CheckSlider
-          name="retained"
+          name="status"
           className={stateClass}
           checked={retainOn}
           action={toggle}
@@ -445,7 +449,7 @@ export const Review = ({
         { showType && <TextArea
             name="text"
             className="text"
-            placeholder={db.text}
+            placeholder={showPlaceholder ? db.text : ""}
             text={text}
             onFocus={onFocusChange}
             onBlur={onFocusChange}
@@ -455,17 +459,17 @@ export const Review = ({
             autoCapitalize={autoCapitalize}
           />
         }
-        <Hint hint={(showClue || sneakPreview) && hint} />
+        <Hint hint={(showHint || sneakPreview) && hint} />
       </div>
       <div
         className="control back"
       >
         { right && !retainOn
-          ? <GreenCircle disabled={limitShut}/>
+          ? <GreenCircle />
           : <CheckSlider
             name="limit"
             className={limitClass}
-            checked={limitOn}
+            checked={!unlimited}
             action={toggle}
             title={hideHintTitle}
           />

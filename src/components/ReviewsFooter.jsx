@@ -16,11 +16,11 @@ export const ReviewsFooter = () => {
   const {
     user,
     getPhrases,
+    limitState,
     toggleLimitState,
     cancelReview
   } = useContext(UserContext)
 
-  const { limitState } = user
    // "on" (limit=>true), "mix", "off" (limit=>false)
   const phrases = getPhrases("redo")
 

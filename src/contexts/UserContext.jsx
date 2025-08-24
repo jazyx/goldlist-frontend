@@ -47,24 +47,26 @@ export const UserProvider = ({ children }) => {
   const { origin } = useContext(APIContext)
 
   // Read initial value of userData from LocalStorage
-  const [ user, setUser ] = useState(() => storage.get())
+  const [ user,        setUser ] = useState(() => storage.get())
   const [ initialized, setInitialized ] = useState(INITIALIZED)
-  const [ failed, setFailed ] = useState("")
-  const [ loaded, setLoaded ] = useState(false)
-  const [ lists, setLists ] = useState([])
-  const [ redos, setRedos ] = useState([])
+  const [ failed,      setFailed ] = useState("")
+  const [ loaded,      setLoaded ] = useState(false)
+  const [ lists,       setLists ] = useState([])
+  const [ redos,       setRedos ] = useState([])
   const [ reviewState, setReviewState ] = useState("untreated")
-  const [ redosDone, setRedosDone ] = useState(0)
-  const [ dayList, setDayList ] = useState(0)
-  const [ daysLists, setDaysLists ] = useState(0)
-  const [ dayDone, setDayDone ] = useState(0)
-  const [ from, setFrom ] = useState("/add")
-  const [ preferences, setPreferences ] = useState({
-    daysDelay: 14,
-    phraseCount: 21
-  })
+  const [ redosDone,   setRedosDone ] = useState(0)
+  const [ dayList,     setDayList ] = useState(0)
+  const [ daysLists,   setDaysLists ] = useState(0)
+  const [ dayDone,     setDayDone ] = useState(0)
+  const [ from,        setFrom ] = useState("/add")
+  // Preferences is probably obsolete
+  const [ preferences, setPreferences ] = useState({})
+  const [ limitState,  setLimitState ] = useState("mix")
+  const [ switchLimit, setSwitchLimit ] = useState(false)
+
   // Tracking the Review with the current focus
-  const [ focus, setFocus ] = useState({})
+  const [ focus,       setFocus ] = useState({})
+
   // Create a Set to store which transitions are running to change
   // the height of a Review component when limitState is changed
   const runRef = useRef(new Set())
@@ -179,8 +181,8 @@ export const UserProvider = ({ children }) => {
       user.host_name = storage.getItem("user_name")
     }
 
-    const { limitState, daysDelay, phraseCount } = user
-    const preferences = { limitState, daysDelay, phraseCount }
+    const { daysDelay, phraseCount } = user
+    const preferences = { daysDelay, phraseCount }
 
     setUser(user)
     setLists(lists)
@@ -342,12 +344,31 @@ export const UserProvider = ({ children }) => {
   }
 
 
-  const toggleLimitState = (name, limitState) => {
-    // Pre-emptively update locally
-    preferences.limitState = limitState
-    setPreferences({ ...preferences })
-    // Update the database
-    submitPreferences()
+  /**
+   * Can be called by the LimitState vertical slider in the
+   * ReviewsFooter, or by horizontal limit sliders on individual
+   * Review components immediately afterwards.
+   */
+  const toggleLimitState = (_id, limit) => {
+    if (_id === "limit"){
+      // Call came from ReviewsFooter and applies to all
+      setLimitState(limit) // "off" | "mix" | "on"
+
+      // Set switchLimit to true until the next useEffect, so that
+      // Review components will each call toggleLimitState
+      // individually, and then relax.
+      return setSwitchLimit(true)
+
+    } else if (limit === "mix") {
+      // Leave each phrase the way it is
+      return
+    }
+
+    // The call came from an individual phrase immediately after
+    // switchLimit was set to true.
+    const phrase = getPhrase(_id)
+    phrase.limit = limit === "on"
+    setRedos([ ...redos ]) // will be called multiple times!
   }
 
 
@@ -444,6 +465,11 @@ export const UserProvider = ({ children }) => {
     phrase[name] = checked
 
     setLists([...lists])
+
+    if (name === "limit") {
+      setLimitState("mix")
+      saveLimitState(_id, checked)
+    }
   }
 
 
@@ -471,22 +497,28 @@ export const UserProvider = ({ children }) => {
     const { _id } = getActive()
     const phrases = getPhrases()
 
-    // Find all phrases which are flagged to be retained...
-    const reviewed = phrases.filter( phrase => (
-      phrase.retained && !phrase.db.retained
+    // Count all phrases which are flagged to be retained, while
+    // finding all phrases which are to be grasped or retained
+    let retained = 0
+    const reviewed = phrases
+    .filter( phrase => (
+       phrase.grasped && !phrase.db.grasped
+    || phrase.retained && !phrase.db.retained
     ))
-    // ...and add any whose `limited` value has changed
-    const limited = phrases.filter( phrase => (
-      phrase.limit !== phrase.db.limit
-    ))
+    .map( phrase => {
+      // Only send grasped or retained values if they have changed
+      const fields = (phrase.db.grasped)
+        ? { "_id": 1, "retained": 1 }
+        : { "_id": 1, "grasped": 1 }
 
-    limited.forEach( phrase => {
-      if (reviewed.indexOf(phrase) === -1) {
-        reviewed.push(phrase)
-      }
+      retained += (fields.retained || 0)
+      Object.keys(fields).forEach(key => fields[key] = phrase[key])
+
+
+      return fields
     })
 
-    requestReview({ list_id: _id, reviewed })
+    requestReview({ list_id: _id, reviewed, retained })
   }
 
 
@@ -494,16 +526,8 @@ export const UserProvider = ({ children }) => {
     const url = `${origin}/submitReview`
     const headers = { 'Content-Type': 'application/json' }
 
-    // Exclude text, hint and db entries from body, as the server
-    // will not change these
-    const replacer = (key, value) => {
-      if (key === "db" || key === "text" || key === "hint") {
-        return
-      }
-      return value
-    }
-
-    const body = JSON.stringify(data, replacer)
+    const body = JSON.stringify(data) //, replacer)
+    console.log("body:", JSON.parse(body))
 
     fetch(url, {
       method: 'POST',
@@ -630,6 +654,39 @@ export const UserProvider = ({ children }) => {
     if (to) {
       navigate(to)
     }
+  }
+
+
+  const saveLimitState = (_id, limit) => {
+    const url = `${origin}/setLimitState`
+    const headers = { 'Content-Type': 'application/json' }
+    const body = JSON.stringify({ _id, limit })
+
+    fetch(url, {
+      method: 'POST',
+      headers,
+      body,
+    })
+      // .then(incoming => incoming.text())
+      // .then(text => {
+      //   console.log("incoming:", text)
+      //   try {
+      //     const json = JSON.parse(text)
+      //     return json
+      //   } catch (error) {
+      //     console.log("error", JSON.stringify(error, null, '  '));
+
+      //   }
+      // })
+      .then(incoming => incoming.json())
+      .then(json => treatLimitState(json))
+      .catch(treatDataError)
+  }
+
+
+  const treatLimitState = json => {
+    console.log("treatLimitState:", JSON.stringify(json))
+    // { _id, checked } // should already be set
   }
 
 
@@ -822,8 +879,18 @@ export const UserProvider = ({ children }) => {
   }
 
 
+  const resetSwitchLimit = () => {
+    if (switchLimit) {
+      setSwitchLimit(false)
+      // All phrases will have had their limit field updated.
+      // Tell the db to update them all.
+    }
+  }
+
+
   useEffect(goAdd, [lists])
   useEffect(checkIfDone, [ dayList, redos.length ])
+  useEffect(resetSwitchLimit) // after a single re-render 
 
 
   return (
@@ -840,6 +907,8 @@ export const UserProvider = ({ children }) => {
         dayDone,
         daysLists,
         redosDone,
+        limitState,
+        switchLimit,
         reviewState,
         preferences,
         connectUser,
