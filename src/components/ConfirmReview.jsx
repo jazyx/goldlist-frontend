@@ -18,14 +18,20 @@ export const ConfirmReview = ({phrases}) => {
 
 
   const reviewed = phrases.filter( phrase => {
-    return phrase.retained === true
-  }).map( phrase => (
-    <li
-      key={phrase._id}
-    >
-      {phrase.db.text}
-    </li>
-  ))
+    return phrase.retained || phrase.grasped
+  }).map( phrase => {
+    const text = (phrase.retained)
+      ? <b>{phrase.db.text}</b>
+      : <span>{phrase.db.text}</span>
+
+    return (
+      <li
+        key={phrase._id}
+      >
+        {text}
+      </li>
+    )
+  })
 
 
   const reviewedCount = reviewed.length
@@ -36,7 +42,7 @@ export const ConfirmReview = ({phrases}) => {
 
   return <div className="mask">
     <div className="dialog">
-      <h2>{header}</h2>
+      <h3>{header}</h3>
       <ul>
         {reviewed}
       </ul>

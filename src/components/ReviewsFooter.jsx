@@ -45,14 +45,20 @@ export const ReviewsFooter = () => {
 
  const reviewed = phrases.reduce(( status, phrase ) => {
     const { grasped, retained, right, db } = phrase
-    // Don't count any that have been grasped or retaind
+
+    // Count all that remain unretained
+    // Count all that have not been grasped or retaind, for typing
     const consider = !( db.retained || retained
                      || ( grasped && !db.grasped )
                       )
-    status.target = status.total += consider
-    status.count += (right && consider) || 0   // avoid NaN
+    status.total = status.target += consider
+
+    // Count all of these that have been correctly typed
+    status.count += (right && consider) || 0 // avoid NaN
+
     return status
   }, { total: 0, count: 0, target: 0 })
+
   reviewed.total = Math.min(
     reviewed.total, total - retained.target
   )
@@ -61,7 +67,7 @@ export const ReviewsFooter = () => {
 
 
   const disabled = retained.count < retained.target
-    || (retained.count + reviewed.count) < retained.total
+    || (retained.count + reviewed.count) < total
 
 
   const limitProps = {

@@ -111,8 +111,8 @@ textarea {
 }
 
 /* For connections on Home page */
-button,
-.button {
+& button,
+& .button {
   color: inherit;
   font-size: inherit;
   background-color: var(--button);
@@ -150,7 +150,7 @@ button,
   }
 }
 
-button.use-method {
+& button.use-method {
   width: calc(100% - var(--bar));
   height: var(--tab);
   flex-shrink: 0;
@@ -181,7 +181,7 @@ ul#tabs {
   margin: 0;
   z-index: 1;
 
-  button {
+  & button {
     width: 100%;
     height: var(--tab);
     border-bottom-left-radius: 0;
@@ -189,7 +189,7 @@ ul#tabs {
     border-style: inset;
   }
 
-  li {
+  & li {
     width: auto;
     flex: 1;
 
@@ -198,7 +198,7 @@ ul#tabs {
       border-bottom: none;
     }
 
-    a {
+    & a {
       color: inherit;
     }
   }
@@ -224,7 +224,7 @@ ul#tabs {
       width: 100%;
     }
 
-    span {
+    & span {
       position: absolute;
       display: flex;
       justify-content: space-between;
@@ -232,7 +232,7 @@ ul#tabs {
       bottom: 0;
       left: -10%;
 
-      img {
+      & img {
         width: 40%;
         opacity: 0.5;
       }
@@ -378,8 +378,8 @@ div#connect {
     }
   }
 
-  button.warning,
-  div.warning button {
+  & button.warning,
+  & div.warning button {
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -421,7 +421,7 @@ div#connect {
       text-align: center;
     }
 
-    p {
+    & p {
       margin-bottom: 0;
     }
 
@@ -464,8 +464,8 @@ div#about div.info {
 /* General settings for all Phrase and Review text stuff */
 div.phrase,
 div.review {
-  p,
-  textarea {
+  & p,
+  & textarea {
     height: var(--space);
     width: 100%;
     margin: 0;
@@ -499,7 +499,7 @@ div#phrases {
     width: var(--full);
   }
 
-  div.phrase {
+  & div.phrase {
     display: flex;
     width: var(--fill);
     border-radius: 100vmax;
@@ -509,16 +509,16 @@ div#phrases {
     counter-increment: number;
     overflow: hidden;
 
-    div.number,
-    div.button {
+    & div.number,
+    & div.button {
       display: flex;
       justify-content: center;
       align-items: center;
       width: var(--size);
     }
 
-    div.number {
-      span {
+    & div.number {
+      & span {
         &::before {
           content: counter(number);
           display: flex;
@@ -536,11 +536,11 @@ div#phrases {
       }
     }
 
-    div.desk {
+    & div.desk {
       flex: 1;
     }
 
-    textArea {
+    & textArea {
       border-color: black;
       border-width: 1px;
       overflow-y: auto;
@@ -606,13 +606,13 @@ div#phrases {
   position: relative;
   overflow: hidden;
 
-  div.reviews {
+  & div.reviews {
     position: relative;
     height: 100%;
     overflow-y: auto;
     width: var(--full);
 
-    .review {
+    & div.review {
       display: flex;
       align-items: center;
       width: var(--fill);
@@ -662,7 +662,7 @@ div#phrases {
           }
         }
 
-        textarea {
+        & textarea {
           position: absolute;
           top: 0;
           left: 0;
@@ -813,7 +813,7 @@ div#phrases {
         &:has(.circle.disabled) { /* required for GreenCircle */
           background-color: transparent;
 
-          div.control {
+          & div.control {
             background-color: transparent;
 
             & .circle {
@@ -827,7 +827,7 @@ div#phrases {
             }
           }
 
-          div.desk {
+          & div.desk {
             p.hint, p.feedback {
               height: 0;
               overflow: hidden;
@@ -859,7 +859,7 @@ div#phrases {
     overflow-y: auto;
     overflow-x: hidden;
 
-    h3 {
+    & h3 {
       text-decoration: underline;
     }
 
@@ -873,14 +873,14 @@ div#phrases {
       --color-min:      var(--older);
     }
 
-    div#step-slider-phraseCount {
+    & div#step-slider-phraseCount {
       /* height of div.labels must include labels at start _and_ end */
       --total:   21;
       --width:   12em; /* Wide enough to show labels on one side */
       --spacing: 0.6667em; /* spacing between labels */
     }
 
-    div#step-slider-daysDelay {
+    & div#step-slider-daysDelay {
       /* height of div.labels must include labels at start _and_ end */
       --total:   14;
       --width:   22em; /* Wide enough to show labels both sides */
@@ -988,7 +988,7 @@ footer {
   }
 }
 
-.spacer {
+&.spacer {
   flex-grow: 1;
 }
 
@@ -1019,18 +1019,22 @@ div.mask {
     background-color: var(--dark);
     pointer-events: all;
 
-    h2 {
+    & h2 {
       margin: 0;
     }
 
-    ul {
+    & ul {
       flex: 1;
       overflow: auto;
       min-height: 1.2rem;
       text-align: left;
     }
 
-    div.buttons {
+    & b {
+      color: var(--gold);
+    }
+
+    & div.buttons {
       display: flex
     }
   }
