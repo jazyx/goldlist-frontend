@@ -73,7 +73,7 @@ export const IconBar = ({ icons }) => {
 
   const buttons = (loaded)
     ? [<Menu key="menu"/>]
-    : icons.map( iconName => getButton[iconName]())
+    : icons.map( iconName => getButton[iconName]() )
 
 
   return (

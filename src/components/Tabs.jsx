@@ -8,6 +8,7 @@ import { useContext } from 'react'
 import { UserContext } from '../contexts'
 import { TabButton } from './TabButton'
 import { Menu } from './Menu'
+import { FullScreen } from './FullScreen'
 
 
 export const Tabs = () => {
@@ -43,6 +44,7 @@ export const Tabs = () => {
       <Menu />
       {checkTabs}
       {redoTabs}
+      <FullScreen />
     </ul>
   )
 }

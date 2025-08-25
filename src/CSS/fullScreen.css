@@ -1,0 +1,44 @@
+ul#tabs button.full-screen {
+  --button: var(--gold);
+  --button-border: var(--gold);
+  --button-active: var(--old);
+
+  width: var(--tab);
+  border-radius: var(--gap);
+
+  &:active:hover path {
+    fill: #fff;
+  }
+
+  img {
+    width: 100%;
+  }
+}
+
+/* Hide collapse when not fullscreen */
+html:not(:-moz-full-screen) button.full-screen path.collapse {
+  opacity: 0;
+}
+html:not(:-webkit-full-screen) button.full-screen path.collapse {
+  opacity: 0;
+}
+html:not(:-ms-fullscreen) button.full-screen path.collapse {
+  opacity: 0;
+}
+html:not(:fullscreen) button.full-screen path.collapse {
+  opacity: 0;
+}
+
+/* Hide expand when fullscreen */
+html:-moz-full-screen button.full-screen path.expand {
+  opacity: 0;
+}
+html:-webkit-full-screen button.full-screen path.expand {
+  opacity: 0;
+}
+html:-ms-fullscreen button.full-screen path.expand {
+  opacity: 0;
+}
+html:fullscreen button.full-screen path.expand {
+  opacity: 0;
+}

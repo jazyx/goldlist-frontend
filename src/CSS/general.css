@@ -6,6 +6,7 @@
  @import './checkSlider.css';
  @import './threeWay.css';
  @import './stepSlider.css';
+ @import './fullScreen.css';
 
 :root {
   --white: #fff;
