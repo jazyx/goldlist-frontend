@@ -63,6 +63,8 @@ export const UserProvider = ({ children }) => {
   const [ preferences, setPreferences ] = useState({})
   const [ limitState,  setLimitState ] = useState("mix")
   const [ switchLimit, setSwitchLimit ] = useState(false)
+  const [ statistics,  setStatistics ] = useState({})
+  
 
   // Tracking the Review with the current focus
   const [ focus,       setFocus ] = useState({})
@@ -145,7 +147,7 @@ export const UserProvider = ({ children }) => {
 
 
   const treatUserData = data => {
-    const { user, lists, redos, fail } = data
+    const { user, lists, redos, statistics, fail } = data
 
     // If the server sends a fail message, it should be logged to
     // the console, and nothing else should happen.
@@ -191,6 +193,7 @@ export const UserProvider = ({ children }) => {
     setLists(lists)
     setRedos(redos)
     setPreferences(preferences)
+    setStatistics(statistics)
 
     // console.log("prepared lists", lists.length)
   }
@@ -290,6 +293,7 @@ export const UserProvider = ({ children }) => {
    * saved, which would lead to a blank.
    */
   const updatePhrase = _id => {
+    const user_id = user._id
     const list = getActive()
     const phrase = list.phrases.find(
       phrase => phrase._id === _id
@@ -297,7 +301,7 @@ export const UserProvider = ({ children }) => {
     phrase.saving = true
     setLists([...lists])
 
-    savePhrase({ ...phrase, list_id: list._id })
+    savePhrase({ ...phrase, user_id, list_id: list._id })
   }
 
 
@@ -332,7 +336,7 @@ export const UserProvider = ({ children }) => {
 
 
   const treatSavedPhrase = json => {
-    const { _id, key, text, hint, list_id } = json
+    const { _id, key, text, hint, list_id, statistics } = json
     const list = lists.find( list => list._id === list_id)
 
     const phrase =
@@ -346,6 +350,7 @@ export const UserProvider = ({ children }) => {
     delete phrase.saving
 
     setLists([...lists])
+    setStatistics(statistics)
   }
 
 
@@ -499,6 +504,7 @@ export const UserProvider = ({ children }) => {
 
 
   const submitReview = () => {
+    const user_id = user._id
     const { _id } = getActive()
     const phrases = getPhrases()
 
@@ -523,7 +529,7 @@ export const UserProvider = ({ children }) => {
       return fields
     })
 
-    requestReview({ list_id: _id, reviewed, retained })
+    requestReview({ user_id, list_id: _id, reviewed, retained })
   }
 
 
@@ -549,7 +555,7 @@ export const UserProvider = ({ children }) => {
     // json contain just the _id of the list whose review was
     // submitted. Lists may simultaneously be being combined on
     // the server, but the frontend is not told about this.
-    const { _id } = json
+    const { _id, statistics } = json
     const listIndex = redos.findIndex( list => list._id === _id )
     if (listIndex < 0) {
       return console.log("Unable to find list with id:", list_id)
@@ -559,6 +565,7 @@ export const UserProvider = ({ children }) => {
 
     setRedos([ ...redos ])
     setRedosDone(redosDone + 1)
+    setStatistics(statistics)
 
     // Check if there are older lists to review. If so navigate
     // to the next list. If not, go to `/add/X` which should always
@@ -916,6 +923,7 @@ export const UserProvider = ({ children }) => {
         switchLimit,
         reviewState,
         preferences,
+        statistics,
         connectUser,
         getPhrases,
         getActive,

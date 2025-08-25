@@ -181,5 +181,11 @@
       "01_caption": "Le menu contextuel en haut à gauche",
       "02": "Votre préférences sera enregistrée pour vos prochaines visites."
     }
+  },
+  "statistics": {
+    "progress": "Progrès ",
+    "total": "Totale ",
+    "grasped": "Compris ",
+    "retained": "Retenu "
   }
 }

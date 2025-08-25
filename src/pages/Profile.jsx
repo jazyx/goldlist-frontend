@@ -31,6 +31,7 @@ export const Profile = () => {
   const { language } = useContext(I18nContext)
   const {
     user,
+    statistics,
     preferences,
     setPreferences,
     submitPreferences
@@ -42,9 +43,14 @@ export const Profile = () => {
 
 
   const texts = {
-    delay: t("prefs.delay.title"),
-    count: t("prefs.count.title"),
-    settings: t("prefs.for", { user_name })
+    delay:    t("prefs.delay.title"),
+    count:    t("prefs.count.title"),
+    settings: t("prefs.for", { user_name }),
+
+    progress: t("statistics.progress"),
+    total:    t("statistics.total"),
+    grasped:  t("statistics.grasped"),
+    retained: t("statistics.retained")
   }
 
   
@@ -104,18 +110,28 @@ export const Profile = () => {
   return (
     <div id="profile">
       <IconBar icons={[ "login", "about" ]} />
-      <div className="spacer"></div>
+
+      <div className="spacer" />
 
       <article>
         <h1>{texts.settings}</h1>
-        <div className="spacer"></div>
-        <h3>{t("prefs.count.title")}</h3>
+        <div className="statistics">
+          <h3>{texts.progress}</h3>
+          <p>{texts.retained}: {statistics.retained}</p>
+          <p>{texts.grasped}: {statistics.grasped}</p>
+          <p>{texts.total}: {statistics.total}</p>
+        </div>
+
+        <div className="spacer" />
+
+        <h3>{texts.count}</h3>
         {countSlider}
-        <h3>{t("prefs.delay.title")}</h3>
+        <h3>{texts.delay}</h3>
         {delaySlider}
       </article>
 
-      <div className="spacer"></div>
+      <div className="spacer" />
+
       <button
         className="save"
         onClick={submitPreferences}

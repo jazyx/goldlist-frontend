@@ -181,5 +181,11 @@
       "01_caption": "The pop-up menu at the top left",
       "02": "Your preferences will be saved for future visits."
     }
+  },
+  "statistics": {
+    "progress": "Progress",
+    "total": "Total",
+    "grasped": "Understood",
+    "retained": "Remembered"
   }
 }
