@@ -29,9 +29,9 @@
   "cancel": "Cancel",
   "continue": "Continue",
   "sign": {
-    "up": "Sign up",
-    "in": "Sign in",
-    "out": "Sign out",
+    "up": "Register",
+    "in": "Log In",
+    "out": "Log out",
     "connect": "Sign up | Sign in",
     "sign": "Sign up | Sign in",
     "username": "Username",

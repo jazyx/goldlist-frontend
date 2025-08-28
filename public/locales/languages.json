@@ -10,5 +10,9 @@
   "ru": {
     "name": "Русский",
     "flag": "/flags/ru.png"
+  },
+  "jp": {
+    "name": "日本語",
+    "flag": "/flags/jp.png"
   }
 }

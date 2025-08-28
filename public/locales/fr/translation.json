@@ -88,7 +88,7 @@
     "text": "Ajouter une expression dont vous souhaiter vous souvenir",
     "hint": "Entrez un indice sur le sens de cette expression"
   },
-  "commit": "Engagez-vous à vous souvenir de cette expression",
+  "commit": "S'engagez-vous à se souvenir de cette expression",
   "more": "Créer une nouvelle liste",
   "submit_list": "Soumettre la liste",
   "hint": {
@@ -184,7 +184,7 @@
   },
   "statistics": {
     "progress": "Progrès ",
-    "total": "Totale ",
+    "total": "Total ",
     "grasped": "Compris ",
     "retained": "Retenu "
   }
